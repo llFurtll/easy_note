@@ -132,7 +132,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "6adadaf0503ae050ec8255b16d3f5d8bf400ed45"
+      resolved-ref: ee9b9730f312e5aec7fd2874aabc219eb0b9d236
       url: "https://github.com/llFurtll/compmanager.git"
     source: git
     version: "1.0.0"

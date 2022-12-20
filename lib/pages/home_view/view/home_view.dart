@@ -29,12 +29,15 @@ class HomeView extends ScreenView<HomeViewController, HomeViewInjection> {
   @override
   Scaffold build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        controller: controller.scrollController,
-        slivers: [
-          AppBarHomeViewWidget(context: context),
-          ListNoteHomeViewWidget(context: context)
-        ],
+      body: GestureDetector(
+        onTap: () => controller.removeFocus(),
+        child: CustomScrollView(
+          controller: controller.scrollController,
+          slivers: [
+            AppBarHomeViewWidget(context: context),
+            ListNoteHomeViewWidget(context: context)
+          ],
+        ),
       )
     );
   }

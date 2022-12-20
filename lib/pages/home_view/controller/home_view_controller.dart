@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:compmanager/screen_controller.dart';
 
 class HomeViewController extends ScreenController {
-  ScrollController scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
+  final FocusNode focusNode = FocusNode();
 
   @override
   void onClose() {
@@ -12,5 +13,9 @@ class HomeViewController extends ScreenController {
   }
 
   bool get isExpanded =>
-    scrollController.hasClients && scrollController.offset > (200 - kToolbarHeight);
+    scrollController.hasClients && scrollController.offset > (280 - kToolbarHeight);
+
+  void removeFocus() {
+    focusNode.unfocus();
+  }
 }

@@ -9,7 +9,6 @@ import '../injection/home_view_injection.dart';
 class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInjection> {
   AppBarHomeViewWidget({super.key, super.context});
 
-  final ValueNotifier isExpanded = ValueNotifier(false);
   final TextEditingController textController = TextEditingController();
 
   @override
@@ -19,28 +18,23 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
     return _buildAppBar(context);
   }
 
-  ValueListenableBuilder _buildAppBar(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: isExpanded,
-      builder: (context, value, child) {
-        return SliverAppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).primaryColor,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(50.0),
-              bottomRight: Radius.circular(50.0)
-            )
-          ),
-          expandedHeight: 280.0,
-          floating: true,
-          pinned: true,
-          snap: false,
-          forceElevated: true,
-          elevation: 5.0,
-          flexibleSpace: value ? const SizedBox.shrink() : _buildBody(context)
-        );
-      },
+  SliverAppBar _buildAppBar(BuildContext context) {
+    return SliverAppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Theme.of(context).primaryColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(50.0),
+          bottomRight: Radius.circular(50.0)
+        )
+      ),
+      expandedHeight: 280.0,
+      floating: true,
+      pinned: true,
+      snap: false,
+      forceElevated: true,
+      elevation: 5.0,
+      flexibleSpace: value ? const SizedBox.shrink() : _buildBody(context)
     );
   }
 

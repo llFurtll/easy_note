@@ -19,9 +19,12 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewIn
   }
 
   Widget _buildBody(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.9,
-      child: _buildCard(context),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: _buildCard(context),
+      ),
     );
   }
 
@@ -46,10 +49,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewIn
             spacer(10.0),
             _buildTitle(),
             spacer(10.0),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: _buildFooter(),
-            )
+            _buildFooter()
           ],
         ),
       )

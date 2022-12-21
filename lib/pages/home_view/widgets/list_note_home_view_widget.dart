@@ -16,12 +16,15 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewIn
     return _buildList();
   }
 
-  SliverList _buildList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) => CardNoteHomeViewWidget(id: index),
-        childCount: 50
-      ),
+  SliverPadding _buildList() {
+    return SliverPadding(
+      padding: const EdgeInsets.all(10.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => CardNoteHomeViewWidget(id: index),
+          childCount: 50
+        ),
+      )
     );
   }
 }

@@ -34,7 +34,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
       snap: false,
       forceElevated: true,
       elevation: 5.0,
-      flexibleSpace: value ? const SizedBox.shrink() : _buildBody(context)
+      flexibleSpace: _buildBody(context)
     );
   }
 

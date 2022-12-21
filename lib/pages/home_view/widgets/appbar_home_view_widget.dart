@@ -18,13 +18,6 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
 
     return _buildAppBar(context);
   }
-  
-  @override
-  void onInit() {
-    super.onInit();
-
-    controller.scrollController.addListener(_listenerAppBar);
-  }
 
   ValueListenableBuilder _buildAppBar(BuildContext context) {
     return ValueListenableBuilder(
@@ -39,8 +32,6 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
               bottomRight: Radius.circular(50.0)
             )
           ),
-          title: value ? const Text("Daniel Melonari") : null,
-          centerTitle: true,
           expandedHeight: 280.0,
           floating: true,
           pinned: true,
@@ -53,25 +44,32 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
     );
   }
 
-  void _listenerAppBar() {
-    isExpanded.value = controller.isExpanded;
-  }
-
   Widget _buildBody(BuildContext context) {
-    return FlexibleSpaceBar(
-      collapseMode: CollapseMode.parallax,
-      background: SafeArea(
-        child: Column(
-          children: [
-            spacer(10.0),
-            _buildProfile(context),
-            spacer(10.0),
-            _buildName(),
-            spacer(10.0),
-            _buildSearch(context)
-          ],
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool result = controller.verifySize(constraints);
+
+        return FlexibleSpaceBar(
+          title: Visibility(
+            visible: result,
+            child: const Text("Daniel Melonari"),
+          ),
+          centerTitle: true,
+          collapseMode: CollapseMode.parallax,
+          background: SafeArea(
+            child: Column(
+              children: [
+                spacer(10.0),
+                _buildProfile(context),
+                spacer(10.0),
+                _buildName(),
+                spacer(10.0),
+                _buildSearch(context)
+              ],
+            ),
+          )
+        );
+      },
     );
   }
 

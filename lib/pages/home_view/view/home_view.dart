@@ -32,7 +32,6 @@ class HomeView extends ScreenView<HomeViewController, HomeViewInjection> {
       body: GestureDetector(
         onTap: () => controller.removeFocus(),
         child: CustomScrollView(
-          controller: controller.scrollController,
           slivers: [
             AppBarHomeViewWidget(context: context),
             ListNoteHomeViewWidget(context: context)

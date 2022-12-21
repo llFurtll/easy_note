@@ -29,30 +29,41 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewIn
   }
 
   Widget _buildCard(BuildContext context) {
-    return Container( // IMAGEM DE FUNDO
-      height: 90.0,
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        image: DecorationImage(
-          image: NetworkImage("https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true"),
-          fit: BoxFit.cover
-        )
-      ),
-      child: Container( // SOMBRA
-        color: Colors.white.withOpacity(0.5),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            spacer(10.0),
-            _buildTitle(),
-            spacer(10.0),
-            _buildFooter()
-          ],
+    const shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    );
+
+    return InkWell(
+      onTap: () {},
+      customBorder: shape,
+      child: Card(
+        shape: shape,
+        clipBehavior: Clip.antiAlias,
+        elevation: 10.0,
+        child: Container( // IMAGEM DE FUNDO
+          height: 90.0,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage("https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true"),
+              fit: BoxFit.cover
+            )
+          ),
+          child: Container( // SOMBRA
+            color: Colors.white.withOpacity(0.5),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                spacer(10.0),
+                _buildTitle(),
+                spacer(10.0),
+                _buildFooter()
+              ],
+            ),
+          )
         ),
-      )
+      ),
     );
   }
 

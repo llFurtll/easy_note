@@ -34,7 +34,48 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
       snap: false,
       forceElevated: true,
       elevation: 5.0,
-      flexibleSpace: _buildBody(context)
+      flexibleSpace: _buildBody(context),
+      actions: _buildActions(),
+    );
+  }
+
+  List<Widget> _buildActions() {
+    return [
+      _buildPopup()
+    ];
+  }
+
+  PopupMenuButton _buildPopup() {
+    return PopupMenuButton<int>(
+      shape: const ContinuousRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      tooltip: "Menu",
+      itemBuilder: (BuildContext context) => const [
+        PopupMenuItem(
+          value: 1,
+          child: Text("Configurações"),
+        ),
+        PopupMenuDivider(),
+        PopupMenuItem(
+          value: 2,
+          child: Text("Sobre o desenvolvedor")
+        ),
+        PopupMenuDivider(),
+        PopupMenuItem(
+          value: 3,
+          child: Text("O que há de novo?")
+        )
+      ],
+      onSelected: (int index) {
+        switch (index) {
+          case 2:
+            controller.toSobre();
+            break;
+        }
+      },
     );
   }
 

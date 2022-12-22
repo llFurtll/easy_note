@@ -1,6 +1,7 @@
+import 'package:compmanager/screen_controller.dart';
 import 'package:flutter/material.dart';
 
-import 'package:compmanager/screen_controller.dart';
+import '../../sobre_view/view/sobre_view.dart';
 
 class HomeViewController extends ScreenController {
   final FocusNode focusNode = FocusNode();
@@ -17,5 +18,9 @@ class HomeViewController extends ScreenController {
     } else {
       return false;
     }
+  }
+
+  void toSobre() {
+    Navigator.of(context).pushNamed(SobreView.routeSobre);
   }
 }

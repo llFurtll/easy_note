@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:compmanager/screen_controller.dart';
 
-import '../../home_view/view/home_view.dart';
+import '../../../home_view/view/home_view.dart';
 
 class SplashViewController extends ScreenController {
   @override

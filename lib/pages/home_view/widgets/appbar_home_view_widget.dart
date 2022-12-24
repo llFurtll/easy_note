@@ -74,6 +74,8 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeViewController, HomeViewInje
           case 2:
             controller.toSobre();
             break;
+          default:
+            controller.toConfiguracao();
         }
       },
     );

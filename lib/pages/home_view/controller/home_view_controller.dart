@@ -1,6 +1,7 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../../configuracao/configuracao_list_view/view/configuracao_list_view.dart';
 import '../../sobre_view/view/sobre_view.dart';
 
 class HomeViewController extends ScreenController {
@@ -22,5 +23,9 @@ class HomeViewController extends ScreenController {
 
   void toSobre() {
     Navigator.of(context).pushNamed(SobreView.routeSobre);
+  }
+
+  void toConfiguracao() {
+    Navigator.of(context).pushNamed(ConfiguracaoView.routeConfig);
   }
 }

@@ -11,7 +11,7 @@ import '../pages/splash/view/splash_view.dart';
 Map<String, Widget Function(BuildContext)> routes() {
   return {
     Splash.splashRoute: (context) => const Splash(),
-    Home.homeRoute: (context) => const Home(),
+    Home.routeHome: (context) => const Home(),
     SobreView.routeSobre: (context) => SobreView(),
     ConfiguracaoView.routeConfig: (context) => ConfiguracaoView(),
     ConfiguracaoEdit.routeConfigEdit: (context) => const ConfiguracaoEdit(),

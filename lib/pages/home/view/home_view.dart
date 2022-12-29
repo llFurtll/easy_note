@@ -8,7 +8,7 @@ import '../widgets/appbar_home_view_widget.dart';
 import '../widgets/list_note_home_view_widget.dart';
 
 class Home extends Screen {
-  static const homeRoute = "/home";
+  static const routeHome = "/home";
 
   const Home({super.key});
 

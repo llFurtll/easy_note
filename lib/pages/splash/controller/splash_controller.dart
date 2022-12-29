@@ -25,6 +25,6 @@ class SplashController extends ScreenController {
   }
 
   void toHome() {
-    Navigator.of(context).pushNamed(Home.homeRoute);
+    Navigator.of(context).pushNamed(Home.routeHome);
   }
 }

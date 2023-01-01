@@ -1,6 +1,10 @@
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../data/databases/versao_data_source.dart';
+import '../../../../data/repositories/versao_repository_impl.dart';
+import '../../../../domain/entities/versao.dart';
+import '../../../../domain/usecases/get_find_all_versao.dart';
 import '../controller/novo_list_controller.dart';
 import '../injection/novo_list_injection.dart';
 
@@ -12,6 +16,9 @@ class NovoList extends Screen {
   @override
   NovoListInjection build(BuildContext context) {
     return NovoListInjection(
+      getFindAllVersao: GetFindAllVersao(
+        VersaoRepositoryImpl(dataSource: VersaoDataSourceImpl())
+      ),
       child: Builder(
         builder: (context) => NovoListView(context: context),
       )
@@ -34,12 +41,22 @@ class NovoListView extends ScreenView<NovoListController, NovoListInjection> {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (controller.isError) {
+            return const Center(
+              child: Text(
+                "Falha ao carregar as versões",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
+                ),
+              ),
+            );
+          }
+
           return Container(
             padding: const EdgeInsets.all(10.0),
             child: ListView(
-              children: [
-                _buildItem()
-              ],
+              children: controller.versoes.map((versao) => _buildItem(versao)).toList(),
             ),
           );
         },
@@ -67,14 +84,14 @@ class NovoListView extends ScreenView<NovoListController, NovoListInjection> {
     );
   }
 
-  Widget _buildItem() {
+  Widget _buildItem(Versao versao) {
     return ListTile(
       onTap: () async {
         controller.toSplashAtualizacao();
       },
-      title: const Text(
-        "Versão 3.0",
-        style: TextStyle(
+      title: Text(
+        "Versão ${versao.versao}",
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20.0
         ),

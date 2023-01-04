@@ -1,7 +1,7 @@
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../data/databases/versao_data_source.dart';
+import '../../../../data/datasources/versao_data_source.dart';
 import '../../../../data/repositories/versao_repository_impl.dart';
 import '../../../../domain/entities/versao.dart';
 import '../../../../domain/usecases/get_find_all_versao.dart';
@@ -42,12 +42,16 @@ class NovoListView extends ScreenView<NovoListController, NovoListInjection> {
           }
 
           if (controller.isError) {
-            return const Center(
-              child: Text(
-                "Falha ao carregar as versões",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
+            return Container(
+              padding: const EdgeInsets.all(10.0),
+              child: const Center(
+                child: Text(
+                  "Falha ao carregar as versões, tente novamente!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             );

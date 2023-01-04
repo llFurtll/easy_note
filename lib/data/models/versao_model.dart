@@ -10,7 +10,7 @@ class VersaoModel extends Versao {
     versao: versao
   );
 
-  factory VersaoModel.fromJson(Map json) {
+  factory VersaoModel.fromMap(Map json) {
     return VersaoModel(
       idVersao: json["id"],
       versao: json["versao"]

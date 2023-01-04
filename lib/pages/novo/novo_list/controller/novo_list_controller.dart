@@ -1,9 +1,11 @@
 import 'package:compmanager/screen_controller.dart';
-import 'package:easy_note/domain/entities/versao.dart';
-import 'package:easy_note/pages/novo/novo_list/injection/novo_list_injection.dart';
+import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/usecases/usecase.dart';
+import '../../../../domain/entities/versao.dart';
 import '../../novo_detalhe/view/novo_detalhe_view.dart';
+import '../injection/novo_list_injection.dart';
 
 class NovoListController extends ScreenController {
   final isLoading = ValueNotifier(true);
@@ -32,7 +34,7 @@ class NovoListController extends ScreenController {
   }
 
   Future<List<Versao>?> _onLoadVersoes() async {
-    final getFindAllVersao = NovoListInjection.of(context).getFindAllVersao;
-    return await getFindAllVersao.findAll();
+    final getFindAllVersao = ScreenInjection.of<NovoListInjection>(context).getFindAllVersao;
+    return await getFindAllVersao(NoParams());
   }
 }

@@ -22,7 +22,7 @@ class VersaoDataSourceImpl implements VersaoDataSource {
       final List<VersaoModel> response = [];
 
       for (var item in result) {
-        response.add(VersaoModel.fromJson(item));
+        response.add(VersaoModel.fromMap(item));
       }
 
       await connection.close();

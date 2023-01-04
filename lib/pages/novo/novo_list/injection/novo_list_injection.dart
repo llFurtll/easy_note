@@ -16,12 +16,6 @@ class NovoListInjection extends ScreenInjection<NovoListController> {
     controller: NovoListController()
   );
 
-  static NovoListInjection of(BuildContext context) {
-    final result = context.dependOnInheritedWidgetOfExactType<NovoListInjection>();
-    assert(result != null, "No injection found on context");
-    return result!;
-  }
-
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 }

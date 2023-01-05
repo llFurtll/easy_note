@@ -16,7 +16,7 @@ class AtualizacaoDataSourceImpl implements AtualizacaoDataSource {
     String sql = """
       SELECT
         ID,
-        ID_VERSAO,s
+        ID_VERSAO,
         CABECALHO,
         DESCRICAO,
         IMAGEM

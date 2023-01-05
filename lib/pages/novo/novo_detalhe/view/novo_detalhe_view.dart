@@ -6,6 +6,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 
 import '../../../../data/datasources/atualizacao_data_source.dart';
 import '../../../../data/repositories/atualizacao_repository_impl.dart';
+import '../../../../domain/entities/atualizacao.dart';
 import '../../../../domain/usecases/get_find_atualizacao_by_versao.dart';
 import '../controller/novo_detalhe_controller.dart';
 import '../injection/novo_detalhe_injection.dart';
@@ -36,7 +37,34 @@ class NovoDetalheView extends ScreenView<NovoDetalheController, NovoDetalheInjec
   Scaffold build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: _buildBody(context)
+      body: ValueListenableBuilder(
+        valueListenable: controller.isLoading,
+        builder: (context, value, child) {
+          final isError = controller.isError;
+
+          if (value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (isError) {
+            return Container(
+              padding: const EdgeInsets.all(10.0),
+              child: const Center(
+                child: Text(
+                  "Falha ao carregar os dados da atualização, por favor tente novamente!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+
+          return _buildBody(context);
+        },
+      )
     );
   }
 
@@ -50,10 +78,7 @@ class NovoDetalheView extends ScreenView<NovoDetalheController, NovoDetalheInjec
       globalBackgroundColor: Theme.of(context).primaryColor,
       isBottomSafeArea: true,
       isTopSafeArea: true,
-      pages: [
-        _buildPage(),
-        _buildPage()
-      ],
+      pages: controller.lista.map((item) => _buildPage(item, context)).toList(),
       showBackButton: true,
       back: const Icon(Icons.arrow_back_ios, size: 20),
       backStyle: buttonStyle,
@@ -70,7 +95,7 @@ class NovoDetalheView extends ScreenView<NovoDetalheController, NovoDetalheInjec
     );
   }
 
-  PageViewModel _buildPage() {
+  PageViewModel _buildPage(Atualizacao atualizacao, BuildContext context) {
     return PageViewModel(
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(
@@ -85,27 +110,28 @@ class NovoDetalheView extends ScreenView<NovoDetalheController, NovoDetalheInjec
           height: 1.3
         ),
       ),
-      title: "EasyNote",
-      body: "O Note virou Easy Note, contendo vários recursos",
-      image: _buildImage()
+      title: atualizacao.cabecalho,
+      body: atualizacao.descricao,
+      image: _buildImage(atualizacao, context)
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(Atualizacao atualizacao, BuildContext context) {
     return Container(
       width: 250.0,
       height: 250.0,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        boxShadow: [
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        boxShadow: const [
           BoxShadow(
             color: Colors.black,
-            blurRadius: 20,
+            blurRadius: 30,
             offset: Offset(0, 0),
           ),
         ],
         image: DecorationImage(
-          image: NetworkImage("https://www.freevector.com/uploads/vector/preview/31633/freevectorEcoBeachCleaningSickeray0422_generated.jpg"),
+          image: AssetImage(atualizacao.imagem!),
           fit: BoxFit.fill
         )
       ),

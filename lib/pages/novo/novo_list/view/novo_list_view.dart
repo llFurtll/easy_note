@@ -37,11 +37,13 @@ class NovoListView extends ScreenView<NovoListController, NovoListInjection> {
       body: ValueListenableBuilder<bool>(
         valueListenable: controller.isLoading,
         builder: (BuildContext context, bool value, Widget? widget) {
+          final isError = controller.isError;
+
           if (value) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (controller.isError) {
+          if (isError) {
             return Container(
               padding: const EdgeInsets.all(10.0),
               child: const Center(
@@ -91,7 +93,7 @@ class NovoListView extends ScreenView<NovoListController, NovoListInjection> {
   Widget _buildItem(Versao versao) {
     return ListTile(
       onTap: () async {
-        controller.toSplashAtualizacao();
+        await controller.toSplashAtualizacao(versao.idVersao!);
       },
       title: Text(
         "Versão ${versao.versao}",

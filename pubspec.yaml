@@ -72,6 +72,10 @@ flutter:
   assets:
     - lib/images/easy-note-logo.png
     - lib/images/coffee.svg
+    - lib/images/versoes/3.0/anotacoes.gif
+    - lib/images/versoes/3.0/configuracoes.gif
+    - lib/images/versoes/3.0/nova-secao.gif
+    - lib/images/versoes/3.0/ultima-atualizacao.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

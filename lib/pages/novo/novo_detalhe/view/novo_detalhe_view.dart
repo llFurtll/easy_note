@@ -112,7 +112,7 @@ class NovoDetalheView extends ScreenView<NovoDetalheController> {
       ),
       title: atualizacao.cabecalho,
       body: atualizacao.descricao,
-      image: _buildImage(atualizacao, context)
+      image: _buildImage(atualizacao, context),
     );
   }
 

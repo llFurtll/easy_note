@@ -16,4 +16,13 @@ class VersaoRepositoryImpl implements VersaoRepository {
       return null;
     }
   }
+
+  @override
+  Future<int?> findLastVersao() async {
+    try {
+      return await dataSource.findLastVersao();
+    } on StorageException catch (_) {
+      return null;
+    }
+  }
 }

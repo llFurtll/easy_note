@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/arguments/novo_detalhe_view_arguments.dart';
 import '../../../../domain/entities/atualizacao.dart';
 import '../../../../domain/usecases/get_find_atualizacao_by_versao.dart';
+import '../../../home/view/home_view.dart';
 import '../injection/novo_detalhe_injection.dart';
 
 class NovoDetalheController extends ScreenController {
@@ -12,7 +13,7 @@ class NovoDetalheController extends ScreenController {
   final isLoading = ValueNotifier(true);
   
   bool isError = false;
-  NovoDetalheViewArguments? arguments;
+  late NovoDetalheViewArguments arguments;
 
   @override
   void onInit() {
@@ -20,7 +21,7 @@ class NovoDetalheController extends ScreenController {
     arguments = ModalRoute.of(context)?.settings.arguments as NovoDetalheViewArguments;
 
     Future.value()
-      .then((_) => _onLoadAtualizacao(arguments?.idVersao))
+      .then((_) => _onLoadAtualizacao(arguments.idVersao))
       .then((value) {
         if (value == null || value.isEmpty) {
           isError = false;
@@ -32,7 +33,11 @@ class NovoDetalheController extends ScreenController {
   }
 
   void onContinue() {
-    Navigator.of(context).pop();
+    if (arguments.isSplash) {
+      Navigator.pushNamed(context, Home.routeHome);
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   Future<List<Atualizacao>?> _onLoadAtualizacao(int? idVersao) async {

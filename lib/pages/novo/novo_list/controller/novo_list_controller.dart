@@ -31,7 +31,10 @@ class NovoListController extends ScreenController {
   }
 
   Future<void> toSplashAtualizacao(int idVersao) async {
-    Navigator.of(context).pushNamed(NovoDetalhe.routeNovoDetalhe, arguments: NovoDetalheViewArguments(idVersao: idVersao));
+    Navigator.of(context).pushNamed(
+      NovoDetalhe.routeNovoDetalhe,
+      arguments: NovoDetalheViewArguments(idVersao: idVersao, isSplash: false)
+    );
   }
 
   Future<List<Versao>?> _onLoadVersoes() async {

@@ -16,4 +16,13 @@ class AtualizacaoRepositoryImpl implements AtualizacaoRepository {
       return null;
     }
   }
+
+  @override
+  Future<bool?> existeVersaoWithoutView(int idVersao) async {
+    try {
+      return await dataSource.existeVersaoWithoutView(idVersao);
+    } on StorageException catch (_) {
+      return null;
+    }
+  }
 }

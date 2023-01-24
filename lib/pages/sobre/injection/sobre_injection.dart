@@ -2,16 +2,15 @@ import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
-import '../controller/splash_controller.dart';
+import '../controller/sobre_controller.dart';
 
-// ignore: must_be_immutable
-class SplashInjection extends ScreenInjection<SplashController> {
-  SplashInjection({
+class SobreInjection extends ScreenInjection<SobreController> {
+  SobreInjection({
     super.key,
     required ScreenBridge child
   }) : super(
-    controller: SplashController(),
-    child: child
+    child: child,
+    controller: SobreController()
   );
 
   @override

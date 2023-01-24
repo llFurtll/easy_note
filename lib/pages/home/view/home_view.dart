@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:compmanager/screen_view.dart';
+import 'package:flutter/material.dart';
 
 import '../controller/home_controller.dart';
 import '../injection/home_injection.dart';
@@ -15,16 +14,16 @@ class Home extends Screen {
   @override
   HomeInjection build(BuildContext context) {
     return HomeInjection(
-      child: Builder(
-        builder: (context) => HomeView(context: context),
+      child: const ScreenBridge<HomeController, HomeInjection>(
+        child: HomeView(),
       )
     );
   }
 }
 
 // ignore: must_be_immutable
-class HomeView extends ScreenView<HomeController, HomeInjection> {
-  HomeView({super.key, super.context});
+class HomeView extends ScreenView<HomeController> {
+  const HomeView({super.key});
 
   @override
   Scaffold build(BuildContext context) {

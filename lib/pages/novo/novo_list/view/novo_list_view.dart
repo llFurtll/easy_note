@@ -19,16 +19,16 @@ class NovoList extends Screen {
       getFindAllVersao: GetFindAllVersao(
         VersaoRepositoryImpl(dataSource: VersaoDataSourceImpl())
       ),
-      child: Builder(
-        builder: (context) => NovoListView(context: context),
+      child: const ScreenBridge<NovoListController, NovoListInjection>(
+        child: NovoListView(),
       )
     );
   }
 }
 
 // ignore: must_be_immutable
-class NovoListView extends ScreenView<NovoListController, NovoListInjection> {
-  NovoListView({super.key, required super.context});
+class NovoListView extends ScreenView<NovoListController> {
+  const NovoListView({super.key});
 
   @override
   Scaffold build(BuildContext context) {

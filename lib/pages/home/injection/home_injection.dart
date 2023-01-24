@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:compmanager/screen_injection.dart';
+import 'package:compmanager/screen_view.dart';
+import 'package:flutter/material.dart';
 
 import '../controller/home_controller.dart';
 
@@ -8,7 +8,7 @@ import '../controller/home_controller.dart';
 class HomeInjection extends ScreenInjection<HomeController> {
   HomeInjection({
     super.key,
-    required Builder child
+    required ScreenBridge child
   }) : super(
     child: child,
     controller: HomeController()

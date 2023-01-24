@@ -12,8 +12,8 @@ Map<String, Widget Function(BuildContext)> routes() {
   return {
     Splash.splashRoute: (context) => const Splash(),
     Home.routeHome: (context) => const Home(),
-    SobreView.routeSobre: (context) => SobreView(),
-    ConfiguracaoView.routeConfig: (context) => ConfiguracaoView(),
+    Sobre.routeSobre: (context) => const Sobre(),
+    ConfiguracaoList.routeConfig: (context) => const ConfiguracaoList(),
     ConfiguracaoEdit.routeConfigEdit: (context) => const ConfiguracaoEdit(),
     NovoList.routeNovoList: (context) => const NovoList(),
     NovoDetalhe.routeNovoDetalhe: (context) => const NovoDetalhe()

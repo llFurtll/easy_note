@@ -8,12 +8,27 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/show_message.dart';
 import '../../../core/widgets/spacer.dart';
+import '../controller/sobre_controller.dart';
+import '../injection/sobre_injection.dart';
 
-// ignore: must_be_immutable
-class SobreView extends ScreenView<NoController, NoScreenInjection> {
+class Sobre extends Screen {
   static const routeSobre = "/sobre";
 
-  SobreView({super.key});
+  const Sobre({super.key});
+  
+  @override
+  ScreenInjection<ScreenController> build(BuildContext context) {
+    return SobreInjection(
+      child: const ScreenBridge<SobreController, SobreInjection>(
+        child: SobreView()
+      ),
+    );  
+  }
+}
+
+// ignore: must_be_immutable
+class SobreView extends ScreenView<SobreController> {
+  const SobreView({super.key});
 
   @override
   Scaffold build(BuildContext context) {

@@ -2,10 +2,9 @@ import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/configuracao_edit_controller.dart';
-import '../injection/configuracao_edit_injection.dart';
 
 // ignore: must_be_immutable
-class AppBarConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditController, ConfiguracaoEditInjection> {
+class AppBarConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditController> {
   AppBarConfiguracaoEditViewWidget({super.key, super.context});
 
   late String title;

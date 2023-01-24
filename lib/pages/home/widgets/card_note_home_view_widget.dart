@@ -4,13 +4,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../core/widgets/spacer.dart';
 import '../controller/home_controller.dart';
-import '../injection/home_injection.dart';
 
 // ignore: must_be_immutable
-class CardNoteHomeViewWidget extends ScreenWidget<HomeController, HomeInjection> {
+class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
   final int id;
 
-  CardNoteHomeViewWidget({super.key, super.context, required this.id});
+  const CardNoteHomeViewWidget({super.key, super.context, required this.id});
   
   @override
   Widget build(BuildContext context) {

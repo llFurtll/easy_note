@@ -2,12 +2,11 @@ import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/home_controller.dart';
-import '../injection/home_injection.dart';
 import 'card_note_home_view_widget.dart';
 
 // ignore: must_be_immutable
-class ListNoteHomeViewWidget extends ScreenWidget<HomeController, HomeInjection> {
-  ListNoteHomeViewWidget({super.key, super.context});
+class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
+  const ListNoteHomeViewWidget({super.key, super.context});
 
   @override
   Widget build(BuildContext context) {

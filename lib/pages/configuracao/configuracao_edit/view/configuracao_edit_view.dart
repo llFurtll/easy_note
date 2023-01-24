@@ -13,8 +13,8 @@ class ConfiguracaoEdit extends Screen {
   @override
   ConfiguracaoEditInjection build(BuildContext context) {
     return ConfiguracaoEditInjection(
-      child: Builder(
-        builder: (context) => ConfiguracaoEditView(context: context),
+      child: const ScreenBridge<ConfiguracaoEditController, ConfiguracaoEditInjection>(
+        child: ConfiguracaoEditView(),
       )
     );
   }
@@ -22,8 +22,8 @@ class ConfiguracaoEdit extends Screen {
 }
 
 // ignore: must_be_immutable
-class ConfiguracaoEditView extends ScreenView<ConfiguracaoEditController, ConfiguracaoEditInjection> {
-  ConfiguracaoEditView({super.key, super.context});
+class ConfiguracaoEditView extends ScreenView<ConfiguracaoEditController> {
+  const ConfiguracaoEditView({super.key});
 
   @override
   Scaffold build(BuildContext context) {

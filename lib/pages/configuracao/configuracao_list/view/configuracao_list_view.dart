@@ -4,12 +4,28 @@ import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../configuracao_edit/view/configuracao_edit_view.dart';
+import '../controller/configuracao_list_controller.dart';
+import '../injection/configuracao_list_injection.dart';
 
 // ignore: must_be_immutable
-class ConfiguracaoView extends ScreenView<NoController, NoScreenInjection> {
-  static const routeConfig = "/config";
 
-  ConfiguracaoView({super.key});
+class ConfiguracaoList extends Screen {
+  static const routeConfig = "/config/list";
+
+  const ConfiguracaoList({super.key});
+
+  @override
+  ScreenInjection<ScreenController> build(BuildContext context) {
+    return ConfiguracaoListInjection(
+      child: const ScreenBridge<ConfiguracaoListController, ConfiguracaoListInjection>(
+        child: ConfiguracaoListView()
+      )
+    );
+  }
+
+}
+class ConfiguracaoListView extends ScreenView<ConfiguracaoListController> {
+  const ConfiguracaoListView({super.key});
 
   @override
   Scaffold build(BuildContext context) {

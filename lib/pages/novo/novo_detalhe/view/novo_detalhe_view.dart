@@ -22,16 +22,16 @@ class NovoDetalhe extends Screen {
       getFindAtualizacaoByVersao: GetFindAtualizacaoByVersao(
         AtualizacaoRepositoryImpl(dataSource: AtualizacaoDataSourceImpl())
       ),
-      child: Builder(
-        builder: (context) => NovoDetalheView(context: context),
+      child: const ScreenBridge<NovoDetalheController, NovoDetalheInjection>(
+        child: NovoDetalheView(),
       )
     );
   }
 }
 
 // ignore: must_be_immutable
-class NovoDetalheView extends ScreenView<NovoDetalheController, NovoDetalheInjection> {
-  NovoDetalheView({super.key, super.context});
+class NovoDetalheView extends ScreenView<NovoDetalheController> {
+  const NovoDetalheView({super.key});
 
   @override
   Scaffold build(BuildContext context) {

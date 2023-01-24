@@ -23,11 +23,11 @@ class HomeController extends ScreenController {
   }
 
   void toSobre() {
-    Navigator.of(context).pushNamed(SobreView.routeSobre);
+    Navigator.of(context).pushNamed(Sobre.routeSobre);
   }
 
   void toConfiguracao() {
-    Navigator.of(context).pushNamed(ConfiguracaoView.routeConfig);
+    Navigator.of(context).pushNamed(ConfiguracaoList.routeConfig);
   }
 
   void toNovo() {

@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/spacer.dart';
 import '../controller/home_controller.dart';
-import '../injection/home_injection.dart';
 
 // ignore: must_be_immutable
-class AppBarHomeViewWidget extends ScreenWidget<HomeController, HomeInjection> {
+class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
   AppBarHomeViewWidget({super.key, super.context});
 
   final TextEditingController textController = TextEditingController();

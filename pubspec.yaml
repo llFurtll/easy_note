@@ -72,6 +72,7 @@ flutter:
   assets:
     - lib/images/easy-note-logo.png
     - lib/images/coffee.svg
+    - lib/images/sem-anotacao.svg
     - lib/images/versoes/3.0/anotacoes.gif
     - lib/images/versoes/3.0/configuracoes.gif
     - lib/images/versoes/3.0/nova-secao.gif

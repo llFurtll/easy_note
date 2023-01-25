@@ -3,9 +3,12 @@ import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/arguments/novo_detalhe_view_arguments.dart';
+import '../../../../core/widgets/show_loading.dart';
 import '../../../../domain/entities/atualizacao.dart';
 import '../../../../domain/usecases/get_find_atualizacao_by_versao.dart';
+import '../../../../domain/usecases/get_save_visualizacao.dart';
 import '../../../home/view/home_view.dart';
+import '../../../splash/view/splash_view.dart';
 import '../injection/novo_detalhe_injection.dart';
 
 class NovoDetalheController extends ScreenController {
@@ -34,7 +37,17 @@ class NovoDetalheController extends ScreenController {
 
   void onContinue() {
     if (arguments.isSplash) {
-      Navigator.pushNamed(context, Home.routeHome);
+      showLoading(context);
+
+      Future.value()
+        .then((_) async {
+          final getSaveVisualizacao = ScreenInjection.of<NovoDetalheInjection>(context).getSaveVisualizacao;
+          await getSaveVisualizacao(SaveVisualizacaoParams(
+            idUsuario: 1,
+            idVersao: arguments.idVersao
+          ));
+        })
+        .then((_) => Navigator.pushNamedAndRemoveUntil(context, Home.routeHome, ModalRoute.withName(Splash.splashRoute)));
     } else {
       Navigator.pop(context);
     }

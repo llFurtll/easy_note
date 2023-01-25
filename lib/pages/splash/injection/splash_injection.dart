@@ -15,7 +15,7 @@ class SplashInjection extends ScreenInjection<SplashController> {
     super.key,
     required ScreenBridge child,
     required this.getFindLastVersao,
-    required this.getExisteVersaoWithoutView
+    required this.getExisteVersaoWithoutView,
   }) : super(
     controller: SplashController(),
     child: child

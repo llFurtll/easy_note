@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import '../../../../data/datasources/atualizacao_data_source.dart';
+import '../../../../data/datasources/visualizacao_data_source.dart';
 import '../../../../data/repositories/atualizacao_repository_impl.dart';
+import '../../../../data/repositories/visualizacao_repository_impl.dart';
 import '../../../../domain/entities/atualizacao.dart';
 import '../../../../domain/usecases/get_find_atualizacao_by_versao.dart';
+import '../../../../domain/usecases/get_save_visualizacao.dart';
 import '../controller/novo_detalhe_controller.dart';
 import '../injection/novo_detalhe_injection.dart';
 
@@ -21,6 +24,9 @@ class NovoDetalhe extends Screen {
     return NovoDetalheInjection(
       getFindAtualizacaoByVersao: GetFindAtualizacaoByVersao(
         AtualizacaoRepositoryImpl(dataSource: AtualizacaoDataSourceImpl())
+      ),
+      getSaveVisualizacao: GetSaveVisualizacao(
+        VisualizacaoRepositoryImpl(dataSource: VisualizacaoDataSourceImpl())
       ),
       child: const ScreenBridge<NovoDetalheController, NovoDetalheInjection>(
         child: NovoDetalheView(),

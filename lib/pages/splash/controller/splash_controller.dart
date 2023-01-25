@@ -27,9 +27,12 @@ class SplashController extends ScreenController {
       return null;
     })
     .then((result) {
-      if (result == null) toHome();
+      if (result == null) {
+        toHome();
+        return;
+      }
 
-      if (result! > 0) {
+      if (result > 0) {
         toAtualizacao(result);
       }
     });

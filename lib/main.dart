@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'core/storage/storage.dart';
 import 'routes/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await StorageImpl().initStorage();
 
   runApp(
     MaterialApp(

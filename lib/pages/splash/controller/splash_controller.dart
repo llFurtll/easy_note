@@ -1,12 +1,13 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
-import 'package:easy_note/core/arguments/novo_detalhe_view_arguments.dart';
-import 'package:easy_note/pages/novo/novo_detalhe/view/novo_detalhe_view.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/arguments/novo_detalhe_view_arguments.dart';
+import '../../../core/storage/storage.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/get_existe_versao_without_view.dart';
 import '../../home/view/home_view.dart';
+import '../../novo/novo_detalhe/view/novo_detalhe_view.dart';
 import '../injection/splash_injection.dart';
 
 class SplashController extends ScreenController {
@@ -15,27 +16,28 @@ class SplashController extends ScreenController {
     super.onInit();
 
     Future.value()
-    .then((_) => Future.delayed(const Duration(seconds: 2)))
-    .then((_) => getVersao())
-    .then((idVersao) async {
-      if (idVersao != null) {
-        final existe = await getExisteVersaoWithoutView(idVersao);
+      .then((_) async => await StorageImpl().initStorage())
+      .then((_) => Future.delayed(const Duration(seconds: 2)))
+      .then((_) => getVersao())
+      .then((idVersao) async {
+        if (idVersao != null) {
+          final existe = await getExisteVersaoWithoutView(idVersao);
 
-        if (existe != null && existe) return idVersao;
-      }
+          if (existe != null && existe) return idVersao;
+        }
 
-      return null;
-    })
-    .then((result) {
-      if (result == null) {
-        toHome();
-        return;
-      }
+        return null;
+      })
+      .then((result) {
+        if (result == null) {
+          toHome();
+          return;
+        }
 
-      if (result > 0) {
-        toAtualizacao(result);
-      }
-    });
+        if (result > 0) {
+          toAtualizacao(result);
+        }
+      });
   }
 
   Future<int?> getVersao() async {

@@ -1,6 +1,7 @@
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
+import '../../anotacao/view/anotacao_view.dart';
 import '../controller/home_controller.dart';
 import '../injection/home_injection.dart';
 import '../widgets/appbar_home_view_widget.dart';
@@ -45,7 +46,7 @@ class HomeView extends ScreenView<HomeController> {
     return FloatingActionButton(
       elevation: 10,
       backgroundColor: Theme.of(context).primaryColor,
-      onPressed: () {},
+      onPressed: () => Navigator.pushNamed(context, AnotacaoScreen.routeAnotacao),
       child: const Icon(Icons.add),
     );
   }

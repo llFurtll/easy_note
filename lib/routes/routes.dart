@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/anotacao/view/anotacao_view.dart';
 import '../pages/configuracao/configuracao_edit/view/configuracao_edit_view.dart';
 import '../pages/configuracao/configuracao_list/view/configuracao_list_view.dart';
 import '../pages/home/view/home_view.dart';
@@ -16,6 +17,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     ConfiguracaoList.routeConfig: (context) => const ConfiguracaoList(),
     ConfiguracaoEdit.routeConfigEdit: (context) => const ConfiguracaoEdit(),
     NovoList.routeNovoList: (context) => const NovoList(),
-    NovoDetalhe.routeNovoDetalhe: (context) => const NovoDetalhe()
+    NovoDetalhe.routeNovoDetalhe: (context) => const NovoDetalhe(),
+    AnotacaoScreen.routeAnotacao: (context) => const AnotacaoScreen()
   };
 }

@@ -1,10 +1,7 @@
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../data/datasources/versao_data_source.dart';
-import '../../../../data/repositories/versao_repository_impl.dart';
 import '../../../../domain/entities/versao.dart';
-import '../../../../domain/usecases/get_find_all_versao.dart';
 import '../controller/novo_list_controller.dart';
 import '../injection/novo_list_injection.dart';
 
@@ -16,9 +13,6 @@ class NovoList extends Screen {
   @override
   NovoListInjection build(BuildContext context) {
     return NovoListInjection(
-      getFindAllVersao: GetFindAllVersao(
-        VersaoRepositoryImpl(dataSource: VersaoDataSourceImpl())
-      ),
       child: const ScreenBridge<NovoListController, NovoListInjection>(
         child: NovoListView(),
       )

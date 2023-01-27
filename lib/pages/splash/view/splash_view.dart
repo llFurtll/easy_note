@@ -1,12 +1,6 @@
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/datasources/atualizacao_data_source.dart';
-import '../../../data/datasources/versao_data_source.dart';
-import '../../../data/repositories/atualizacao_repository_impl.dart';
-import '../../../data/repositories/versao_repository_impl.dart';
-import '../../../domain/usecases/get_existe_versao_without_view.dart';
-import '../../../domain/usecases/get_find_last_versao.dart';
 import '../controller/splash_controller.dart';
 import '../injection/splash_injection.dart';
 
@@ -18,12 +12,6 @@ class Splash extends Screen {
   @override
   SplashInjection build(BuildContext context) {
     return SplashInjection(
-      getFindLastVersao: GetFindLastVersao(
-        VersaoRepositoryImpl(dataSource: VersaoDataSourceImpl())
-      ),
-      getExisteVersaoWithoutView: GetExisteVersaoWithoutView(
-        AtualizacaoRepositoryImpl(dataSource: AtualizacaoDataSourceImpl())
-      ),
       child: const ScreenBridge<SplashController, SplashInjection>(
         child: SplashView()
       )

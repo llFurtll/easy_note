@@ -6,9 +6,7 @@ import '../controller/home_controller.dart';
 
 // ignore: must_be_immutable
 class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
-  AppBarHomeViewWidget({super.key, super.context});
-
-  final TextEditingController textController = TextEditingController();
+  const AppBarHomeViewWidget({super.key, super.context});
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +164,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
       width: MediaQuery.of(context).size.width * 0.7,
       child: TextFormField(
         focusNode: controller.focusNode,
-        controller: textController,
+        controller: controller.textController,
         onChanged: (String value) {},
         decoration: const InputDecoration(
           hintText: "Pesquisar anotação",

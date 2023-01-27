@@ -13,6 +13,7 @@ class HomeController extends ScreenController {
   final FocusNode focusNode = FocusNode();
   final ValueNotifier<bool> isLoading = ValueNotifier(true);
   final List<Anotacao> anotacoes = [];
+  final TextEditingController textController = TextEditingController();
 
   late GetFindAllAnotacao getFindAllAnotacao;
 

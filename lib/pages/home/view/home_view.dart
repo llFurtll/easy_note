@@ -1,9 +1,6 @@
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/datasources/anotacao_data_source.dart';
-import '../../../data/repositories/anotacao_repository_impl.dart';
-import '../../../domain/usecases/get_find_all_anotacao.dart';
 import '../controller/home_controller.dart';
 import '../injection/home_injection.dart';
 import '../widgets/appbar_home_view_widget.dart';
@@ -17,9 +14,6 @@ class Home extends Screen {
   @override
   HomeInjection build(BuildContext context) {
     return HomeInjection(
-      getFindAllAnotacao: GetFindAllAnotacao(
-        AnotacaoRepositoryImpl(dataSource: AnotacaoDataSourceImpl())
-      ),
       child: const ScreenBridge<HomeController, HomeInjection>(
         child: HomeView(),
       )
@@ -36,13 +30,23 @@ class HomeView extends ScreenView<HomeController> {
     return Scaffold(
       body: GestureDetector(
         onTap: () => controller.removeFocus(),
-        child: CustomScrollView(
+        child: const CustomScrollView(
           slivers: [
-            AppBarHomeViewWidget(context: context),
-            ListNoteHomeViewWidget(context: context)
+            AppBarHomeViewWidget(),
+            ListNoteHomeViewWidget()
           ],
         ),
-      )
+      ),
+      floatingActionButton: _buildFab(context),
+    );
+  }
+
+  Widget _buildFab(BuildContext context) {
+    return FloatingActionButton(
+      elevation: 10,
+      backgroundColor: Theme.of(context).primaryColor,
+      onPressed: () {},
+      child: const Icon(Icons.add),
     );
   }
 }

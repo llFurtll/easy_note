@@ -16,4 +16,13 @@ class ConfiguracaoModel extends Configuracao {
       modulo: map["modulo"]
     );
   }
+  
+  factory ConfiguracaoModel.fromEntity(Configuracao configuracao) {
+    return ConfiguracaoModel(
+      id: configuracao.id,
+      identificador: configuracao.identificador,
+      valor: configuracao.valor,
+      modulo: configuracao.modulo
+    );
+  }
 }

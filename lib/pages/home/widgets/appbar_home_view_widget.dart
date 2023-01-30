@@ -85,11 +85,12 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
     return LayoutBuilder(
       builder: (context, constraints) {
         bool result = controller.verifySize(constraints);
+        final name = controller.nameUser.value;
 
         return FlexibleSpaceBar(
           title: Visibility(
             visible: result,
-            child: const Text("Daniel Melonari"),
+            child: Text(name.isEmpty ? "Digite seu nome aqui :)" : name)
           ),
           centerTitle: true,
           collapseMode: CollapseMode.parallax,
@@ -141,16 +142,19 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
       child: Wrap(
         spacing: 10.0,
         alignment: WrapAlignment.center,
-        children: const [
-          Text(
-            "Daniel Melonari",
-            style: TextStyle (
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0
+        children: [
+          ValueListenableBuilder(
+            valueListenable: controller.nameUser,
+            builder: (context, value, child) => Text(
+              value.isEmpty ? "Digite seu nome aqui :)" : value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0
+              ),
             ),
           ),
-          Icon(
+          const Icon(
             Icons.edit,
             color: Colors.white,
           )

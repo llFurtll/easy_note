@@ -8,6 +8,7 @@ import '../../../data/repositories/anotacao_repository_impl.dart';
 import '../../../data/repositories/usuario_repository_impl.dart';
 import '../../../domain/usecases/get_find_all_anotacao.dart';
 import '../../../domain/usecases/get_name_usuario.dart';
+import '../../../domain/usecases/get_photo_usuario.dart';
 import '../../../domain/usecases/get_save_name_usuario.dart';
 import '../controller/home_controller.dart';
 
@@ -22,6 +23,7 @@ class HomeInjection extends ScreenInjection<HomeController> {
   );
   final GetNameUsuario getNameUsuario = GetNameUsuario(_usuarioRepository);
   final GetSaveNameUsuario getSaveNameUsuario = GetSaveNameUsuario(_usuarioRepository);
+  final GetPhotoUsuario getPhotoUsuario = GetPhotoUsuario(_usuarioRepository);
 
   HomeInjection({
     super.key,

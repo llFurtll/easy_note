@@ -24,4 +24,21 @@ class UsuarioRepositoryImpl extends UsuarioRepository {
       return null;
     }
   }
+
+  @override
+  Future<String?> getPhoto(int idUsuario) async {
+    try {
+      return await dataSource.getPhoto(idUsuario);
+    } on StorageException catch (_) {
+      return null;
+    }
+  }
+  @override
+  Future<int?> updatePhoto(String path, int idUsuario) async {
+    try {
+      return await dataSource.updatePhoto(path, idUsuario);
+    } on StorageException catch (_) {
+      return null;
+    }
+  }
 }

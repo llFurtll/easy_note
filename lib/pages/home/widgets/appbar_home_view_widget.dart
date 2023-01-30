@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -112,23 +114,47 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
   }
 
   Widget _buildProfile(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: Colors.white,
-      radius: 58,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              width: 50.0,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white
-              ),
-              child: Icon(Icons.camera, color: Theme.of(context).primaryColor, size: 30.0),
+    return GestureDetector(
+      onTap: controller.showAlterPhoto,
+      child: ValueListenableBuilder(
+        valueListenable: controller.photoUser,
+        builder: (context, value, child) {
+          final path = value;
+
+          return CircleAvatar(
+            backgroundColor: Colors.white,
+            backgroundImage: path.isNotEmpty ?
+              FileImage(File(path)) :
+              null,
+            radius: 58,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: 50.0,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white
+                    ),
+                    child: Icon(Icons.camera, color: Theme.of(context).primaryColor, size: 30.0),
+                  )
+                ),
+                path.isEmpty ?
+                  Center(
+                    child: Text(
+                      "SEM FOTO",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold
+                      ),
+                    )
+                  ) :
+                  const Text("")
+              ],
             ),
-          )
-        ],
+          );
+        },
       ),
     );
   }
@@ -138,7 +164,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
       style: TextButton.styleFrom(
         foregroundColor: Colors.white
       ),
-      onPressed: () {},
+      onPressed: controller.showAlterName,
       child: Wrap(
         spacing: 10.0,
         alignment: WrapAlignment.center,

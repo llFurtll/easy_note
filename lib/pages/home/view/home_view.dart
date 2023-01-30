@@ -30,7 +30,7 @@ class HomeView extends ScreenView<HomeController> {
   Scaffold build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: () => controller.removeFocus(),
+        onTap: controller.removeFocus,
         child: const CustomScrollView(
           slivers: [
             AppBarHomeViewWidget(),

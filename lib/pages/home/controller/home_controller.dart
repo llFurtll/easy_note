@@ -6,21 +6,26 @@ import '../../../core/widgets/show_message.dart';
 import '../../../domain/entities/anotacao.dart';
 import '../../../domain/usecases/get_find_all_anotacao.dart';
 import '../../../domain/usecases/get_name_usuario.dart';
+import '../../../domain/usecases/get_photo_usuario.dart';
 import '../../../domain/usecases/get_save_name_usuario.dart';
 import '../../configuracao/configuracao_list/view/configuracao_list_view.dart';
 import '../../novo/novo_list/view/novo_list_view.dart';
 import '../../sobre/view/sobre_view.dart';
 import '../injection/home_injection.dart';
+import '../widgets/alter_name_home_view_widget.dart';
+import '../widgets/alter_photo_home_view_widget.dart';
 
 class HomeController extends ScreenController {
   // CASOS DE USO
   late final GetFindAllAnotacao getFindAllAnotacao;
   late final GetNameUsuario getNameUsuario;
   late final GetSaveNameUsuario getSaveNameUsuario;
+  late final GetPhotoUsuario getPhotoUsuario;
 
   // VALUE NOTIFIER
   final ValueNotifier<bool> isLoading = ValueNotifier(true);
   final ValueNotifier<String> nameUser = ValueNotifier("");
+  final ValueNotifier<String> photoUser = ValueNotifier("");
 
   // FOCUS
   final FocusNode focusNode = FocusNode();
@@ -41,6 +46,7 @@ class HomeController extends ScreenController {
     getFindAllAnotacao = ScreenInjection.of<HomeInjection>(context).getFindAllAnotacao;
     getNameUsuario = ScreenInjection.of<HomeInjection>(context).getNameUsuario;
     getSaveNameUsuario = ScreenInjection.of<HomeInjection>(context).getSaveNameUsuario;
+    getPhotoUsuario = ScreenInjection.of<HomeInjection>(context).getPhotoUsuario;
 
     Future.value()
       .then((_) => loadName())
@@ -49,6 +55,14 @@ class HomeController extends ScreenController {
           showMessage(context, "Erro ao tentar buscar o nome");
         } else {
           nameUser.value = result;
+        }
+      })
+      .then((_) => loadPhoto())
+      .then((result) {
+        if (result == null) {
+          showMessage(context, "Erro ao tentar buscar a foto");
+        } else {
+          photoUser.value = result;
         }
       })
       .then((_) => loadAnotacoes(""))
@@ -85,13 +99,34 @@ class HomeController extends ScreenController {
           if (result == null || result == 0) {
             showMessage(context, "Erro ao atualizar o nome do usuário, tente novamente!");
             nameUser.value = "";
+          } else {
+            Navigator.of(context).pop();
           }
         });
     }
   }
 
+  Future<String?> loadPhoto() async {
+    return await getPhotoUsuario(PhotoUsuarioParams(
+      idUsuario: 1
+    ));
+  }
+
   void removeFocus() {
     focusNode.unfocus();
+  }
+
+  void showAlterName() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => const AlterNameHomeViewWidget()
+    );
+  }
+
+  void showAlterPhoto() {
+    showDialog(context: context, builder: (context) => const AlterPhotoHomeViewWidget());
   }
 
   bool verifySize(BoxConstraints constraints) {

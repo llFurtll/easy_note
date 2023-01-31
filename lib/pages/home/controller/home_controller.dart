@@ -167,7 +167,7 @@ class HomeController extends ScreenController {
             showMessage(context, "Erro ao pegar imagem da galeria, por favor tente novamente!");
             return "";
           } else {
-            showMessage(context, "Ocorreu algum erro no processo, por favor tente novamente!");
+            showMessage(context, "Ocorreu algum erro no processo de alteração da imagem de perfil, por favor tente novamente!");
           }
         }
       })
@@ -213,7 +213,7 @@ class HomeController extends ScreenController {
         if (result != null && result.isNotEmpty) {
           photoUser.value = result;
         } else {
-          showMessage(context, "Ocorreu algum erro no processo, por favor tente novamente!");
+          showMessage(context, "Ocorreu algum erro no processo de alteração da imagem de perfil, por favor tente novamente!");
         }
       })
       .then((_) => Navigator.of(context).pop());

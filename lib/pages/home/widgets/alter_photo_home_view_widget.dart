@@ -45,13 +45,13 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
               )
             ),
           ),
-          removeOption ? Container(height: 1.0, color: Colors.black) : Container(),
-          removeOption ?
+          !removeOption ? Container(height: 1.0, color: Colors.black) : Container(),
+          !removeOption ?
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: color
               ),
-              onPressed: removeOption ? () async {
+              onPressed: !removeOption ? () async {
                 
               } : null,
               child: const Text(

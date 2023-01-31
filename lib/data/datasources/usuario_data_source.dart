@@ -57,12 +57,11 @@ class UsuarioDataSourceImpl extends UsuarioDataSource {
 
     try {
       final result = await connection.rawQuery(sql, [ idUsuario ]);
-
-      connection.close();
-
-      return result.first["nome"] as String;
+      return result.first["path_foto"] as String;
     } catch (e) {
       throw StorageException("error-get-photo");
+    } finally {
+      connection.close();
     }
   }
 

@@ -22,9 +22,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
             style: TextButton.styleFrom(
               foregroundColor: color
             ),
-            onPressed: () async {
-              
-            },
+            onPressed: controller.fromGallery,
             child: const Text(
               "Abrir da galeria",
               style: TextStyle(
@@ -38,8 +36,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
             style: TextButton.styleFrom(
               foregroundColor: color
             ),
-            onPressed: () async {
-            },
+            onPressed: controller.fromCamera,
             child: const Text(
               "Tirar foto",
               style: TextStyle(

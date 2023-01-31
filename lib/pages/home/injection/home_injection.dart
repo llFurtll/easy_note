@@ -10,6 +10,7 @@ import '../../../domain/usecases/get_find_all_anotacao.dart';
 import '../../../domain/usecases/get_name_usuario.dart';
 import '../../../domain/usecases/get_photo_usuario.dart';
 import '../../../domain/usecases/get_save_name_usuario.dart';
+import '../../../domain/usecases/get_save_photo_usuario.dart';
 import '../controller/home_controller.dart';
 
 // ignore: must_be_immutable
@@ -24,6 +25,7 @@ class HomeInjection extends ScreenInjection<HomeController> {
   final GetNameUsuario getNameUsuario = GetNameUsuario(_usuarioRepository);
   final GetSaveNameUsuario getSaveNameUsuario = GetSaveNameUsuario(_usuarioRepository);
   final GetPhotoUsuario getPhotoUsuario = GetPhotoUsuario(_usuarioRepository);
+  final GetSavePhotoUsuario getSavePhotoUsuario = GetSavePhotoUsuario(_usuarioRepository);
 
   HomeInjection({
     super.key,

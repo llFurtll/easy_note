@@ -1,0 +1,35 @@
+import 'package:image_picker/image_picker.dart';
+
+enum ImagePickerEnum {
+  camera,
+  gallery;
+
+  const ImagePickerEnum();
+
+  ImageSource fromImagePickerEnum(ImagePickerEnum source) {
+    return ImageSource.values.firstWhere((item) => item.index == source.index);
+  }
+}
+
+abstract class ImagePickerAbstract {
+  Future<String?> getImage(ImagePickerEnum source);
+}
+
+class ImagePickerEasyNote implements ImagePickerAbstract {
+  final ImagePicker _imagePicker = ImagePicker();
+
+  @override
+  Future<String?> getImage(ImagePickerEnum source) async {
+    try {
+      XFile? file = await _imagePicker.pickImage(source: source.fromImagePickerEnum(source));
+
+      if (file != null) {
+        return file.path;
+      }
+    } catch (_) {
+      return null;
+    }
+
+    return "";
+  }
+}

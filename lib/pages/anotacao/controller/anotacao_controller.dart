@@ -1,3 +1,17 @@
 import 'package:compmanager/screen_controller.dart';
+import 'package:flutter/material.dart';
 
-class AnotacaoController extends ScreenController {}
+class AnotacaoController extends ScreenController {
+  bool isEdit = false;
+  final showIcones = ValueNotifier(false);
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    int? idAnotacao = ModalRoute.of(context)!.settings.arguments as int?;
+    if (idAnotacao != null) {
+      isEdit = true;
+    }
+  }
+}

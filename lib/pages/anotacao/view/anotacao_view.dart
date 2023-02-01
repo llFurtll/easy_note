@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
 import '../injection/anotacao_injection.dart';
+import '../widgets/appbar_antotacao_view_widget.dart';
 
 class AnotacaoScreen extends Screen {
   static const routeAnotacao = "/anotacao";
@@ -24,6 +25,9 @@ class AnotacaoView extends ScreenView<AnotacaoController> {
 
   @override
   Scaffold build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBarAnotacaoViewWidget(),
+    );
   }
 }

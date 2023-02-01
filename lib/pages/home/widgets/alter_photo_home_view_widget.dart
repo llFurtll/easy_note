@@ -51,9 +51,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
               style: TextButton.styleFrom(
                 foregroundColor: color
               ),
-              onPressed: !removeOption ? () async {
-                
-              } : null,
+              onPressed: !removeOption ? controller.removePhoto : null,
               child: const Text(
                 "Remover foto",
                 style: TextStyle(

@@ -6,7 +6,7 @@ enum ImagePickerEnum {
 
   const ImagePickerEnum();
 
-  ImageSource fromImagePickerEnum(ImagePickerEnum source) {
+  ImageSource fromImagePicker(ImagePickerEnum source) {
     return ImageSource.values.firstWhere((item) => item.index == source.index);
   }
 }
@@ -21,7 +21,7 @@ class ImagePickerEasyNote implements ImagePickerAbstract {
   @override
   Future<String?> getImage(ImagePickerEnum source) async {
     try {
-      XFile? file = await _imagePicker.pickImage(source: source.fromImagePickerEnum(source));
+      XFile? file = await _imagePicker.pickImage(source: source.fromImagePicker(source));
 
       if (file != null) {
         return file.path;

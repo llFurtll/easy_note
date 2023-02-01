@@ -61,8 +61,8 @@ class HomeController extends ScreenController {
     Future.value()
       .then((_) => loadName())
       .then((result) {
-        if (result == null ) {
-          showMessage(context, "Erro ao tentar buscar o nome");
+        if (result == null) {
+          showMessage(context, "Erro ao tentar buscar o nome!");
         } else {
           nameUser.value = result;
         }
@@ -70,7 +70,7 @@ class HomeController extends ScreenController {
       .then((_) => _loadPhoto())
       .then((result) {
         if (result == null) {
-          showMessage(context, "Erro ao tentar buscar a foto");
+          showMessage(context, "Erro ao tentar buscar a foto de perfil!");
         } else {
           photoUser.value = result;
         }
@@ -94,7 +94,7 @@ class HomeController extends ScreenController {
     ));
   }
 
-  void saveName() async{
+  void saveName(){
     if (formKeyAlterName.currentState!.validate()) {
       formKeyAlterName.currentState!.save();
 
@@ -139,41 +139,18 @@ class HomeController extends ScreenController {
     showDialog(context: context, builder: (context) => const AlterPhotoHomeViewWidget());
   }
 
-  void fromGallery() async {
+  void fromGallery() {
     Navigator.of(context).pop();
 
     Future.value()
       .then((_) => showLoading(context))
-      .then((_) async => await imagePicker.getImage(ImagePickerEnum.gallery))
-      .then((result) async {
-        if (result != null && result.isNotEmpty) {
-          await _deleteOldPhoto();
-          final extension = result.split(".").last;
-          bool saveFile = await _saveFile(result, "perfil", "${DateTime.now().toIso8601String()}.$extension");
-
-          if (!saveFile) {
-            return "";
-          }
-          
-          int? save = await _savePhotoUser(result);
-
-          if (save != null && save > 0) {
-            return result;
-          }
-          
-          return "";
-        } else {
-          if (result == null) {
-            showMessage(context, "Erro ao pegar imagem da galeria, por favor tente novamente!");
-            return "";
-          } else {
-            showMessage(context, "Ocorreu algum erro no processo de alteração da imagem de perfil, por favor tente novamente!");
-          }
-        }
-      })
+      .then((_) => imagePicker.getImage(ImagePickerEnum.gallery))
+      .then((result) => _savePhotoUser(result))
       .then((result) {
-        if (result != null && result.isNotEmpty) {
+        if (result.isNotEmpty) {
           photoUser.value = result;
+        } else if (result == "-1" || result == "0") {
+          showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
         }
       })
       .then((_) => Navigator.of(context).pop());
@@ -184,36 +161,13 @@ class HomeController extends ScreenController {
     
     Future.value()
       .then((_) => showLoading(context))
-      .then((_) async => await imagePicker.getImage(ImagePickerEnum.camera))
-      .then((result) async {
-        if (result != null && result.isNotEmpty) {
-          await _deleteOldPhoto();
-          final extension = result.split(".").last;
-          bool saveFile = await _saveFile(result, "perfil", "${DateTime.now().toIso8601String()}.$extension");
-
-          if (!saveFile) {
-            return "";
-          }
-
-          int? save = await _savePhotoUser(result);
-
-          if (save != null && save > 0) {
-            return result;
-          }
-          
-          return "";
-        } else {
-          if (result == null) {
-            showMessage(context, "Erro ao capturar imagem, por favor tente novamente!");
-            return null;
-          }
-        }
-      })
+      .then((_) => imagePicker.getImage(ImagePickerEnum.camera))
+      .then((result) => _savePhotoUser(result))
       .then((result) {
-        if (result != null && result.isNotEmpty) {
+        if (result.isNotEmpty) {
           photoUser.value = result;
-        } else {
-          showMessage(context, "Ocorreu algum erro no processo de alteração da imagem de perfil, por favor tente novamente!");
+        } else if (result == "-1" || result == "0") {
+          showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
         }
       })
       .then((_) => Navigator.of(context).pop());
@@ -230,11 +184,50 @@ class HomeController extends ScreenController {
     return await saveFile(pathFile, path, nomeFile);
   }
 
-  Future<int?> _savePhotoUser(String path) async {
-    return await getSavePhotoUsuario(SavePhotoUsuarioParams(
-      idUsuario: 1,
-      path: path
-    ));
+  Future<String> _savePhotoUser(String? path) async {
+    if (path != null && path.isNotEmpty) {
+      await _deleteOldPhoto();
+      final extension = path.split(".").last;
+      bool saveFile = await _saveFile(path, "perfil", "${DateTime.now().toIso8601String()}.$extension");
+
+      if (!saveFile) {
+        return "-1";
+      }
+      
+      int? save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
+        idUsuario: 1,
+        path: path
+      ));
+
+      if (save != null && save > 0) {
+        return path;
+      } else {
+        return "0";
+      }
+    }
+
+    return "";
+  }
+
+  Future<void> removePhoto() async {
+    showLoading(context);
+
+    await _deleteOldPhoto();
+
+    Future.value()
+      .then((_) => getSavePhotoUsuario(SavePhotoUsuarioParams(
+        idUsuario: 1,
+        path: ""
+      )))
+      .then((result) {
+        Navigator.of(context).pop();
+        if (result != null && result > 0) {
+          photoUser.value = "";
+          showMessage(context, "Foto de perfil removida com sucesso!");
+        } else {
+          showMessage(context, "Não foi possível remover a foto de perfil, tente novamente!");
+        }
+      });
   }
 
   bool verifySize(BoxConstraints constraints) {

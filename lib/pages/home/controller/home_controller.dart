@@ -210,6 +210,7 @@ class HomeController extends ScreenController {
   }
 
   Future<void> removePhoto() async {
+    Navigator.of(context).pop();
     showLoading(context);
 
     await _deleteOldPhoto();

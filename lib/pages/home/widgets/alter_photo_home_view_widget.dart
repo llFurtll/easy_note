@@ -10,59 +10,65 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
   Widget build(BuildContext context) {
     super.build(context);
 
-    final removeOption = controller.nameUser.value.isEmpty;
     final color = Theme.of(context).primaryColor.withOpacity(0.5);
 
-    return AlertDialog(
-      title: const Text("Escolha uma das opções"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: color
-            ),
-            onPressed: controller.fromGallery,
-            child: const Text(
-              "Abrir da galeria",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black
-              )
-            ),
-          ),
-          Container(height: 1.0, color: Colors.black),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: color
-            ),
-            onPressed: controller.fromCamera,
-            child: const Text(
-              "Tirar foto",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black
-              )
-            ),
-          ),
-          !removeOption ? Container(height: 1.0, color: Colors.black) : Container(),
-          !removeOption ?
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: color
+    return ValueListenableBuilder(
+      valueListenable: controller.photoUser,
+      builder: (context, value, child) {
+        final removeOption = value.isEmpty;
+
+        return AlertDialog(
+          title: const Text("Escolha uma das opções"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: color
+                ),
+                onPressed: controller.fromGallery,
+                child: const Text(
+                  "Abrir da galeria",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                  )
+                ),
               ),
-              onPressed: !removeOption ? controller.removePhoto : null,
-              child: const Text(
-                "Remover foto",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black
-                )
+              Container(height: 1.0, color: Colors.black),
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: color
+                ),
+                onPressed: controller.fromCamera,
+                child: const Text(
+                  "Tirar foto",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                  )
+                ),
               ),
-            ) :
-            Container()
-        ],
-      ),
+              !removeOption ? Container(height: 1.0, color: Colors.black) : Container(),
+              !removeOption ?
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: color
+                  ),
+                  onPressed: !removeOption ? controller.removePhoto : null,
+                  child: const Text(
+                    "Remover foto",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black
+                    )
+                  ),
+                ) :
+                Container()
+            ],
+          ),
+        );
+      },
     );
   }
 }

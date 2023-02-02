@@ -186,7 +186,6 @@ class HomeController extends ScreenController {
 
   Future<String> _savePhotoUser(String? path) async {
     if (path != null && path.isNotEmpty) {
-      await _deleteOldPhoto();
       final extension = path.split(".").last;
       bool saveFile = await _saveFile(path, "perfil", "${DateTime.now().toIso8601String()}.$extension");
 
@@ -200,6 +199,7 @@ class HomeController extends ScreenController {
       ));
 
       if (save != null && save > 0) {
+        await _deleteOldPhoto();
         return path;
       } else {
         return "0";

@@ -2,8 +2,8 @@ import 'package:compmanager/screen_controller.dart';
 import 'package:flutter/material.dart';
 
 class AnotacaoController extends ScreenController {
-  bool isEdit = false;
   final showIcones = ValueNotifier(false);
+  bool isEdit = false;
 
   @override
   void onInit() {

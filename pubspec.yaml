@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   compmanager:
-    git: https://github.com/llFurtll/compmanager.git
+    git: https://github.com/llFurtll/screen_manager.git
   font_awesome_flutter: ^10.3.0
   flutter_svg: ^1.1.6
   url_launcher: ^6.1.7
@@ -42,6 +42,7 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   image_picker: ^0.8.6+1
+  flutter_quill: ^6.1.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

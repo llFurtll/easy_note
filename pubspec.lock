@@ -157,13 +157,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.17.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -218,20 +211,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_colorpicker:
-    dependency: transitive
-    description:
-      name: flutter_colorpicker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.0"
-  flutter_inappwebview:
-    dependency: transitive
-    description:
-      name: flutter_inappwebview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.7.2+3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -270,13 +249,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_widget_from_html_core:
-    dependency: transitive
-    description:
-      name: flutter_widget_from_html_core
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.2"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -305,13 +277,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.15.1"
   http:
     dependency: transitive
     description:
@@ -564,13 +529,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
-  rich_editor:
-    dependency: "direct main"
-    description:
-      name: rich_editor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5"
   shelf:
     dependency: transitive
     description:
@@ -779,13 +737,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
-  xml2json:
-    dependency: transitive
-    description:
-      name: xml2json
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.3.6"
   yaml:
     dependency: transitive
     description:

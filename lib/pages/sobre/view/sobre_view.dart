@@ -176,10 +176,17 @@ class SobreView extends ScreenView<SobreController> {
 
   Future<void> _launchUrl(String url, BuildContext context) async {
     Uri newUrl = Uri.parse(url);
-    if (await canLaunchUrl(newUrl)) {
-      await launchUrl(newUrl);
-    } else {
-      showMessage(context, "Não foi possível abrir o link!");
-    }
+
+    Future.value()
+      .then((value) => canLaunchUrl(newUrl))
+      .then((result) async {
+        if (result) {
+          await launchUrl(newUrl);
+          return false;
+        }
+
+        return true;
+      })
+      .then((hasError) => hasError ? showMessage(context, "Não foi possível abrir o link!") : null);
   }
 }

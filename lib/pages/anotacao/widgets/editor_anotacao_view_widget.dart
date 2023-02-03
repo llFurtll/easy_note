@@ -1,7 +1,6 @@
 import 'package:compmanager/screen_widget.dart';
 import 'package:easy_note/core/widgets/spacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 
 import '../controller/anotacao_controller.dart';
 
@@ -12,12 +11,11 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
   Widget build(BuildContext context) {
     super.build(context);
 
-    return _buildBody();
+    return _buildBody(context);
   }
 
-  Widget _buildBody() {
-    return Container(
-      color: Colors.red,
+  Widget _buildBody(BuildContext context) {
+    return SizedBox(
       child: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -26,9 +24,9 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
             children: [
               _buildTitle(),
               spacer(10.0),
-              _buildToolbar(),
+              _buildToolbar(context),
               spacer(10.0),
-              _buildEditor()
+              _buildEditor(context)
             ],
           ),
         )
@@ -50,25 +48,11 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
     );
   }
 
-  Widget _buildToolbar() {
-    return QuillToolbar.basic(
-      iconTheme: const QuillIconTheme(
-        borderRadius: 10.0
-      ),
-      controller: controller.quillController,
-      locale: const Locale("pt-BR"),
-      toolbarIconAlignment: WrapAlignment.start
-    );
+  Widget _buildToolbar(BuildContext context) {
+    return const SizedBox.shrink();
   }
 
-  Widget _buildEditor() {
-    return Expanded(
-      child: SizedBox(
-        child: QuillEditor.basic(
-          controller: controller.quillController,
-          readOnly: false
-        ),
-      ),
-    );
+  Widget _buildEditor(BuildContext context) {
+    return const SizedBox.shrink();
   }
 }

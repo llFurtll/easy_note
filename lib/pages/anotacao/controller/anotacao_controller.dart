@@ -1,7 +1,8 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_quill/flutter_quill.dart';
 class AnotacaoController extends ScreenController {
+  final quillController = QuillController.basic();
   final showIcones = ValueNotifier(false);
   bool isEdit = false;
 

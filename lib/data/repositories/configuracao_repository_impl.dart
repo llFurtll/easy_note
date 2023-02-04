@@ -1,4 +1,6 @@
 import '../../core/exceptions/custom_exceptions.dart';
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../../domain/entities/configuracao.dart';
 import '../../domain/repositories/configuracao_repository.dart';
 import '../datasources/configuracao_data_source.dart';
@@ -10,20 +12,22 @@ class ConfiguracaoRepositoryImpl extends ConfiguracaoRepository {
   ConfiguracaoRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Map<String, int>?> findAllConfigByModulo(String modulo) async {
+  Future<Result<Failure, Map<String, int>>> findAllConfigByModulo(String modulo) async {
     try {
-      return await dataSource.findAllConfigByModulo(modulo);
+      final result = await dataSource.findAllConfigByModulo(modulo);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-find-all-config-by-modulo"));
     }
   }
 
   @override
-  Future<int?> updateConfig(Configuracao configuracao) async {
+  Future<Result<Failure, int>> updateConfig(Configuracao configuracao) async {
     try {
-      return await dataSource.updateConfig(ConfiguracaoModel.fromEntity(configuracao));
+      final result = await dataSource.updateConfig(ConfiguracaoModel.fromEntity(configuracao));
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-update-config"));
     }
   }
 }

@@ -1,4 +1,6 @@
 import '../../core/exceptions/custom_exceptions.dart';
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../../domain/repositories/usuario_repository.dart';
 import '../datasources/usuario_data_source.dart';
 
@@ -8,37 +10,41 @@ class UsuarioRepositoryImpl extends UsuarioRepository {
   UsuarioRepositoryImpl({required this.dataSource});
 
   @override
-  Future<int?> updateName(String name, int idUsuario) async {
+  Future<Result<Failure, int>> updateName(String name, int idUsuario) async {
     try {
-      return await dataSource.updateName(name, idUsuario);
+      final result = await dataSource.updateName(name, idUsuario);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-update-name"));
     }
   }
 
   @override
-  Future<String?> getName(int idUsuario) async {
+  Future<Result<Failure, String>> getName(int idUsuario) async {
     try {
-      return await dataSource.getName(idUsuario);
+      final result = await dataSource.getName(idUsuario);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-get-name"));
     }
   }
 
   @override
-  Future<String?> getPhoto(int idUsuario) async {
+  Future<Result<Failure, String>> getPhoto(int idUsuario) async {
     try {
-      return await dataSource.getPhoto(idUsuario);
+      final result = await dataSource.getPhoto(idUsuario);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-get-photo"));
     }
   }
   @override
-  Future<int?> updatePhoto(String path, int idUsuario) async {
+  Future<Result<Failure, int>> updatePhoto(String path, int idUsuario) async {
     try {
-      return await dataSource.updatePhoto(path, idUsuario);
+      final result = await dataSource.updatePhoto(path, idUsuario);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-update-photo"));
     }
   }
 }

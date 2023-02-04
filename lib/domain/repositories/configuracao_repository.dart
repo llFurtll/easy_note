@@ -1,6 +1,8 @@
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../entities/configuracao.dart';
 
 abstract class ConfiguracaoRepository {
-  Future<Map<String, int>?> findAllConfigByModulo(String modulo);
-  Future<int?> updateConfig(Configuracao configuracao);
+  Future<Result<Failure, Map<String, int>>> findAllConfigByModulo(String modulo);
+  Future<Result<Failure, int>> updateConfig(Configuracao configuracao);
 }

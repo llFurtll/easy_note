@@ -1,3 +1,6 @@
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
+
 abstract class VisualizacaoRepository {
-  Future<int?> insertVisualizacao(int idUsuario, int idVersao);
+  Future<Result<Failure, int>> insertVisualizacao(int idUsuario, int idVersao);
 }

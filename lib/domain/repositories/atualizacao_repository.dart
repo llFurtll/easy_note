@@ -1,6 +1,8 @@
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../entities/atualizacao.dart';
 
 abstract class AtualizacaoRepository {
-  Future<List<Atualizacao>?> findAtualizacoesByVersao(int idVersao);
-  Future<bool?> existeVersaoWithoutView(int idVersao);
+  Future<Result<Failure, List<Atualizacao>>> findAtualizacoesByVersao(int idVersao);
+  Future<Result<Failure, bool>> existeVersaoWithoutView(int idVersao);
 }

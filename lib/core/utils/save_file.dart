@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-Future<bool> saveFile(String pathFile, String path, String nomeFile) async {
+Future<String?> saveFile(String pathFile, String path, String nomeFile) async {
   final pathBase = (await getApplicationDocumentsDirectory()).path;
   final pathFinal = Directory("$pathBase/$path");
 
@@ -15,8 +15,8 @@ Future<bool> saveFile(String pathFile, String path, String nomeFile) async {
     String pathToSave = "${pathFinal.path}/$nomeFile";
     file.copy(pathToSave);
 
-    return true;
+    return pathToSave;
   } catch (_) {
-    return false;
+    return null;
   }
 }

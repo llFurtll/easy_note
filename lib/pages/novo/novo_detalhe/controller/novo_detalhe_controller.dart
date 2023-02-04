@@ -3,6 +3,8 @@ import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/arguments/novo_detalhe_view_arguments.dart';
+import '../../../../core/failures/failures.dart';
+import '../../../../core/result/result.dart';
 import '../../../../core/widgets/show_loading.dart';
 import '../../../../domain/entities/atualizacao.dart';
 import '../../../../domain/usecases/get_find_atualizacao_by_versao.dart';
@@ -25,12 +27,16 @@ class NovoDetalheController extends ScreenController {
 
     Future.value()
       .then((_) => _onLoadAtualizacao(arguments.idVersao))
-      .then((value) {
-        if (value == null || value.isEmpty) {
-          isError = false;
-        } else {
-          lista.addAll(value);
-        }
+      .then((response) {
+        response.fold((left) {
+          isError = true;
+        }, (right) {
+          if (right.isEmpty) {
+            isError = true;
+          } else {
+            lista.addAll(right);
+          }
+        });
       })
       .then((_) => isLoading.value = false);
   }
@@ -53,11 +59,7 @@ class NovoDetalheController extends ScreenController {
     }
   }
 
-  Future<List<Atualizacao>?> _onLoadAtualizacao(int? idVersao) async {
-    if (idVersao == null) {
-      return null;
-    }
-
+  Future<Result<Failure, List<Atualizacao>>> _onLoadAtualizacao(int idVersao) async {
     final getAtualizacoes = ScreenInjection.of<NovoDetalheInjection>(context).getFindAtualizacaoByVersao;
     return await getAtualizacoes(FindAtualizacaoByVersaoParams(idVersao: idVersao));
   }

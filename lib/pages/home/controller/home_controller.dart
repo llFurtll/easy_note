@@ -3,6 +3,8 @@ import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/adapters/image_picker.dart';
+import '../../../core/failures/failures.dart';
+import '../../../core/result/result.dart';
 import '../../../core/utils/delete_file.dart';
 import '../../../core/utils/save_file.dart';
 import '../../../core/widgets/show_loading.dart';
@@ -61,34 +63,41 @@ class HomeController extends ScreenController {
     Future.value()
       .then((_) => loadName())
       .then((result) {
-        if (result == null) {
+        result.fold((left) {
           showMessage(context, "Erro ao tentar buscar o nome!");
-        } else {
-          nameUser.value = result;
-        }
+        }, (right) {
+          if (right.isNotEmpty) {
+            nameUser.value = right;
+          }
+        });
       })
       .then((_) => _loadPhoto())
       .then((result) {
-        if (result == null) {
+        result.fold((left) {
           showMessage(context, "Erro ao tentar buscar a foto de perfil!");
-        } else {
-          photoUser.value = result;
-        }
+        }, (right) {
+          if (right.isNotEmpty) {
+            photoUser.value = right;
+          }
+        });
       })
       .then((_) => loadAnotacoes(""))
-      .then((value) {
-        if (value != null && value.isNotEmpty) {
-          anotacoes.addAll(value);
-        }
+      .then((response) {
+        response.fold((left) => null, (right) {
+          if (right.isNotEmpty) {
+            anotacoes.addAll(right);
+          }
+        });
+
       })
       .then((_) => isLoading.value = false);
   }
 
-  Future<List<Anotacao>?> loadAnotacoes(String descricao) async {
+  Future<Result<Failure, List<Anotacao>>> loadAnotacoes(String descricao) async {
     return await getFindAllAnotacao(FindAllAnotacaoParams(descricao: descricao));
   }
 
-  Future<String?> loadName() async {
+  Future<Result<Failure, String>> loadName() async {
     return await getNameUsuario(NameUsuarioParams(
       idUsuario: 1
     ));
@@ -106,17 +115,19 @@ class HomeController extends ScreenController {
           )
         ))
         .then((result) {
-          if (result == null || result == 0) {
-            showMessage(context, "Erro ao atualizar o nome do usuário, tente novamente!");
-            nameUser.value = "";
-          } else {
-            Navigator.of(context).pop();
-          }
+          result.fold((left) => null, (right) {
+            if (right == 0) {
+              showMessage(context, "Erro ao atualizar o nome do usuário, tente novamente!");
+              nameUser.value = "";
+            } else {
+              Navigator.of(context).pop();
+            }
+          });
         });
     }
   }
 
-  Future<String?> _loadPhoto() async {
+  Future<Result<Failure, String>> _loadPhoto() async {
     return await getPhotoUsuario(PhotoUsuarioParams(
       idUsuario: 1
     ));
@@ -174,36 +185,42 @@ class HomeController extends ScreenController {
   }
 
   Future<void> _deleteOldPhoto() async {
-    String? otherPhoto = await _loadPhoto();
-    if (otherPhoto != null && otherPhoto.isNotEmpty) {
-      deleteFile(otherPhoto);
-    }
+    final otherPhoto = await _loadPhoto();
+    otherPhoto.fold((left) => null, (right) {
+      if (right.isNotEmpty) {
+        deleteFile(right);
+      }
+    });
   }
 
-  Future<bool> _saveFile(String pathFile, String path, String nomeFile) async {
+  Future<String?> _saveFile(String pathFile, String path, String nomeFile) async {
     return await saveFile(pathFile, path, nomeFile);
   }
 
   Future<String> _savePhotoUser(String? path) async {
     if (path != null && path.isNotEmpty) {
       final extension = path.split(".").last;
-      bool saveFile = await _saveFile(path, "perfil", "${DateTime.now().toIso8601String()}.$extension");
+      String? pathSave = await _saveFile(path, "perfil", "${DateTime.now().toIso8601String()}.$extension");
 
-      if (!saveFile) {
+      if (pathSave == null) {
         return "-1";
       }
+
+      path = pathSave;
       
-      int? save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
+      final save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
         idUsuario: 1,
         path: path
       ));
 
-      if (save != null && save > 0) {
-        await _deleteOldPhoto();
-        return path;
-      } else {
-        return "0";
-      }
+      return save.fold((left) => "", (right) async {
+        if (right > 0) {
+          await _deleteOldPhoto();
+          return path!;
+        } else {
+          return "0";
+        }
+      });
     }
 
     return "";
@@ -222,12 +239,16 @@ class HomeController extends ScreenController {
       )))
       .then((result) {
         Navigator.of(context).pop();
-        if (result != null && result > 0) {
-          photoUser.value = "";
-          showMessage(context, "Foto de perfil removida com sucesso!");
-        } else {
+        result.fold((left) {
           showMessage(context, "Não foi possível remover a foto de perfil, tente novamente!");
-        }
+        }, (right) {
+          if (right > 0) {
+            photoUser.value = "";
+            showMessage(context, "Foto de perfil removida com sucesso!");
+          } else {
+            showMessage(context, "Não foi possível remover a foto de perfil, tente novamente!");
+          }
+        });
       });
   }
 

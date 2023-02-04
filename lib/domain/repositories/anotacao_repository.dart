@@ -1,5 +1,7 @@
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../entities/anotacao.dart';
 
 abstract class AnotacaoRepository {
-  Future<List<Anotacao>?> findAll(String descricao);
+  Future<Result<Failure, List<Anotacao>>> findAll(String descricao);
 }

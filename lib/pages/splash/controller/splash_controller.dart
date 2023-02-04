@@ -3,6 +3,8 @@ import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/arguments/novo_detalhe_view_arguments.dart';
+import '../../../core/failures/failures.dart';
+import '../../../core/result/result.dart';
 import '../../../core/storage/storage.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/get_existe_versao_without_view.dart';
@@ -16,17 +18,24 @@ class SplashController extends ScreenController {
     super.onInit();
 
     Future.value()
-      .then((_) async => await StorageImpl().initStorage())
+      .then((_) => StorageImpl().initStorage())
       .then((_) => Future.delayed(const Duration(seconds: 2)))
       .then((_) => getVersao())
-      .then((idVersao) async {
-        if (idVersao != null) {
-          final existe = await getExisteVersaoWithoutView(idVersao);
+      .then((response) async {
+        return response.fold((left) => null, (idVersao) async {
+          if (idVersao != 0) {
+            final existe = await getExisteVersaoWithoutView(idVersao);
+            return existe.fold((left) => null, (right) {
+              if (right) {
+                return idVersao;
+              }
 
-          if (existe != null && existe) return idVersao;
-        }
+              return null;
+            });
+          }
 
-        return null;
+          return null;
+        });
       })
       .then((result) {
         if (result == null) {
@@ -40,12 +49,12 @@ class SplashController extends ScreenController {
       });
   }
 
-  Future<int?> getVersao() async {
+  Future<Result<Failure, int>> getVersao() async {
     final getFindLastVersao = ScreenInjection.of<SplashInjection>(context).getFindLastVersao;
     return await getFindLastVersao(NoParams());
   }
 
-  Future<bool?> getExisteVersaoWithoutView(int idVersao) async {
+  Future<Result<Failure, bool>> getExisteVersaoWithoutView(int idVersao) async {
     final getExisteVersaoWithoutView = ScreenInjection.of<SplashInjection>(context).getExisteVersaoWithoutView;
     return await getExisteVersaoWithoutView(GetExisteVersaoWithoutViewParams(idVersao: idVersao));
   }

@@ -2,6 +2,8 @@ import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/failures/failures.dart';
+import '../../../../core/result/result.dart';
 import '../../../../core/widgets/show_loading.dart';
 import '../../../../core/widgets/show_message.dart';
 import '../../../../domain/entities/configuracao.dart';
@@ -38,21 +40,26 @@ class ConfiguracaoEditController extends ScreenController {
     Future.value()
       .then((_) => _loadConfigs(modulo))
       .then((response) {
-        if (response == null || response.isEmpty) {
+        response.fold((left) {
           isError = true;
           return;
-        }
+        }, (right) {
+           if (right.isEmpty) {
+            isError = true;
+            return;
+          }
 
-        for (var identificador in response.keys) {
-          configs.add(
-            ItemListConfiguracaoEditViewWidget(identificador: identificador, valor: response[identificador]!)
-          );
-        }
+          for (var identificador in right.keys) {
+            configs.add(
+              ItemListConfiguracaoEditViewWidget(identificador: identificador, valor: right[identificador]!)
+            );
+          }
+        });
       })
       .then((_) => isLoading.value = false);
   }
 
-  Future<Map<String, int>?> _loadConfigs(String modulo) async {
+  Future<Result<Failure, Map<String, int>>> _loadConfigs(String modulo) async {
     final getFindAllConfigByModulo = ScreenInjection.of<ConfiguracaoEditInjection>(context).getFindAllConfigByModulo;
     return await getFindAllConfigByModulo(FindAllConfigByModulo(modulo: modulo)); 
   }
@@ -77,9 +84,13 @@ class ConfiguracaoEditController extends ScreenController {
             configuracao: config
           ));
 
-          if (result == null || result == 0) {
-            return true;
-          }
+          return result.fold((left) => true, (right) {
+            if (right == 0) {
+              return true;
+            }
+
+            return false;
+          });
         }
 
         return false;

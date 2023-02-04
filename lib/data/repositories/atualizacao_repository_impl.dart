@@ -1,4 +1,6 @@
 import '../../core/exceptions/custom_exceptions.dart';
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../../domain/entities/atualizacao.dart';
 import '../../domain/repositories/atualizacao_repository.dart';
 import '../datasources/atualizacao_data_source.dart';
@@ -9,20 +11,22 @@ class AtualizacaoRepositoryImpl implements AtualizacaoRepository {
   const AtualizacaoRepositoryImpl({required this.dataSource});
 
   @override
-  Future<List<Atualizacao>?> findAtualizacoesByVersao(int idVersao) async {
+  Future<Result<Failure, List<Atualizacao>>> findAtualizacoesByVersao(int idVersao) async {
     try {
-      return await dataSource.findAtualizacoesByVersao(idVersao);
+      final result = await dataSource.findAtualizacoesByVersao(idVersao);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-find-atualizacao-by-versao"));
     }
   }
 
   @override
-  Future<bool?> existeVersaoWithoutView(int idVersao) async {
+  Future<Result<Failure, bool>> existeVersaoWithoutView(int idVersao) async {
     try {
-      return await dataSource.existeVersaoWithoutView(idVersao);
+      final result = await dataSource.existeVersaoWithoutView(idVersao);
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-existe-versao-without-view"));
     }
   }
 }

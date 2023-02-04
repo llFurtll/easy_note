@@ -3,6 +3,8 @@ import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/arguments/novo_detalhe_view_arguments.dart';
+import '../../../../core/failures/failures.dart';
+import '../../../../core/result/result.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../../domain/entities/versao.dart';
 import '../../novo_detalhe/view/novo_detalhe_view.dart';
@@ -21,11 +23,15 @@ class NovoListController extends ScreenController {
     Future.value()
       .then((_) => _onLoadVersoes())
       .then((result) {
-        if (result == null || result.isEmpty) {
+        result.fold((left) {
           isError = true;
-        } else {
-          versoes.addAll(result);
-        }
+        }, (right) {
+          if (right.isEmpty) {
+            isError = true;
+          } else {
+            versoes.addAll(right);
+          }
+        });
       })
       .then((_) => isLoading.value = false);
   }
@@ -37,7 +43,7 @@ class NovoListController extends ScreenController {
     );
   }
 
-  Future<List<Versao>?> _onLoadVersoes() async {
+  Future<Result<Failure, List<Versao>>> _onLoadVersoes() async {
     final getFindAllVersao = ScreenInjection.of<NovoListInjection>(context).getFindAllVersao;
     return await getFindAllVersao(NoParams());
   }

@@ -1,4 +1,6 @@
 import '../../core/exceptions/custom_exceptions.dart';
+import '../../core/failures/failures.dart';
+import '../../core/result/result.dart';
 import '../../domain/entities/versao.dart';
 import '../../domain/repositories/versao_repository.dart';
 import '../datasources/versao_data_source.dart';
@@ -9,20 +11,22 @@ class VersaoRepositoryImpl implements VersaoRepository {
   const VersaoRepositoryImpl({required this.dataSource});
 
   @override
-  Future<List<Versao>?> findAll() async {
+  Future<Result<Failure, List<Versao>>> findAll() async {
     try {
-      return await dataSource.findAll();
+      final result = await dataSource.findAll();
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-find-all-versao"));
     }
   }
 
   @override
-  Future<int?> findLastVersao() async {
+  Future<Result<Failure, int>> findLastVersao() async {
     try {
-      return await dataSource.findLastVersao();
+      final result = await dataSource.findLastVersao();
+      return Right(result);
     } on StorageException catch (_) {
-      return null;
+      return Left(StorageFailure(message: "error-find-last-versao"));
     }
   }
 }

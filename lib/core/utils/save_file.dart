@@ -5,8 +5,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<String?> saveFile(String pathFile, String folder) async {
-  String pathBase = (await getApplicationDocumentsDirectory()).path;
-  File pathFinal = File("$pathBase/$folder/");
+  String pathBase = (await getExternalStorageDirectory())!.path;
+  Directory pathFinal = Directory("$pathBase/$folder");
   final ext = extension(pathFile);
 
   final nameFile = "${UniqueKey().hashCode}$ext";
@@ -17,8 +17,7 @@ Future<String?> saveFile(String pathFile, String folder) async {
     }
 
     File cacheFile = File(pathFile);
-    String pathToSave = "${pathFinal.path}/$nameFile";
-    await cacheFile.copy(pathToSave);
+    await cacheFile.copy("${pathFinal.path}/$nameFile");
 
     return "$pathBase/$folder/$nameFile";
   } catch (_) {

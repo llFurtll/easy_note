@@ -122,8 +122,8 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
         builder: (context, value, child) {
           final path = value;
 
-          getApplicationDocumentsDirectory().then((result) {
-            final dir = Directory("${result.path}/perfil");
+          getExternalStorageDirectory().then((result) {
+            final dir = Directory("${result!.path}/perfil");
             print(dir.listSync());
           });
 

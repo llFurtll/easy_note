@@ -1,6 +1,8 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
+import 'package:easy_note/core/utils/get_path_file.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as ph;
 
 import '../../../core/adapters/image_picker.dart';
 import '../../../core/failures/failures.dart';
@@ -173,7 +175,7 @@ class HomeController extends ScreenController {
       .then((_) => imagePicker.getImage(ImagePickerEnum.camera))
       .then((result) => _savePhotoUser(result))
       .then((result) {
-        if (result.isNotEmpty) {
+        if (result.isNotEmpty && result != "-1" && result != "0") {
           photoUser.value = result;
         } else if (result == "-1" || result == "0") {
           showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
@@ -191,20 +193,17 @@ class HomeController extends ScreenController {
     });
   }
 
-  Future<String?> _saveFile(String pathFile, String path, String nomeFile) async {
-    return await saveFile(pathFile, path, nomeFile);
+  Future<String?> _saveFile(String pathFile, String path) async {
+    return await saveFile(pathFile, path);
   }
 
   Future<String> _savePhotoUser(String? path) async {
     if (path != null && path.isNotEmpty) {
-      final extension = path.split(".").last;
-      String? pathSave = await _saveFile(path, "perfil", "${DateTime.now().toIso8601String()}.$extension");
+      path = await _saveFile(path, "perfil");
 
-      if (pathSave == null) {
+      if (path == null) {
         return "-1";
       }
-
-      path = pathSave;
       
       final save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
         idUsuario: 1,
@@ -225,12 +224,10 @@ class HomeController extends ScreenController {
   }
 
   Future<void> removePhoto() async {
-    Navigator.of(context).pop();
-    showLoading(context);
-
-    await _deleteOldPhoto();
-
     Future.value()
+      .then((_) => Navigator.of(context).pop())
+      .then((_) => showLoading(context))
+      .then((_) => _deleteOldPhoto())
       .then((_) => getSavePhotoUsuario(SavePhotoUsuarioParams(
         idUsuario: 1,
         path: ""

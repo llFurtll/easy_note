@@ -151,9 +151,8 @@ class HomeController extends ScreenController {
   }
 
   void fromGallery() {
-    Navigator.of(context).pop();
-
     Future.value()
+      .then((_) =>  Navigator.of(context).pop())
       .then((_) => showLoading(context))
       .then((_) => imagePicker.getImage(ImagePickerEnum.gallery))
       .then((result) => _savePhotoUser(result))
@@ -168,9 +167,8 @@ class HomeController extends ScreenController {
   }
 
   void fromCamera() {
-    Navigator.of(context).pop();
-    
     Future.value()
+      .then((value) => Navigator.of(context).pop())
       .then((_) => showLoading(context))
       .then((_) => imagePicker.getImage(ImagePickerEnum.camera))
       .then((result) => _savePhotoUser(result))

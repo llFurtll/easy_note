@@ -11,9 +11,9 @@ Future<String?> saveFile(String pathFile, String path, String nomeFile) async {
       pathFinal.createSync(recursive: true);
     }
 
-    final file = File(pathFile);
+    final cacheFile = File(pathFile);
     String pathToSave = "${pathFinal.path}/$nomeFile";
-    file.copy(pathToSave);
+    cacheFile.copySync(pathToSave);
 
     return pathToSave;
   } catch (_) {

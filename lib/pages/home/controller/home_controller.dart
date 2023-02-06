@@ -1,8 +1,6 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
-import 'package:easy_note/core/utils/get_path_file.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as ph;
 
 import '../../../core/adapters/image_picker.dart';
 import '../../../core/failures/failures.dart';
@@ -193,27 +191,23 @@ class HomeController extends ScreenController {
     });
   }
 
-  Future<String?> _saveFile(String pathFile, String path) async {
-    return await saveFile(pathFile, path);
-  }
-
   Future<String> _savePhotoUser(String? path) async {
     if (path != null && path.isNotEmpty) {
-      path = await _saveFile(path, "perfil");
+      final file = await saveFile(path, "perfil");
 
-      if (path == null) {
+      if (file == null) {
         return "-1";
       }
       
       final save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
         idUsuario: 1,
-        path: path
+        path: file.path
       ));
 
       return save.fold((left) => "", (right) async {
         if (right > 0) {
           await _deleteOldPhoto();
-          return path!;
+          return file.path;
         } else {
           return "0";
         }

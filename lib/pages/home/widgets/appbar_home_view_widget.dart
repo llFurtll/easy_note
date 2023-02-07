@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../core/widgets/spacer.dart';
 import '../controller/home_controller.dart';
@@ -121,11 +120,6 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
         valueListenable: controller.photoUser,
         builder: (context, value, child) {
           final path = value;
-
-          getExternalStorageDirectory().then((result) {
-            final dir = Directory("${result!.path}/perfil");
-            print(dir.listSync());
-          });
 
           return CircleAvatar(
             backgroundColor: Colors.white,

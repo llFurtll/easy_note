@@ -6,6 +6,7 @@ import '../../../core/adapters/image_picker.dart';
 import '../../../core/failures/failures.dart';
 import '../../../core/result/result.dart';
 import '../../../core/utils/delete_file.dart';
+import '../../../core/utils/get_default_dir.dart';
 import '../../../core/utils/save_file.dart';
 import '../../../core/widgets/show_loading.dart';
 import '../../../core/widgets/show_message.dart';
@@ -193,21 +194,23 @@ class HomeController extends ScreenController {
 
   Future<String> _savePhotoUser(String? path) async {
     if (path != null && path.isNotEmpty) {
-      final file = await saveFile(path, "perfil");
-
-      if (file == null) {
+      String? fileName = await saveFile(path, "perfil");
+      
+      if (fileName == null) {
         return "-1";
       }
-      
+
+      String pathFinal = await getDefaultDir();
+      pathFinal += "/perfil/$fileName";
       final save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
         idUsuario: 1,
-        path: file.path
+        path: pathFinal
       ));
 
       return save.fold((left) => "", (right) async {
         if (right > 0) {
           await _deleteOldPhoto();
-          return file.path;
+          return pathFinal;
         } else {
           return "0";
         }

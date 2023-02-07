@@ -2,22 +2,27 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
-Future<File?> saveFile(String pathFile, String folder) async {
-  String pathBase = (await getApplicationDocumentsDirectory()).path;
-  Directory pathFinal = Directory("$pathBase/$folder");
-  final ext = extension(pathFile);
+import 'create_dir.dart';
+import 'get_default_dir.dart';
 
-  final nameFile = "${UniqueKey().hashCode}$ext";
+Future<String?> saveFile(String pathFile, String folder) async {
+  bool? dir = await createDir(folder);
+  String ext = extension(pathFile);
+  String nameFile = "${UniqueKey().hashCode}$ext";
 
   try {
-    if (!pathFinal.existsSync()) {
-      pathFinal.createSync(recursive: true);
+    if (dir != null) {
+      String path = await getDefaultDir();
+      path = "$path/$folder";
+      File cacheFile = File(pathFile);
+      await cacheFile.copy("$path/$nameFile");
+
+
+      return await Future.delayed(const Duration(seconds: 5), () => nameFile);
     }
 
-    File cacheFile = File(pathFile);
-    return await cacheFile.copy("${pathFinal.path}/$nameFile");
+    return null;
   } catch (_) {
     return null;
   }

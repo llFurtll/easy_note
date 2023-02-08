@@ -1,7 +1,4 @@
-import 'package:easy_note/core/utils/get_default_dir.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 
 enum ImagePickerEnum {
   camera,
@@ -27,15 +24,7 @@ class ImagePickerEasyNote implements ImagePickerAbstract {
       XFile? file = await _imagePicker.pickImage(source: source.fromImagePicker(source));
 
       if (file != null) {
-        String path = await getDefaultDir();
-        path += "/$folderToSave";
-        String ext = extension(file.path);
-        String nameFile = "${UniqueKey().hashCode}$ext";
-        path += "/$nameFile";
-
-        await file.saveTo(path);
-
-        return path;
+        return file.path;
       }
     } catch (_) {
       return null;

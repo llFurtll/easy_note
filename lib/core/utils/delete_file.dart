@@ -4,7 +4,7 @@ Future<bool> deleteFile(String path) async {
   try {
     File file = File(path);
     if (file.existsSync()) {
-      file.delete();
+      file.deleteSync();
     }
 
     return true;

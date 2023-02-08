@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'get_default_dir.dart';
 
-Future<bool?> createDir(String subFolder) async {
+Future<String> createDir(String subFolder) async {
   try {
-    String? path = await getDefaultDir();
-    Directory subDir = Directory("$path/$subFolder");
+    Directory dir = await getDefaultDir();
+    Directory subDir = Directory("${dir.path}/$subFolder");
 
     bool exist = await subDir.exists();
     if (!exist) {
       await subDir.create();
     }
 
-    return true;
+    return subDir.path;
   } catch (_) {
-    return null;
+    return "";
   }
 }

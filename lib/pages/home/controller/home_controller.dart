@@ -6,8 +6,6 @@ import '../../../core/adapters/image_picker.dart';
 import '../../../core/failures/failures.dart';
 import '../../../core/result/result.dart';
 import '../../../core/utils/delete_file.dart';
-import '../../../core/utils/get_default_dir.dart';
-import '../../../core/utils/save_file.dart';
 import '../../../core/widgets/show_loading.dart';
 import '../../../core/widgets/show_message.dart';
 import '../../../domain/entities/anotacao.dart';
@@ -155,7 +153,7 @@ class HomeController extends ScreenController {
     Future.value()
       .then((_) =>  Navigator.of(context).pop())
       .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEnum.gallery))
+      .then((_) => imagePicker.getImage(ImagePickerEnum.gallery, "perfil"))
       .then((result) => _savePhotoUser(result))
       .then((result) {
         if (result.isNotEmpty) {
@@ -171,12 +169,12 @@ class HomeController extends ScreenController {
     Future.value()
       .then((value) => Navigator.of(context).pop())
       .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEnum.camera))
+      .then((_) => imagePicker.getImage(ImagePickerEnum.camera, "perfil"))
       .then((result) => _savePhotoUser(result))
       .then((result) {
-        if (result.isNotEmpty && result != "-1" && result != "0") {
+        if (result.isNotEmpty && result != "0") {
           photoUser.value = result;
-        } else if (result == "-1" || result == "0") {
+        } else if (result == "0") {
           showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
         }
       })
@@ -193,24 +191,16 @@ class HomeController extends ScreenController {
   }
 
   Future<String> _savePhotoUser(String? path) async {
-    if (path != null && path.isNotEmpty) {
-      String? fileName = await saveFile(path, "perfil");
-      
-      if (fileName == null) {
-        return "-1";
-      }
-
-      String pathFinal = await getDefaultDir();
-      pathFinal += "/perfil/$fileName";
+    if (path != null && path.isNotEmpty) {  
       final save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
         idUsuario: 1,
-        path: pathFinal
+        path: path
       ));
 
       return save.fold((left) => "", (right) async {
         if (right > 0) {
           await _deleteOldPhoto();
-          return pathFinal;
+          return path;
         } else {
           return "0";
         }

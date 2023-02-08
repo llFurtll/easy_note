@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:easy_note/core/utils/get_default_dir.dart';
+import 'get_default_dir.dart';
 
 Future<bool?> createDir(String subFolder) async {
   try {
-    String?path = await getDefaultDir();
+    String? path = await getDefaultDir();
     Directory subDir = Directory("$path/$subFolder");
 
     bool exist = await subDir.exists();

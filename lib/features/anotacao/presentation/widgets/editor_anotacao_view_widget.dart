@@ -1,7 +1,9 @@
 import 'package:compmanager/screen_widget.dart';
-import 'package:easy_note/core/widgets/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
+import '../../../../core/widgets/spacer.dart';
 import '../controller/anotacao_controller.dart';
 
 class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
@@ -49,10 +51,22 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
   }
 
   Widget _buildToolbar(BuildContext context) {
-    return const SizedBox.shrink();
+    return QuillToolbar.basic(
+      embedButtons: FlutterQuillEmbeds.buttons(),
+      locale: controller.locale,
+      controller: controller.quillController,
+      multiRowsDisplay: false
+    );
   }
 
   Widget _buildEditor(BuildContext context) {
-    return const SizedBox.shrink();
+    return Expanded(
+      child: QuillEditor.basic(
+        embedBuilders: FlutterQuillEmbeds.builders(),
+        locale: controller.locale,
+        controller: controller.quillController,
+        readOnly: false
+      )
+    );
   }
 }

@@ -2,7 +2,7 @@ import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/adapters/image_picker.dart';
+import '../../../../core/adapters/image_picker_easy_note.dart';
 import '../../../../core/failures/failures.dart';
 import '../../../../core/result/result.dart';
 import '../../../../core/utils/delete_file.dart';
@@ -23,7 +23,7 @@ import '../widgets/alter_photo_home_view_widget.dart';
 
 class HomeController extends ScreenController {
   // ADAPTERS
-  final imagePicker = ImagePickerEasyNote();
+  final imagePicker = ImagePickerEasyNoteImpl();
 
   // CASOS DE USO
   late final GetFindAllAnotacao getFindAllAnotacao;
@@ -153,7 +153,7 @@ class HomeController extends ScreenController {
     Future.value()
       .then((_) =>  Navigator.of(context).pop())
       .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEnum.gallery, "perfil"))
+      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.gallery, "perfil"))
       .then((result) => _savePhotoUser(result))
       .then((result) {
         if (result.isNotEmpty) {
@@ -169,7 +169,7 @@ class HomeController extends ScreenController {
     Future.value()
       .then((value) => Navigator.of(context).pop())
       .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEnum.camera, "perfil"))
+      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.camera, "perfil"))
       .then((result) => _savePhotoUser(result))
       .then((result) {
         if (result.isNotEmpty && result != "0") {

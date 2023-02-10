@@ -1,12 +1,22 @@
+import 'dart:async';
+
 import 'package:compmanager/screen_controller.dart';
+import 'package:compmanager/screen_injection.dart';
+import 'package:easy_note/features/anotacao/presentation/injection/anotacao_injection.dart';
+import 'package:easy_note/features/configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
-class AnotacaoController extends ScreenController with WidgetsBindingObserver {
+class AnotacaoController extends ScreenController {
   final showIcones = ValueNotifier(false);
   final quillController = QuillController.basic();
   final locale = const Locale("pt", "BR");
-  final keyboard = ValueNotifier(false);
+  final showToolbar = ValueNotifier(false);
+  final titleFocus = FocusNode();
+  final isLoading = ValueNotifier(true);
+  final configs = {};
+  
+  late final Timer timer;
 
   bool isEdit = false;
 
@@ -14,25 +24,33 @@ class AnotacaoController extends ScreenController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
 
-    WidgetsBinding.instance.addObserver(this);
+    timer = Timer.periodic(
+      const Duration(milliseconds: 500),
+      (timer) => _showToolbarObserver()
+    );
+    
+    Future.value()
+      .then((_) => _loadConfigs())
+      .then((_) => isLoading.value = false);
+  }
 
-    int? idAnotacao = ModalRoute.of(context)!.settings.arguments as int?;
-    if (idAnotacao != null) {
-      isEdit = true;
+  void _showToolbarObserver() {
+    if (!titleFocus.hasFocus) {
+      showToolbar.value = true;
+    } else {
+      showToolbar.value = false;
     }
   }
 
   @override
   void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
+    timer.cancel();
     super.onClose();
   }
 
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    check() => keyboard.value = WidgetsBinding.instance.window.viewInsets.bottom > 0;
-
-    Future.delayed(const Duration(milliseconds: 100), () => check());
+  void _loadConfigs() async {
+    final usecase = ScreenInjection.of<AnotacaoInjection>(context).getFindAllConfigByModulo;
+    final result = await usecase(FindAllConfigByModuloParams(modulo: "NOTE"));
+    result.fold((left) => null, (right) => configs.addAll(right));
   }
 }

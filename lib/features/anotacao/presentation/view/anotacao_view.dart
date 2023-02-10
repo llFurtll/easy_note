@@ -25,11 +25,20 @@ class AnotacaoView extends ScreenView<AnotacaoController> {
   const AnotacaoView({super.key});
 
   @override
-  Scaffold build(BuildContext context) {
-    return const Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBarAnotacaoViewWidget(),
-      body: EditorAnotacaoViewWidget(),
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller.isLoading,
+      builder: (context, value, child) {
+        if (value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return const Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBarAnotacaoViewWidget(),
+          body: EditorAnotacaoViewWidget(),
+        );
+      },
     );
   }
 }

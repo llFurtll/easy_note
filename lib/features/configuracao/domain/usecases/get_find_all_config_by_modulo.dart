@@ -4,21 +4,21 @@ import '../../../../core/usecases/params.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/configuracao_repository.dart';
 
-class GetFindAllConfigByModulo extends UseCase<Map<String, int>, FindAllConfigByModulo> {
+class GetFindAllConfigByModulo extends UseCase<Map<String, int>, FindAllConfigByModuloParams> {
   ConfiguracaoRepository repository;
 
   GetFindAllConfigByModulo(this.repository);
 
   @override
-  Future<Result<Failure, Map<String, int>>> call(FindAllConfigByModulo params) async {
+  Future<Result<Failure, Map<String, int>>> call(FindAllConfigByModuloParams params) async {
     return await repository.findAllConfigByModulo(params.modulo);
   }
 }
 
-class FindAllConfigByModulo extends Params {
+class FindAllConfigByModuloParams extends Params {
   final String modulo;
 
-  FindAllConfigByModulo({
+  FindAllConfigByModuloParams({
     required this.modulo
   });
 }

@@ -61,7 +61,7 @@ class ConfiguracaoEditController extends ScreenController {
 
   Future<Result<Failure, Map<String, int>>> _loadConfigs(String modulo) async {
     final getFindAllConfigByModulo = ScreenInjection.of<ConfiguracaoEditInjection>(context).getFindAllConfigByModulo;
-    return await getFindAllConfigByModulo(FindAllConfigByModulo(modulo: modulo)); 
+    return await getFindAllConfigByModulo(FindAllConfigByModuloParams(modulo: modulo)); 
   }
 
   void saveConfigs() {

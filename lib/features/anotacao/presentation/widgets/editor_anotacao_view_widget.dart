@@ -58,8 +58,13 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
           visible: value,
           child: QuillToolbar.basic(
             embedButtons: FlutterQuillEmbeds.buttons(
+              onImagePickCallback: controller.onImageAndVideoPickCallback,
+              onVideoPickCallback: controller.onImageAndVideoPickCallback,
               showImageButton: controller.showConfig("MOSTRAFOTO"),
-              showVideoButton: controller.showConfig("MOSTRAVIDEO"),
+              showCameraButton: controller.showConfig("MOSTRACAMERA"),
+              showVideoButton: false,
+              cameraPickSettingSelector: controller.selectCameraPickSetting,
+              mediaPickSettingSelector: controller.selectMediaPickSetting
             ),
             locale: controller.locale,
             controller: controller.quillController,
@@ -112,6 +117,7 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
         enableInteractiveSelection: true,
         readOnly: false,
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+        locale: controller.locale,
       )
     );
   }

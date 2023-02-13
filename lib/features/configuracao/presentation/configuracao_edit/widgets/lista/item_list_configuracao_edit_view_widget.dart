@@ -131,6 +131,8 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return "Exibir opção de tipo da fonte?";
       case "MOSTRASEARCHBUTTON":
         return "Exibir botão de localizar?";
+      case "MOSTRACAMERA":
+        return "Exibir botão de câmera?";
     }
 
     return "";
@@ -217,6 +219,8 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         ];
       case "MOSTRASEARCHBUTTON":
         return [Icons.search];
+      case "MOSTRACAMERA":
+        return [Icons.camera_alt];
     }
 
     return [const SizedBox.shrink()];

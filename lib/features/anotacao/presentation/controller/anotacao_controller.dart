@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
-import 'package:easy_note/features/anotacao/presentation/injection/anotacao_injection.dart';
-import 'package:easy_note/features/configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill_extensions/embeds/embed_types.dart';
+
+import '../../../../core/utils/save_file.dart';
+import '../../../configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
+import '../injection/anotacao_injection.dart';
 
 class AnotacaoController extends ScreenController {
   final showIcones = ValueNotifier(false);
@@ -56,5 +60,95 @@ class AnotacaoController extends ScreenController {
 
   bool showConfig(String key) {
     return configs[key] == 1;
+  }
+
+  Future<String> onImageAndVideoPickCallback(File file) async {
+    return await saveFile(file.path, "anotacao");
+  }
+
+  Future<MediaPickSetting?> selectCameraPickSetting(BuildContext context) {
+    final color = Theme.of(context).primaryColor.withOpacity(0.5);
+
+    return showDialog<MediaPickSetting>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Selecione uma opção"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: color
+              ),
+              child: const Text(
+                'Tirar uma foto',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                )
+              ),
+              onPressed: () => Navigator.pop(ctx, MediaPickSetting.Camera),
+            ),
+            Container(height: 1.0, color: Colors.black),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: color
+              ),
+              child: const Text(
+                'Gravar um vídeo',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                )
+              ),
+              onPressed: () => Navigator.pop(ctx, MediaPickSetting.Video),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<MediaPickSetting?> selectMediaPickSetting(BuildContext context) {
+    final color = Theme.of(context).primaryColor.withOpacity(0.5);
+
+    return showDialog<MediaPickSetting>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Selecione uma opção"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: color
+              ),
+              child: const Text(
+                'Abrir da galeria',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                )
+              ),
+              onPressed: () => Navigator.pop(ctx, MediaPickSetting.Gallery),
+            ),
+            Container(height: 1.0, color: Colors.black),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: color
+              ),
+              child: const Text(
+                'Link',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                )
+              ),
+              onPressed: () => Navigator.pop(ctx, MediaPickSetting.Link),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

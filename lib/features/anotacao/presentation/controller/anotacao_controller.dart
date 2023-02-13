@@ -14,7 +14,7 @@ class AnotacaoController extends ScreenController {
   final showToolbar = ValueNotifier(false);
   final titleFocus = FocusNode();
   final isLoading = ValueNotifier(true);
-  final configs = {};
+  final configs = <String, int>{};
   
   late final Timer timer;
 
@@ -52,5 +52,9 @@ class AnotacaoController extends ScreenController {
     final usecase = ScreenInjection.of<AnotacaoInjection>(context).getFindAllConfigByModulo;
     final result = await usecase(FindAllConfigByModuloParams(modulo: "NOTE"));
     result.fold((left) => null, (right) => configs.addAll(right));
+  }
+
+  bool showConfig(String key) {
+    return configs[key] == 1;
   }
 }

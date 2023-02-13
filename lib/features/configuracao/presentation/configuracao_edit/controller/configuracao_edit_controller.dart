@@ -72,6 +72,8 @@ class ConfiguracaoEditController extends ScreenController {
 
     Future.value()
       .then((_) async {
+        bool error = false;
+        
         for (var item in configs) {
           final config = Configuracao(
             id: null,
@@ -84,16 +86,18 @@ class ConfiguracaoEditController extends ScreenController {
             configuracao: config
           ));
 
-          return result.fold((left) => true, (right) {
+          result.fold((left) => true, (right) {
             if (right == 0) {
-              return true;
+              error = true;
             }
-
-            return false;
           });
+
+          if (error) {
+            break;
+          }
         }
 
-        return false;
+        return error;
       })
       .then((result) {
         Navigator.of(context).pop();

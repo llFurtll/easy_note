@@ -2,9 +2,9 @@ import 'package:sqflite/sqflite.dart';
 
 import 'versoes.dart';
 
-Future<void> _createConfigByModulo(Database db) async {
-  Map<String, List<String>> configs = {};
+final Map<String, List<String>> configs = {};
 
+void loadConfigs() {
   configs["NOTE"] = [
     "MOSTRAREVERTERPRODUZIRALTERACOES",
     "MOSTRANEGRITO",
@@ -15,25 +15,33 @@ Future<void> _createConfigByModulo(Database db) async {
     "MOSTRAALINHAMENTOCENTRO",
     "MOSTRAALINHAMENTODIREITA",
     "MOSTRAJUSTIFICADO",
-    "MOSTRATABULACAODIREITA",
-    "MOSTRATABULACAOESQUERDA",
-    "MOSTRAESPACAMENTOLINHAS",
     "MOSTRACORLETRA",
     "MOSTRACORFUNDOLETRA",
     "MOSTRALISTAPONTO",
-    "MOSTRALINHANUMERICA",
+    "MOSTRALISTANUMERICA",
     "MOSTRALINK",
     "MOSTRAFOTO",
-    "MOSTRAAUDIO",
     "MOSTRAVIDEO",
-    "MOSTRATABELA",
-    "MOSTRASEPARADOR"
+    "MOSTRASEPARADOR",
+    "MOSTRABOTAOCABECALHO",
+    "MOSTRALISTACHECK",
+    "MOSTRACODEBLOCK",
+    "MOSTRAQUOTE",
+    "MOSTRAINDENT",
+    "MOSTRACLEARFORMAT",
+    "MOSTRAINLINECODE",
+    "MOSTRASMALLBUTTON",
+    "MOSTRAFONTSIZE",
+    "MOSTRAFONTFAMILY",
+    "MOSTRASEARCHBUTTON"
   ];
 
   configs["APP"] = [
     "AUTOSAVE"
   ];
+}
 
+Future<void> _createConfigByModulo(Database db) async {
   for (String modulo in configs.keys) {
     List<String>? items = configs[modulo];
     for (String item in items!) {
@@ -179,4 +187,15 @@ Future<void> updateTables(Database db) async {
   if (!existeColunaUltimaAtualizacao) {
     await db.execute("ALTER TABLE NOTE ADD ultima_atualizacao DATETIME");
   }
+
+  await removeConfigs(db);
+}
+
+Future<void> removeConfigs(Database db) async {
+  await db.execute("""
+    DELETE FROM CONFIGAPP
+    WHERE IDENTIFICADOR NOT IN (
+      ${configs.keys.join(',')}
+    )
+  """);
 }

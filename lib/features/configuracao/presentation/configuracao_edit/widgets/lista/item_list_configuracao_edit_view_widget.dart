@@ -93,7 +93,7 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return "Exibir botão cor de realce?";
       case "MOSTRALISTAPONTO":
         return "Exibir botão de lista?";
-      case "MOSTRALINHANUMERICA":
+      case "MOSTRALISTANUMERICA":
         return "Exibir botão de lista numérica?";
       case "MOSTRALINK":
         return "Exibir botão de link?";
@@ -109,6 +109,28 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return "Exibir botão de separador?";
       case "AUTOSAVE":
         return "Salvar a anotação de forma automática?";
+      case "MOSTRABOTAOCABECALHO":
+        return "Exibir os botões de cabeçalho?";
+      case "MOSTRALISTACHECK":
+        return "Exibir botão de checklist?";
+      case "MOSTRACODEBLOCK":
+        return "Exibir botão de bloco em código? (Recomendado para desenvolvedores)";
+      case "MOSTRAQUOTE":
+        return "Exibir botão de citação?";
+      case "MOSTRAINDENT":
+        return "Exibir botão aumentar/diminuir recuo?";
+      case "MOSTRACLEARFORMAT":
+        return "Exibir botão de limpar formatação?";
+      case "MOSTRAINLINECODE":
+        return "Exibir botão de código em linha? (Recomendado para desenvolvedores)";
+      case "MOSTRASMALLBUTTON":
+        return "Exibir botão de fonte pequena?";
+      case "MOSTRAFONTSIZE":
+        return "Exibir opção de tamanho da fonte?";
+      case "MOSTRAFONTFAMILY":
+        return "Exibir opção de tipo da fonte?";
+      case "MOSTRASEARCHBUTTON":
+        return "Exibir botão de localizar?";
     }
 
     return "";
@@ -146,7 +168,7 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return [Icons.format_color_fill];
       case "MOSTRALISTAPONTO":
         return [Icons.list];
-      case "MOSTRALINHANUMERICA":
+      case "MOSTRALISTANUMERICA":
         return [Icons.format_list_numbered];
       case "MOSTRALINK":
         return [Icons.link];
@@ -162,8 +184,60 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return [Icons.horizontal_rule];
       case "AUTOSAVE":
         return [Icons.save];
+      case "MOSTRABOTAOCABECALHO":
+        return [
+          const Text("H1", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text("H2", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text("H3", style: TextStyle(fontWeight: FontWeight.bold))
+        ];
+      case "MOSTRALISTACHECK":
+        return [Icons.check_box];
+      case "MOSTRACODEBLOCK":
+        return [Icons.code];
+      case "MOSTRAQUOTE":
+        return [Icons.format_quote_sharp];
+      case "MOSTRAINDENT":
+        return [
+          Icons.format_indent_increase_sharp,
+          Icons.format_indent_decrease
+        ];
+      case "MOSTRACLEARFORMAT":
+        return [Icons.format_clear];
+      case "MOSTRAINLINECODE":
+        return [Icons.code];
+      case "MOSTRASMALLBUTTON":
+        return [Icons.format_size];
+      case "MOSTRAFONTSIZE":
+        return [
+          _buildRichText("Tamanho", const Icon(Icons.arrow_drop_down_sharp)),
+        ];
+      case "MOSTRAFONTFAMILY":
+        return [
+          _buildRichText("Fonte", const Icon(Icons.arrow_drop_down_sharp))
+        ];
+      case "MOSTRASEARCHBUTTON":
+        return [Icons.search];
     }
 
     return [const SizedBox.shrink()];
+  }
+
+  Widget _buildRichText(String text, Icon icon) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: text,
+            style: const TextStyle(
+              color: Colors.black
+            )
+          ),
+          WidgetSpan(
+            child: icon,
+            alignment: PlaceholderAlignment.middle
+          )
+        ]
+      )
+    );
   }
 }

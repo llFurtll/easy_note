@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 
@@ -18,8 +20,10 @@ class AnotacaoController extends ScreenController {
   final locale = const Locale("pt", "BR");
   final showToolbar = ValueNotifier(false);
   final titleFocus = FocusNode();
+  final editorFocus = FocusNode();
   final isLoading = ValueNotifier(true);
   final configs = <String, int>{};
+  final images = <Uint8List>[];
   
   late final Timer timer;
 
@@ -35,18 +39,34 @@ class AnotacaoController extends ScreenController {
     );
 
     final idAnotacao = ModalRoute.of(context)!.settings.arguments as int?;
-
     if (idAnotacao != null) {
       isEdit = true;
     }
     
     Future.value()
       .then((_) => _loadConfigs())
-      .then((_) => _loadAnotacao())
+      .then((_) => _loadImages())
+      .then((_) => _loadAnotacao(idAnotacao))
       .then((_) => isLoading.value = false);
   }
 
-  void _loadAnotacao() async {
+  void _loadAnotacao(int? idAnotacao) async {
+    
+  }
+
+  void _loadImages() async {
+    final manifest = await rootBundle.loadString("AssetManifest.json");
+    final Map<String, dynamic> manifestMap = json.decode(manifest);
+    
+    final assetsProject = manifestMap.keys
+      .where((key) => key.contains("lib/assets/images/anotacao"))
+      .where((key) => key.contains(".jpg"))
+      .toList();
+
+    for (String asset in assetsProject) {
+      final bytes = (await rootBundle.load(asset)).buffer.asUint8List();
+      images.add(bytes);
+    }
   }
 
   void _showToolbarObserver() {
@@ -165,5 +185,10 @@ class AnotacaoController extends ScreenController {
         ),
       ),
     );
+  }
+
+  void unfocus() {
+    titleFocus.unfocus();
+    editorFocus.unfocus();
   }
 }

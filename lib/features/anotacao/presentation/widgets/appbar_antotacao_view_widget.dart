@@ -1,4 +1,5 @@
 import 'package:compmanager/screen_widget.dart';
+import 'package:easy_note/features/anotacao/presentation/widgets/change_image_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
@@ -47,7 +48,7 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
                     child: Wrap(
                       children: [
                         _iconOpenItens(value),
-                        ..._iconsActions().map((e) => value ? e : const SizedBox(height: 0.0, width: 0.0))
+                        ..._iconsActions(context).map((e) => value ? e : const SizedBox(height: 0.0, width: 0.0))
                       ],
                     ),
                   )
@@ -73,7 +74,7 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
     );
   }
 
-  List<Widget> _iconsActions() {
+  List<Widget> _iconsActions(BuildContext context) {
     return [
       Visibility(
         visible: controller.isEdit,
@@ -97,7 +98,10 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
       ),
       IconButton(
         color: Colors.black,
-        onPressed: () {},
+        onPressed: () {
+          controller.unfocus();
+          showBottomSheet(context: context, builder: (context) => const ChangeImageAnotacaoViewWiget());
+        },
         icon: const Icon(Icons.photo),
         padding: EdgeInsets.zero,
         splashRadius: 25.0,

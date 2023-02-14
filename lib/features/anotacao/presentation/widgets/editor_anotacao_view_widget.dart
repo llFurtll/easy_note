@@ -19,33 +19,33 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
   Widget _buildBody(BuildContext context) {
     return SizedBox(
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTitle(),
-            spacer(10.0),
-            _buildEditor(),
-            _buildToolbar()
-          ],
+        child: Container(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitle(),
+              spacer(10.0),
+              _buildToolbar(),
+              _buildEditor()
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildTitle() {
-    return Container(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-      child: TextFormField(
-        focusNode: controller.titleFocus,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: "Título",
-          hintStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            fontSize: 18.0
-          )
-        ),
+    return TextFormField(
+      focusNode: controller.titleFocus,
+      decoration: const InputDecoration(
+        border: InputBorder.none,
+        hintText: "Título",
+        hintStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          fontSize: 18.0
+        )
       ),
     );
   }
@@ -56,49 +56,54 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
       builder: (context, value, child) {
         return Visibility(
           visible: value,
-          child: QuillToolbar.basic(
-            toolbarIconSize: 20,
-            embedButtons: FlutterQuillEmbeds.buttons(
-              onImagePickCallback: controller.onImageAndVideoPickCallback,
-              onVideoPickCallback: controller.onImageAndVideoPickCallback,
-              showImageButton: controller.showConfig("MOSTRAFOTO"),
-              showCameraButton: controller.showConfig("MOSTRACAMERA"),
-              showVideoButton: false,
-              cameraPickSettingSelector: controller.selectCameraPickSetting,
-              mediaPickSettingSelector: controller.selectMediaPickSetting
-            ),
-            locale: controller.locale,
-            controller: controller.quillController,
-            multiRowsDisplay: false,
-            showDividers: controller.showConfig("MOSTRASEPARADOR"),
-            showFontFamily: controller.showConfig("MOSTRAFONTFAMILY"),
-            showFontSize: controller.showConfig("MOSTRAFONTSIZE"),
-            showBoldButton: controller.showConfig("MOSTRANEGRITO"),
-            showItalicButton: controller.showConfig("MOSTRAITALICO"),
-            showSmallButton: controller.showConfig("MOSTRASMALLBUTTON"),
-            showUnderLineButton: controller.showConfig("MOSTRASUBLINHADO"),
-            showStrikeThrough: controller.showConfig("MOSTRARISCADO"),
-            showInlineCode: controller.showConfig("MOSTRAINLINECODE"),
-            showColorButton: controller.showConfig("MOSTRACORLETRA"),
-            showBackgroundColorButton: controller.showConfig("MOSTRACORFUNDOLETRA"),
-            showClearFormat: controller.showConfig("MOSTRACLEARFORMAT"),
-            showAlignmentButtons: true,
-            showLeftAlignment: controller.showConfig("MOSTRAALINHAMENTOESQUERDA"),
-            showCenterAlignment: controller.showConfig("MOSTRAALINHAMENTOCENTRO"),
-            showRightAlignment: controller.showConfig("MOSTRAALINHAMENTODIREITA"),
-            showJustifyAlignment: controller.showConfig("MOSTRAJUSTIFICADO"),
-            showHeaderStyle: controller.showConfig("MOSTRABOTAOCABECALHO"),
-            showListNumbers: controller.showConfig("MOSTRALISTANUMERICA"),
-            showListBullets: controller.showConfig("MOSTRALISTAPONTO"),
-            showListCheck: controller.showConfig("MOSTRALISTACHECK"),
-            showCodeBlock: controller.showConfig("MOSTRACODEBLOCK"),
-            showQuote: controller.showConfig("MOSTRAQUOTE"),
-            showIndent: controller.showConfig("MOSTRAINDENT"),
-            showLink: controller.showConfig("MOSTRALINK"),
-            showUndo: controller.showConfig("MOSTRAREVERTERPRODUZIRALTERACOES"),
-            showRedo: controller.showConfig("MOSTRAREVERTERPRODUZIRALTERACOES"),
-            showDirection: false,
-            showSearchButton: controller.showConfig("MOSTRASEARCHBUTTON"),
+          child: Column(
+            children: [
+              QuillToolbar.basic(
+                toolbarIconSize: 20,
+                embedButtons: FlutterQuillEmbeds.buttons(
+                  onImagePickCallback: controller.onImageAndVideoPickCallback,
+                  onVideoPickCallback: controller.onImageAndVideoPickCallback,
+                  showImageButton: controller.showConfig("MOSTRAFOTO"),
+                  showCameraButton: controller.showConfig("MOSTRACAMERA"),
+                  showVideoButton: false,
+                  cameraPickSettingSelector: controller.selectCameraPickSetting,
+                  mediaPickSettingSelector: controller.selectMediaPickSetting
+                ),
+                locale: controller.locale,
+                controller: controller.quillController,
+                multiRowsDisplay: false,
+                showDividers: controller.showConfig("MOSTRASEPARADOR"),
+                showFontFamily: controller.showConfig("MOSTRAFONTFAMILY"),
+                showFontSize: controller.showConfig("MOSTRAFONTSIZE"),
+                showBoldButton: controller.showConfig("MOSTRANEGRITO"),
+                showItalicButton: controller.showConfig("MOSTRAITALICO"),
+                showSmallButton: controller.showConfig("MOSTRASMALLBUTTON"),
+                showUnderLineButton: controller.showConfig("MOSTRASUBLINHADO"),
+                showStrikeThrough: controller.showConfig("MOSTRARISCADO"),
+                showInlineCode: controller.showConfig("MOSTRAINLINECODE"),
+                showColorButton: controller.showConfig("MOSTRACORLETRA"),
+                showBackgroundColorButton: controller.showConfig("MOSTRACORFUNDOLETRA"),
+                showClearFormat: controller.showConfig("MOSTRACLEARFORMAT"),
+                showAlignmentButtons: true,
+                showLeftAlignment: controller.showConfig("MOSTRAALINHAMENTOESQUERDA"),
+                showCenterAlignment: controller.showConfig("MOSTRAALINHAMENTOCENTRO"),
+                showRightAlignment: controller.showConfig("MOSTRAALINHAMENTODIREITA"),
+                showJustifyAlignment: controller.showConfig("MOSTRAJUSTIFICADO"),
+                showHeaderStyle: controller.showConfig("MOSTRABOTAOCABECALHO"),
+                showListNumbers: controller.showConfig("MOSTRALISTANUMERICA"),
+                showListBullets: controller.showConfig("MOSTRALISTAPONTO"),
+                showListCheck: controller.showConfig("MOSTRALISTACHECK"),
+                showCodeBlock: controller.showConfig("MOSTRACODEBLOCK"),
+                showQuote: controller.showConfig("MOSTRAQUOTE"),
+                showIndent: controller.showConfig("MOSTRAINDENT"),
+                showLink: controller.showConfig("MOSTRALINK"),
+                showUndo: controller.showConfig("MOSTRAREVERTERPRODUZIRALTERACOES"),
+                showRedo: controller.showConfig("MOSTRAREVERTERPRODUZIRALTERACOES"),
+                showDirection: false,
+                showSearchButton: controller.showConfig("MOSTRASEARCHBUTTON"),
+              ),
+              spacer(10.0)
+            ],
           )
         );
       },
@@ -115,10 +120,10 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
         placeholder: "Começe a digitar aqui...",
         expands: true,
         scrollable: true,
-        focusNode: FocusNode(),
+        focusNode: controller.editorFocus,
         enableInteractiveSelection: true,
         readOnly: false,
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+        padding: EdgeInsets.zero,
         locale: controller.locale,
       )
     );

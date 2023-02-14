@@ -24,6 +24,9 @@ void main() async {
           color: Color(0xFFA50044),
           circularTrackColor: Colors.white
         ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.transparent
+        )
       ),
       routes: routes(),
     )

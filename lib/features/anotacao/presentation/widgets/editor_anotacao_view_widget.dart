@@ -25,7 +25,7 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
             _buildTitle(),
             spacer(10.0),
             _buildEditor(),
-            _buildToolbar(),
+            _buildToolbar()
           ],
         ),
       ),
@@ -57,6 +57,7 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
         return Visibility(
           visible: value,
           child: QuillToolbar.basic(
+            toolbarIconSize: 20,
             embedButtons: FlutterQuillEmbeds.buttons(
               onImagePickCallback: controller.onImageAndVideoPickCallback,
               onVideoPickCallback: controller.onImageAndVideoPickCallback,

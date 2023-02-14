@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'versoes.dart';
@@ -190,6 +189,7 @@ Future<void> updateTables(Database db) async {
   }
 
   await removeConfigs(db);
+  await updateImagemVersoes(db);
 }
 
 Future<void> removeConfigs(Database db) async {
@@ -217,7 +217,7 @@ Future<void> updateImagemVersoes(Database db) async {
       for (var item in itens) {
         await db.rawUpdate(
           """
-            UPDATE TABLE ATUALIZACAO SET IMAGEM = ?
+            UPDATE ATUALIZACAO SET IMAGEM = ?
             WHERE ID = ?
           """, [item['imagem'], item['id']]
         );

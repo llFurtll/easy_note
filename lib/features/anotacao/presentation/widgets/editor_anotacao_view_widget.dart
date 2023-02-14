@@ -111,6 +111,7 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
         scrollController: ScrollController(),
         controller: controller.quillController,
         autoFocus: false,
+        placeholder: "Começe a digitar aqui...",
         expands: true,
         scrollable: true,
         focusNode: FocusNode(),

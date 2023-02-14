@@ -10,14 +10,14 @@ class ImagePickerEasyNoteOptions {
 }
 
 abstract class ImagePickerEasyNote {
-  Future<String?> getImage(ImagePickerEasyNoteOptions method, String folderToSave);
+  Future<String?> getImage(ImagePickerEasyNoteOptions method);
 }
 
 class ImagePickerEasyNoteImpl implements ImagePickerEasyNote {
   final ImagePicker _imagePicker = ImagePicker();
 
   @override
-  Future<String?> getImage(ImagePickerEasyNoteOptions method, String folderToSave) async {
+  Future<String?> getImage(ImagePickerEasyNoteOptions method) async {
     try {
       XFile? file = await _imagePicker.pickImage(source: method.option);
 

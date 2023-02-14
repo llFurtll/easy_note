@@ -35,8 +35,18 @@ class ListConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditContro
           );
         }
 
+        final configs = controller.configs;
+        final lastItem = configs.last;
+
         return ListView(
-          children: controller.configs,
+          children: configs.map((item) => Column(
+            children: [
+              item,
+              item.identificador != lastItem.identificador ?
+                const Divider(color: Colors.black) :
+                const SizedBox.shrink()
+            ],
+          )).toList(),
         );
       },
     );

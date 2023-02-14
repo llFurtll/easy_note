@@ -1,4 +1,5 @@
 import 'package:compmanager/screen_widget.dart';
+import 'package:easy_note/core/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/home_controller.dart';
@@ -17,7 +18,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
       builder: (context, value, child) {
         final removeOption = value.isEmpty;
 
-        return AlertDialog(
+        return CustomDialog(
           title: const Text("Escolha uma das opções"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -66,7 +67,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
                 ) :
                 Container()
             ],
-          ),
+          )
         );
       },
     );

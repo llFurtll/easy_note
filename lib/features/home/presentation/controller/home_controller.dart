@@ -153,12 +153,12 @@ class HomeController extends ScreenController {
     Future.value()
       .then((_) =>  Navigator.of(context).pop())
       .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.gallery, "perfil"))
+      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.gallery))
       .then((result) => _savePhotoUser(result))
       .then((result) {
         if (result.isNotEmpty) {
           photoUser.value = result;
-        } else if (result == "-1" || result == "0") {
+        } else if (result == "0") {
           showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
         }
       })
@@ -169,7 +169,7 @@ class HomeController extends ScreenController {
     Future.value()
       .then((value) => Navigator.of(context).pop())
       .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.camera, "perfil"))
+      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.camera))
       .then((result) => _savePhotoUser(result))
       .then((result) {
         if (result.isNotEmpty && result != "0") {

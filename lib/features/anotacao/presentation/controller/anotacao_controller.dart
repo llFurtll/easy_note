@@ -8,6 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 
 import '../../../../core/utils/save_file.dart';
+import '../../../../core/widgets/custom_dialog.dart';
 import '../../../configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
 import '../injection/anotacao_injection.dart';
 
@@ -32,10 +33,20 @@ class AnotacaoController extends ScreenController {
       const Duration(milliseconds: 500),
       (timer) => _showToolbarObserver()
     );
+
+    final idAnotacao = ModalRoute.of(context)!.settings.arguments as int?;
+
+    if (idAnotacao != null) {
+      isEdit = true;
+    }
     
     Future.value()
       .then((_) => _loadConfigs())
+      .then((_) => _loadAnotacao())
       .then((_) => isLoading.value = false);
+  }
+
+  void _loadAnotacao() async {
   }
 
   void _showToolbarObserver() {
@@ -62,8 +73,12 @@ class AnotacaoController extends ScreenController {
     return configs[key] == 1;
   }
 
-  Future<String> onImageAndVideoPickCallback(File file) async {
-    return await saveFile(file.path, "anotacao");
+  Future<String?> onImageAndVideoPickCallback(File file) async {
+    try {
+      return await saveFile(file.path, "anotacao");
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<MediaPickSetting?> selectCameraPickSetting(BuildContext context) {
@@ -71,7 +86,7 @@ class AnotacaoController extends ScreenController {
 
     return showDialog<MediaPickSetting>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) => CustomDialog(
         title: const Text("Selecione uma opção"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -114,7 +129,7 @@ class AnotacaoController extends ScreenController {
 
     return showDialog<MediaPickSetting>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) => CustomDialog(
         title: const Text("Selecione uma opção"),
         content: Column(
           mainAxisSize: MainAxisSize.min,

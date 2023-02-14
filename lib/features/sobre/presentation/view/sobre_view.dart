@@ -166,7 +166,7 @@ class SobreView extends ScreenView<SobreController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset("lib/images/coffee.svg")
+              SvgPicture.asset("lib/assets/images/coffee.svg")
             ],
           ),
         ),

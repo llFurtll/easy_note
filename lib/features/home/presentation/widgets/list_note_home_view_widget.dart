@@ -40,7 +40,7 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      SvgPicture.asset("lib/images/sem-anotacao.svg", width: 100.0, height: 100.0),
+                      SvgPicture.asset("lib/assets/images/sem-anotacao.svg", width: 100.0, height: 100.0),
                       const Text(
                         "Sem anotações!",
                         style: TextStyle(

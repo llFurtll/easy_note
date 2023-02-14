@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'versoes.dart';
@@ -192,10 +193,34 @@ Future<void> updateTables(Database db) async {
 }
 
 Future<void> removeConfigs(Database db) async {
+  String itemsToDelete = "'";
+  for (String key in configs.keys) {
+    itemsToDelete += configs[key]!.join("','");
+    if (key != configs.keys.last) {
+      itemsToDelete += "','";
+    }
+  }
+
+  itemsToDelete += "'";
+
   await db.execute("""
     DELETE FROM CONFIGAPP
     WHERE IDENTIFICADOR NOT IN (
-      ${configs.keys.join(',')}
+      $itemsToDelete
     )
   """);
+}
+
+Future<void> updateImagemVersoes(Database db) async {
+  await Future.value()
+    .then((_) async {
+      for (var item in itens) {
+        await db.rawUpdate(
+          """
+            UPDATE TABLE ATUALIZACAO SET IMAGEM = ?
+            WHERE ID = ?
+          """, [item['imagem'], item['id']]
+        );
+      }
+    });
 }

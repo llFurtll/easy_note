@@ -74,9 +74,9 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
           child: Column(
             children: [
               QuillToolbar.basic(
-                color: Colors.white,
-                iconTheme: const QuillIconTheme(
-                  iconUnselectedFillColor: Colors.white,
+                color: Colors.grey[100],
+                iconTheme: QuillIconTheme(
+                  iconUnselectedFillColor: Colors.grey[100],
                   borderRadius: 0.0
                 ),
                 toolbarIconSize: 20,

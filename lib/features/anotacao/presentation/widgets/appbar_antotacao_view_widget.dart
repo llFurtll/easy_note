@@ -96,16 +96,38 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
         padding: EdgeInsets.zero,
         splashRadius: 25.0,
       ),
-      IconButton(
-        color: Colors.black,
-        onPressed: () {
-          controller.unfocus();
-          showBottomSheet(context: context, builder: (context) => const ChangeImageAnotacaoViewWiget());
+      ValueListenableBuilder(
+        valueListenable: controller.backgroundImage,
+        builder: (context, value, child) {
+          final isFoto = value != null;
+
+          return IconButton(
+            tooltip: isFoto ? "Remover imagem de fundo" : "Adicionar imagem de fundo",
+            color: Colors.black,
+            onPressed: () {
+              if (isFoto) {
+                controller.changeBackground(null);
+              } else {
+                controller.unfocus();
+                showBottomSheet(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0)
+                    )
+                  ),
+                  backgroundColor: Colors.blueGrey[50],
+                  context: context,
+                  builder: (context) => const ChangeImageAnotacaoViewWiget()
+                );
+              }
+            },
+            icon: Icon(isFoto ? Icons.no_photography : Icons.photo),
+            padding: EdgeInsets.zero,
+            splashRadius: 25.0,
+          );  
         },
-        icon: const Icon(Icons.photo),
-        padding: EdgeInsets.zero,
-        splashRadius: 25.0,
-      )
+      ),
     ];
   }
 

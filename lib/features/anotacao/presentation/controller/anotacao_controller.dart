@@ -13,6 +13,7 @@ import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/custom_dialog.dart';
 import '../../../configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
 import '../injection/anotacao_injection.dart';
+import '../models/background_anotacao_model.dart';
 
 class AnotacaoController extends ScreenController {
   final showIcones = ValueNotifier(false);
@@ -23,7 +24,8 @@ class AnotacaoController extends ScreenController {
   final editorFocus = FocusNode();
   final isLoading = ValueNotifier(true);
   final configs = <String, int>{};
-  final images = <Uint8List>[];
+  final images = <BackgroundAnotacaoModel>[];
+  final backgroundImage = ValueNotifier<BackgroundAnotacaoModel?>(null);
   
   late final Timer timer;
 
@@ -64,8 +66,35 @@ class AnotacaoController extends ScreenController {
       .toList();
 
     for (String asset in assetsProject) {
-      final bytes = (await rootBundle.load(asset)).buffer.asUint8List();
-      images.add(bytes);
+      Future.value()
+        .then((_) => rootBundle.load(asset))
+        .then((value) => value.buffer.asUint8List())
+        .then((value) {
+          final image = Image.memory(
+          value,
+          fit: BoxFit.cover,
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            if (wasSynchronouslyLoaded) {
+              return child;
+            }
+
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: frame != null
+                ? SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: child,
+                )
+                : const Center(
+                  child: CircularProgressIndicator(),
+                )
+            );
+          },
+        );
+        precacheImage(image.image, context);
+        images.add(BackgroundAnotacaoModel(widget: image, bytes: value));
+      });
     }
   }
 
@@ -190,5 +219,16 @@ class AnotacaoController extends ScreenController {
   void unfocus() {
     titleFocus.unfocus();
     editorFocus.unfocus();
+  }
+
+  void changeBackground(BackgroundAnotacaoModel? image) {
+    if (backgroundImage.value != null) {
+      backgroundImage.value!.isSelect = false;
+    }
+
+    backgroundImage.value = image;
+    if (image != null) {
+      backgroundImage.value!.isSelect = true;
+    }
   }
 }

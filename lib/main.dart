@@ -26,7 +26,8 @@ void main() async {
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent
-        )
+        ),
+        fontFamily: "roboto"
       ),
       routes: routes(),
     )

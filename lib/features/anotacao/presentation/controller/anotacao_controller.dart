@@ -69,32 +69,32 @@ class AnotacaoController extends ScreenController {
 
     for (String asset in assetsProject) {
       Future.value()
-          .then((_) => rootBundle.load(asset))
-          .then((value) => value.buffer.asUint8List())
-          .then((value) {
-        final image = Image.memory(
-          value,
-          fit: BoxFit.cover,
-          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-            if (wasSynchronouslyLoaded) {
-              return child;
-            }
+        .then((_) => rootBundle.load(asset))
+        .then((value) => value.buffer.asUint8List())
+        .then((value) {
+          final image = Image.memory(
+            value,
+            fit: BoxFit.cover,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded) {
+                return child;
+              }
 
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: frame != null
-                    ? SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: child,
-                      )
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      ));
-          },
-        );
-        precacheImage(image.image, context);
-        images.add(BackgroundAnotacaoModel(widget: image, bytes: value));
+              return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: frame != null
+                      ? SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: child,
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ));
+            },
+          );
+          precacheImage(image.image, context);
+          images.add(BackgroundAnotacaoModel(widget: image, bytes: value));
       });
     }
   }
@@ -125,55 +125,59 @@ class AnotacaoController extends ScreenController {
         ScreenInjection.of<AnotacaoInjection>(context).getSaveAnotacao;
 
     Future.value()
-        .then((_) => unfocus())
-        .then((_) => _validateTitle())
-        .then((result) {
-      if (result) {
-        showLoading(context);
-        return true;
-      } else {
-        showMessage(context, "Preencha o título e tente novamente!");
-      }
-
-      return false;
-    }).then((result) async {
-      if (result) {
-        anotacao.titulo = titleController.text;
-        if (anotacao.id == null) {
-          anotacao.data = DateTime.now();
-        }
-        anotacao.ultimaAtualizacao = DateTime.now();
-        if (backgroundImage.value != null) {
-          anotacao.imagemFundo =
-              String.fromCharCodes(backgroundImage.value!.bytes!);
+      .then((_) => unfocus())
+      .then((_) => _validateTitle())
+      .then((result) {
+        if (result) {
+          showLoading(context);
+          return true;
         } else {
-          anotacao.imagemFundo = "";
+          showMessage(context, "Preencha o título e tente novamente!");
         }
-        anotacao.observacao = json.encode(
-          quillController.document.toDelta().toJson()
-        );
-        anotacao.situacao =1;
 
-        final response =
-            await getSaveAnotacao(SaveAnotacaoParams(anotacao: anotacao));
-        response.fold((left) {
-          Navigator.of(context).pop();
-          showMessage(
-            context,
-            "Não foi possível salvar os dados da anotação, tente novamente!"
-          );
-        }, (right) {
-          Navigator.of(context).pop();
-          showMessage(
-            context,
-            "Anotação ${isEdit ? 'atualizada' : 'cadastrada'} com sucesso"
-          );
-          if (!isEdit) {
-            isEdit = true;
-            anotacao.id = right.id;
+        return false;
+      })
+      .then((result) async {
+        if (result) {
+          anotacao.titulo = titleController.text;
+          if (anotacao.id == null) {
+            anotacao.data = DateTime.now();
           }
-        });
-      }
+          anotacao.ultimaAtualizacao = DateTime.now();
+          if (backgroundImage.value != null) {
+            anotacao.imagemFundo = String.fromCharCodes(
+              backgroundImage.value!.bytes!
+            );
+          } else {
+            anotacao.imagemFundo = "";
+          }
+          anotacao.observacao = json.encode(
+            quillController.document.toDelta().toJson()
+          );
+          anotacao.situacao = 1;
+
+          final response = await getSaveAnotacao(
+            SaveAnotacaoParams(anotacao: anotacao)
+          );
+          response.fold((left) {
+            Navigator.of(context).pop();
+            showMessage(
+              context,
+              "Não foi possível salvar os dados da anotação, tente novamente!"
+            );
+          },
+          (right) {
+            Navigator.of(context).pop();
+            showMessage(
+              context,
+              "Anotação ${isEdit ? 'atualizada' : 'cadastrada'} com sucesso"
+            );
+            if (!isEdit) {
+              isEdit = true;
+              anotacao.id = right.id;
+            }
+          });
+        }
     });
   }
 

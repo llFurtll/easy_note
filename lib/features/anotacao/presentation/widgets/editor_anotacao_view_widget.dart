@@ -52,6 +52,7 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
 
   Widget _buildTitle() {
     return TextFormField(
+      controller: controller.titleController,
       focusNode: controller.titleFocus,
       decoration: const InputDecoration(
         border: InputBorder.none,
@@ -60,7 +61,11 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
           fontWeight: FontWeight.bold,
           color: Colors.black,
           fontSize: 18.0
-        )
+        ),
+      ),
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 18.0
       ),
     );
   }

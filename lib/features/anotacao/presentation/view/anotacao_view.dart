@@ -1,4 +1,5 @@
 import 'package:compmanager/screen_view.dart';
+import 'package:easy_note/features/anotacao/presentation/widgets/fab_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
@@ -37,6 +38,7 @@ class AnotacaoView extends ScreenView<AnotacaoController> {
           extendBodyBehindAppBar: true,
           appBar: AppBarAnotacaoViewWidget(),
           body: EditorAnotacaoViewWidget(),
+          floatingActionButton: FabAnotacaoViewWidget(),
         );
       },
     );

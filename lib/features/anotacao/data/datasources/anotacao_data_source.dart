@@ -4,6 +4,8 @@ import '../models/anotacao_model.dart';
 
 abstract class AnotacaoDataSource {
   Future<List<AnotacaoModel>> findAll(String descricao);
+  Future<AnotacaoModel> insert(AnotacaoModel anotacao);
+  Future<AnotacaoModel> update(AnotacaoModel anotacao);
 }
 
 class AnotacaoDataSourceImpl extends AnotacaoDataSource {
@@ -49,6 +51,52 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       return listAnotacao;
     } catch (_) {
       throw StorageException("error-find-all");
+    }
+  }
+
+  @override
+  Future<AnotacaoModel> insert(AnotacaoModel anotacao) async {
+    try {
+      final connection = await storage.getStorage();
+      final map = anotacao.toMap(true);
+
+      int insert = await connection.insert("NOTE", map);
+
+      await connection.close();
+
+      if (insert == 0) {
+        throw StorageException("");
+      }
+
+      map["ID"] = insert;
+      anotacao = AnotacaoModel.fromMap(map);
+      return anotacao;
+    } catch (_) {
+      throw StorageException("error-insert-anotacao");
+    }
+  }
+
+  @override
+  Future<AnotacaoModel> update(AnotacaoModel anotacao) async {
+    try {
+      final connection = await storage.getStorage();
+      final map = anotacao.toMap(false);
+
+      int update = await connection.update(
+        "NOTE",
+        map, where: "ID = ?",
+        whereArgs: [ anotacao.id ]
+      );
+
+      await connection.close();
+
+      if (update == 0) {
+        throw StorageException("");
+      }
+      
+      return anotacao;
+    } catch (_) {
+      throw StorageException("error-update-anotacao");
     }
   }
 }

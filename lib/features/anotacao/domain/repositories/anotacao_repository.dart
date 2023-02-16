@@ -4,4 +4,6 @@ import '../entities/anotacao.dart';
 
 abstract class AnotacaoRepository {
   Future<Result<Failure, List<Anotacao>>> findAll(String descricao);
+  Future<Result<Failure, Anotacao>> insert(Anotacao anotacao);
+  Future<Result<Failure, Anotacao>> update(Anotacao anotacao);
 }

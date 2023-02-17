@@ -1,15 +1,17 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
+import 'package:compmanager/screen_receive.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/adapters/image_picker_easy_note.dart';
 import '../../../../core/failures/failures.dart';
 import '../../../../core/result/result.dart';
 import '../../../../core/utils/delete_file.dart';
+import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/show_loading.dart';
 import '../../../../core/widgets/show_message.dart';
-import '../../../anotacao/domain/entities/anotacao.dart';
 import '../../../anotacao/domain/usecases/get_find_all_anotacao.dart';
+import '../../../anotacao/presentation/view/anotacao_view.dart';
 import '../../../atualizacao/presentation/atualizacao_list/view/atualizacao_list_view.dart';
 import '../../../configuracao/presentation/configuracao_list/view/configuracao_list_view.dart';
 import '../../../sobre/presentation/view/sobre_view.dart';
@@ -18,6 +20,7 @@ import '../../../usuario/domain/usecases/get_photo_usuario.dart';
 import '../../../usuario/domain/usecases/get_save_name_usuario.dart';
 import '../../../usuario/domain/usecases/get_save_photo_usuario.dart';
 import '../injection/home_injection.dart';
+import '../models/list_item_note_home_model.dart';
 import '../widgets/alter_name_home_view_widget.dart';
 import '../widgets/alter_photo_home_view_widget.dart';
 
@@ -47,89 +50,89 @@ class HomeController extends ScreenController {
   GlobalKey<FormState> formKeyAlterName = GlobalKey();
 
   // VARIÁVEIS
-  final List<Anotacao> anotacoes = [];
+  final List<ListItemNoteHomeModel> anotacoes = [];
 
   @override
   void onInit() {
     super.onInit();
 
-    getFindAllAnotacao = ScreenInjection.of<HomeInjection>(context).getFindAllAnotacao;
+    getFindAllAnotacao =
+        ScreenInjection.of<HomeInjection>(context).getFindAllAnotacao;
     getNameUsuario = ScreenInjection.of<HomeInjection>(context).getNameUsuario;
-    getSaveNameUsuario = ScreenInjection.of<HomeInjection>(context).getSaveNameUsuario;
-    getPhotoUsuario = ScreenInjection.of<HomeInjection>(context).getPhotoUsuario;
-    getSavePhotoUsuario = ScreenInjection.of<HomeInjection>(context).getSavePhotoUsuario;
+    getSaveNameUsuario =
+        ScreenInjection.of<HomeInjection>(context).getSaveNameUsuario;
+    getPhotoUsuario =
+        ScreenInjection.of<HomeInjection>(context).getPhotoUsuario;
+    getSavePhotoUsuario =
+        ScreenInjection.of<HomeInjection>(context).getSavePhotoUsuario;
 
     Future.value()
-      .then((_) => loadName())
-      .then((result) {
-        result.fold((left) {
-          showMessage(context, "Erro ao tentar buscar o nome!");
-        }, (right) {
-          if (right.isNotEmpty) {
-            nameUser.value = right;
-          }
-        });
-      })
-      .then((_) => _loadPhoto())
-      .then((result) {
-        result.fold((left) {
-          showMessage(context, "Erro ao tentar buscar a foto de perfil!");
-        }, (right) {
-          if (right.isNotEmpty) {
-            photoUser.value = right;
-          }
-        });
-      })
-      .then((_) => loadAnotacoes(""))
-      .then((response) {
-        response.fold((left) => null, (right) {
-          if (right.isNotEmpty) {
-            anotacoes.addAll(right);
-          }
-        });
-
-      })
-      .then((_) => isLoading.value = false);
+        .then((_) => loadName())
+        .then((result) {
+          result.fold((left) {
+            showMessage(context, "Erro ao tentar buscar o nome!");
+          }, (right) {
+            if (right.isNotEmpty) {
+              nameUser.value = right;
+            }
+          });
+        })
+        .then((_) => _loadPhoto())
+        .then((result) {
+          result.fold((left) {
+            showMessage(context, "Erro ao tentar buscar a foto de perfil!");
+          }, (right) {
+            if (right.isNotEmpty) {
+              photoUser.value = right;
+            }
+          });
+        })
+        .then((_) => loadAnotacoes(""))
+        .then((_) => isLoading.value = false);
   }
 
-  Future<Result<Failure, List<Anotacao>>> loadAnotacoes(String descricao) async {
-    return await getFindAllAnotacao(FindAllAnotacaoParams(descricao: descricao));
+  Future<void> loadAnotacoes(String descricao) async {
+    anotacoes.clear();
+    final response = await getFindAllAnotacao(
+      FindAllAnotacaoParams(descricao: descricao)
+    );
+    response.fold((left) => null, (right) {
+      if (right.isNotEmpty) {
+        anotacoes.addAll(
+          right.map((item) => ListItemNoteHomeModel.fromMap(item))
+        );
+      }
+    });
   }
 
   Future<Result<Failure, String>> loadName() async {
-    return await getNameUsuario(NameUsuarioParams(
-      idUsuario: 1
-    ));
+    return await getNameUsuario(NameUsuarioParams(idUsuario: 1));
   }
 
-  void saveName(){
+  void saveName() {
     if (formKeyAlterName.currentState!.validate()) {
       formKeyAlterName.currentState!.save();
 
       Future.value()
         .then((_) async => await getSaveNameUsuario(
-          SaveNameUsuarioParams(
-            idUsuario: 1,
-            name: nameUser.value
-          )
+          SaveNameUsuarioParams(idUsuario: 1, name: nameUser.value)
         ))
         .then((result) {
           result.fold((left) => null, (right) {
             if (right == 0) {
-              showMessage(context, "Erro ao atualizar o nome do usuário, tente novamente!");
+              showMessage(context,
+                  "Erro ao atualizar o nome do usuário, tente novamente!");
               nameUser.value = "";
             } else {
               Navigator.of(context).pop();
             }
           });
-        });
+      });
     }
   }
 
   Future<Result<Failure, String>> _loadPhoto() async {
-    return await getPhotoUsuario(PhotoUsuarioParams(
-      idUsuario: 1
-    ));
+    return await getPhotoUsuario(PhotoUsuarioParams(idUsuario: 1));
   }
 
   void removeFocus() {
@@ -138,47 +141,48 @@ class HomeController extends ScreenController {
 
   void showAlterName() {
     showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      context: context,
-      builder: (context) => const AlterNameHomeViewWidget()
-    );
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => const AlterNameHomeViewWidget());
   }
 
   void showAlterPhoto() {
-    showDialog(context: context, builder: (context) => const AlterPhotoHomeViewWidget());
+    showDialog(
+        context: context,
+        builder: (context) => const AlterPhotoHomeViewWidget());
   }
 
   void fromGallery() {
     Future.value()
-      .then((_) =>  Navigator.of(context).pop())
-      .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.gallery))
-      .then((result) => _savePhotoUser(result))
-      .then((result) {
-        if (result.isNotEmpty) {
-          photoUser.value = result;
-        } else if (result == "0") {
-          showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
-        }
-      })
-      .then((_) => Navigator.of(context).pop());
+        .then((_) => Navigator.of(context).pop())
+        .then((_) => showLoading(context))
+        .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.gallery))
+        .then((result) => _savePhotoUser(result))
+        .then((result) {
+      if (result.isNotEmpty) {
+        photoUser.value = result;
+      } else if (result == "0") {
+        showMessage(context,
+            "Não foi possível salvar a foto de perfil, tente novamente!");
+      }
+    }).then((_) => Navigator.of(context).pop());
   }
 
   void fromCamera() {
     Future.value()
-      .then((value) => Navigator.of(context).pop())
-      .then((_) => showLoading(context))
-      .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.camera))
-      .then((result) => _savePhotoUser(result))
-      .then((result) {
-        if (result.isNotEmpty && result != "0") {
-          photoUser.value = result;
-        } else if (result == "0") {
-          showMessage(context, "Não foi possível salvar a foto de perfil, tente novamente!");
-        }
-      })
-      .then((_) => Navigator.of(context).pop());
+        .then((value) => Navigator.of(context).pop())
+        .then((_) => showLoading(context))
+        .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.camera))
+        .then((result) => _savePhotoUser(result))
+        .then((result) {
+      if (result.isNotEmpty && result != "0") {
+        photoUser.value = result;
+      } else if (result == "0") {
+        showMessage(context,
+            "Não foi possível salvar a foto de perfil, tente novamente!");
+      }
+    }).then((_) => Navigator.of(context).pop());
   }
 
   Future<void> _deleteOldPhoto() async {
@@ -200,10 +204,8 @@ class HomeController extends ScreenController {
       }
 
       await _deleteOldPhoto();
-      final save = await getSavePhotoUsuario(SavePhotoUsuarioParams(
-        idUsuario: 1,
-        path: pathFile
-      ));
+      final save = await getSavePhotoUsuario(
+          SavePhotoUsuarioParams(idUsuario: 1, path: pathFile));
 
       return save.fold((left) => "", (right) async {
         if (right > 0) {
@@ -219,26 +221,26 @@ class HomeController extends ScreenController {
 
   Future<void> removePhoto() async {
     Future.value()
-      .then((_) => Navigator.of(context).pop())
-      .then((_) => showLoading(context))
-      .then((_) => _deleteOldPhoto())
-      .then((_) => getSavePhotoUsuario(SavePhotoUsuarioParams(
-        idUsuario: 1,
-        path: ""
-      )))
-      .then((result) {
-        Navigator.of(context).pop();
-        result.fold((left) {
-          showMessage(context, "Não foi possível remover a foto de perfil, tente novamente!");
-        }, (right) {
-          if (right > 0) {
-            photoUser.value = "";
-            showMessage(context, "Foto de perfil removida com sucesso!");
-          } else {
-            showMessage(context, "Não foi possível remover a foto de perfil, tente novamente!");
-          }
-        });
+        .then((_) => Navigator.of(context).pop())
+        .then((_) => showLoading(context))
+        .then((_) => _deleteOldPhoto())
+        .then((_) =>
+            getSavePhotoUsuario(SavePhotoUsuarioParams(idUsuario: 1, path: "")))
+        .then((result) {
+      Navigator.of(context).pop();
+      result.fold((left) {
+        showMessage(context,
+            "Não foi possível remover a foto de perfil, tente novamente!");
+      }, (right) {
+        if (right > 0) {
+          photoUser.value = "";
+          showMessage(context, "Foto de perfil removida com sucesso!");
+        } else {
+          showMessage(context,
+              "Não foi possível remover a foto de perfil, tente novamente!");
+        }
       });
+    });
   }
 
   bool verifySize(BoxConstraints constraints) {
@@ -262,6 +264,21 @@ class HomeController extends ScreenController {
   void toNovo() {
     Navigator.of(context).pushNamed(AtualizacaoList.routeAtualizacaoList);
   }
-  
-  saveFile(String path, String subFolder) {}
+
+  void toEdit(int id) {
+    Navigator.of(context).pushNamed(
+      AnotacaoScreen.routeAnotacao,
+      arguments: id
+    );
+  }
+
+  void receive(String message, value, {ScreenReceive? screen}) async {
+    switch (message) {
+      case "update":
+        Future.value()
+          .then((_) => isLoading.value = true)
+          .then((_) => loadAnotacoes(""))
+          .then((_) => isLoading.value = false);
+    }
+  }
 }

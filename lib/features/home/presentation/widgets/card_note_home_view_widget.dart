@@ -4,12 +4,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../core/widgets/spacer.dart';
 import '../controller/home_controller.dart';
+import '../models/list_item_note_home_model.dart';
 
 // ignore: must_be_immutable
 class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
-  final int id;
+  final ListItemNoteHomeModel item;
 
-  const CardNoteHomeViewWidget({super.key, super.context, required this.id});
+  const CardNoteHomeViewWidget({super.key, super.context, required this.item});
   
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
         borderRadius: BorderRadius.all(Radius.circular(10.0))
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () => controller.toEdit(item.id),
         child: Card(
           clipBehavior: Clip.antiAlias,
           elevation: 10.0,
@@ -52,11 +53,11 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
               ],
             ),
             child: Container( // IMAGEM DE FUNDO
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage("https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true"),
+            decoration: BoxDecoration(
+              image: item.imagemFundo.isNotEmpty ? DecorationImage(
+                image: MemoryImage(item.imagemFundo),
                 fit: BoxFit.cover
-              )
+              ) : null
             ),
             child: Container( // SOMBRA
               color: Colors.white.withOpacity(0.5),
@@ -83,7 +84,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
       child: Text(
-        "NOTA - $id",
+        item.titulo,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 18.0,
@@ -101,7 +102,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
       width: double.infinity,
       color: Colors.grey[400],
       child: Text(
-        DateTime.now().toString(),
+        item.data,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 18.0,

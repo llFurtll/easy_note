@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
+import 'package:compmanager/screen_mediator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -81,20 +82,27 @@ class AnotacaoController extends ScreenController {
               }
 
               return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: frame != null
-                      ? SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: child,
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator(),
-                        ));
+                duration: const Duration(milliseconds: 200),
+                child: frame != null
+                  ? SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: child,
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                );
             },
           );
           precacheImage(image.image, context);
-          images.add(BackgroundAnotacaoModel(widget: image, bytes: value));
+          images.add(
+            BackgroundAnotacaoModel(
+              widget: image,
+              bytes: value,
+              pathImage: asset
+            )
+          );
       });
     }
   }
@@ -145,9 +153,7 @@ class AnotacaoController extends ScreenController {
           }
           anotacao.ultimaAtualizacao = DateTime.now();
           if (backgroundImage.value != null) {
-            anotacao.imagemFundo = String.fromCharCodes(
-              backgroundImage.value!.bytes!
-            );
+            anotacao.imagemFundo = backgroundImage.value!.pathImage;
           } else {
             anotacao.imagemFundo = "";
           }
@@ -176,6 +182,7 @@ class AnotacaoController extends ScreenController {
               isEdit = true;
               anotacao.id = right.id;
             }
+            ScreenMediator.callScreen("Home")!.receive("update", null);
           });
         }
     });

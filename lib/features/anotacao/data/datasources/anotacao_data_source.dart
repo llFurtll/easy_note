@@ -1,9 +1,11 @@
+import 'package:flutter/services.dart';
+
 import '../../../../core/exceptions/custom_exceptions.dart';
 import '../../../../core/storage/storage.dart';
 import '../models/anotacao_model.dart';
 
 abstract class AnotacaoDataSource {
-  Future<List<AnotacaoModel>> findAll(String descricao);
+  Future<List<Map<String, Object?>>> findAll(String descricao);
   Future<AnotacaoModel> insert(AnotacaoModel anotacao);
   Future<AnotacaoModel> update(AnotacaoModel anotacao);
 }
@@ -12,7 +14,7 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
   final storage = StorageImpl();
 
   @override
-  Future<List<AnotacaoModel>> findAll(String descricao) async {
+  Future<List<Map<String, Object?>>> findAll(String descricao) async {
     final connection = await storage.getStorage();
 
     String sql = """
@@ -38,17 +40,25 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
     sqlFinal += "\n$sqlOrderBy";
 
     try {
-      List<AnotacaoModel> listAnotacao = [];
+      List<Map<String, Object?>> listNote = await connection.rawQuery(sqlFinal);
+      List<Map<String, Object?>> result = [];
 
-      List<Map> listNote = await connection.rawQuery(sqlFinal);
-
-      for (var elemento in listNote) {
-        listAnotacao.add(AnotacaoModel.fromMap(elemento));
+      for (Map<String, Object?> map in listNote) {
+        final tmpMap = Map<String, Object>.from(map);
+        final path = tmpMap["imagem_fundo"] as String;
+        if (path.isNotEmpty && path.contains("lib")) {
+          final bytesData = await rootBundle.load(path);
+          final buffer = bytesData.buffer.asUint8List();
+          tmpMap["imagem_fundo"] = buffer;
+        } else {
+          tmpMap["imagem_fundo"] = Uint8List(0);
+        }
+        result.add(tmpMap);
       }
 
-      connection.close();
+      await connection.close();
 
-      return listAnotacao;
+      return result;
     } catch (_) {
       throw StorageException("error-find-all");
     }
@@ -82,18 +92,15 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       final connection = await storage.getStorage();
       final map = anotacao.toMap(false);
 
-      int update = await connection.update(
-        "NOTE",
-        map, where: "ID = ?",
-        whereArgs: [ anotacao.id ]
-      );
+      int update = await connection
+          .update("NOTE", map, where: "ID = ?", whereArgs: [anotacao.id]);
 
       await connection.close();
 
       if (update == 0) {
         throw StorageException("");
       }
-      
+
       return anotacao;
     } catch (_) {
       throw StorageException("error-update-anotacao");

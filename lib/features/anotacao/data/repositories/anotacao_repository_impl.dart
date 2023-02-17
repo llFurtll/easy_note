@@ -12,7 +12,7 @@ class AnotacaoRepositoryImpl extends AnotacaoRepository {
   AnotacaoRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Result<Failure, List<Anotacao>>> findAll(String descricao) async {
+  Future<Result<Failure, List<Map<String, Object?>>>> findAll(String descricao) async {
     try {
       final result = await dataSource.findAll(descricao);
       return Right(result);

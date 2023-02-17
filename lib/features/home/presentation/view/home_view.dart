@@ -1,3 +1,4 @@
+import 'package:compmanager/screen_receive.dart';
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
@@ -49,5 +50,10 @@ class HomeView extends ScreenView<HomeController> {
       onPressed: () => Navigator.pushNamed(context, AnotacaoScreen.routeAnotacao),
       child: const Icon(Icons.add),
     );
+  }
+
+  @override
+  void receive(String message, value, {ScreenReceive? screen}) {
+    controller.receive(message, value, screen: screen);
   }
 }

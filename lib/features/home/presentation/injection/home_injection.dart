@@ -1,4 +1,5 @@
 import 'package:compmanager/screen_injection.dart';
+import 'package:compmanager/screen_receive.dart';
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,8 @@ class HomeInjection extends ScreenInjection<HomeController> {
     required ScreenBridge child
   }) : super(
     child: child,
-    controller: HomeController()
+    controller: HomeController(),
+    receiveArgs: const ScreenReceiveArgs(receive: true, identity: "Home")
   );
 
   @override

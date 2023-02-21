@@ -1,8 +1,8 @@
 import 'package:compmanager/screen_widget.dart';
-import 'package:easy_note/features/anotacao/presentation/widgets/change_image_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
+import 'change_image_anotacao_view_widget.dart';
 
 class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
     with PreferredSizeWidget {

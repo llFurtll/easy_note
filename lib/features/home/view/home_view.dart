@@ -2,7 +2,7 @@ import 'package:compmanager/screen_receive.dart';
 import 'package:compmanager/screen_view.dart';
 import 'package:flutter/material.dart';
 
-import '../../../anotacao/presentation/view/anotacao_view.dart';
+import '../../anotacao/presentation/view/anotacao_view.dart';
 import '../controller/home_controller.dart';
 import '../injection/home_injection.dart';
 import '../widgets/appbar_home_view_widget.dart';

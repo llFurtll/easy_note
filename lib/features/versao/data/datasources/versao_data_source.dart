@@ -26,11 +26,11 @@ class VersaoDataSourceImpl implements VersaoDataSource {
         response.add(VersaoModel.fromMap(item));
       }
 
-      await connection.close();
-
       return response;
     } catch (_) {
       throw StorageException("error-find-all-versao");
+    } finally {
+      await connection.close();
     }
   }
 
@@ -44,13 +44,11 @@ class VersaoDataSourceImpl implements VersaoDataSource {
       """;
 
       List<Map<String, Object?>> result = await connection.rawQuery(sql);
-
-      connection.close();
-
       return result[0]["id"] as int;
-      
     } catch (_) {
       throw StorageException("error-find-last-versao");
+    } finally {
+      await connection.close();
     }
   }
 }

@@ -34,11 +34,11 @@ class AtualizacaoDataSourceImpl implements AtualizacaoDataSource {
         response.add(AtualizacaoModel.fromMap(item));
       }
 
-      await connection.close();
-
       return response;
     } catch (_) {
       throw StorageException("error-find-atualizacao-by-versao");
+    } finally {
+      await connection.close();
     }
   }
 
@@ -57,12 +57,11 @@ class AtualizacaoDataSourceImpl implements AtualizacaoDataSource {
 
     try {
       List<Map<String, Object?>> result = await connection.rawQuery(sql, [ idVersao ]);
-
-      connection.close();
-
       return result[0]["TOTAL"] as int > 0;
     } catch (_) {
       throw StorageException("error-find-all-by-versao-without-visualizacao");
+    } finally {
+      await connection.close();
     }
   }
 }

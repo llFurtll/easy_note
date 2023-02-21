@@ -5,7 +5,7 @@ import '../features/atualizacao/presentation/atualizacao_detalhe/view/atualizaca
 import '../features/atualizacao/presentation/atualizacao_list/view/atualizacao_list_view.dart';
 import '../features/configuracao/presentation/configuracao_edit/view/configuracao_edit_view.dart';
 import '../features/configuracao/presentation/configuracao_list/view/configuracao_list_view.dart';
-import '../features/home/view/home_view.dart';
+import '../features/home/presentation/view/home_view.dart';
 import '../features/sobre/presentation/view/sobre_view.dart';
 import '../features/splash/presentation/view/splash_view.dart';
 

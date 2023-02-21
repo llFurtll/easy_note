@@ -6,7 +6,7 @@ import '../../../../../core/arguments/atualizacao_detalhe_view_arguments.dart';
 import '../../../../../core/failures/failures.dart';
 import '../../../../../core/result/result.dart';
 import '../../../../../core/widgets/show_loading.dart';
-import '../../../../home/view/home_view.dart';
+import '../../../../home/presentation/view/home_view.dart';
 import '../../../../splash/presentation/view/splash_view.dart';
 import '../../../../visualizacao/domain/usecases/get_save_visualizacao.dart';
 import '../../../domain/entities/atualizacao.dart';

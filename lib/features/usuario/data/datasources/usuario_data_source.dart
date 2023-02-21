@@ -24,7 +24,7 @@ class UsuarioDataSourceImpl extends UsuarioDataSource {
     } catch (_) {
       throw StorageException("error-update-name");
     } finally {
-      connection.close();
+      await connection.close();
     }
   }
 
@@ -38,12 +38,11 @@ class UsuarioDataSourceImpl extends UsuarioDataSource {
 
     try {
       final result = await connection.rawQuery(sql, [ idUsuario ]);
-
-      connection.close();
-
       return result.first["nome"] as String;
     } catch (e) {
       throw StorageException("error-get-name");
+    } finally {
+      await connection.close();
     }
   }
 
@@ -61,7 +60,7 @@ class UsuarioDataSourceImpl extends UsuarioDataSource {
     } catch (e) {
       throw StorageException("error-get-photo");
     } finally {
-      connection.close();
+      await connection.close();
     }
   }
 
@@ -78,7 +77,7 @@ class UsuarioDataSourceImpl extends UsuarioDataSource {
     } catch (e) {
       throw StorageException("error-update-photo");
     } finally {
-      connection.close();
+      await connection.close();
     }
   }
 }

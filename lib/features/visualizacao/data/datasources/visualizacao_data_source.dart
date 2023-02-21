@@ -20,11 +20,11 @@ class VisualizacaoDataSourceImpl extends VisualizacaoDataSource {
 
       int insert = await connection.rawInsert(sql, [ idUsuario, idVersao ]);
 
-      connection.close();
-
       return insert;
     } catch (_) {
       throw StorageException("error-insert-visualizacao");
+    } finally {
+      await connection.close();
     }
   }
 }

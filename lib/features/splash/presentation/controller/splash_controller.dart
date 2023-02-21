@@ -9,7 +9,7 @@ import '../../../../core/storage/storage.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../atualizacao/domain/usecases/get_existe_atualizacao_without_view.dart';
 import '../../../atualizacao/presentation/atualizacao_detalhe/view/atualizacao_detalhe_view.dart';
-import '../../../home/view/home_view.dart';
+import '../../../home/presentation/view/home_view.dart';
 import '../injection/splash_injection.dart';
 
 class SplashController extends ScreenController {

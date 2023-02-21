@@ -30,11 +30,11 @@ class ConfiguracaoDataSourceImpl extends ConfiguracaoDataSource {
         }
       }
 
-      connection.close();
-
       return response;
     } catch (_) {
       throw StorageException("error-find-all-config-by-modulo");
+    } finally {
+      await connection.close();
     }
   }
 
@@ -50,6 +50,8 @@ class ConfiguracaoDataSourceImpl extends ConfiguracaoDataSource {
       return await connection.rawUpdate(sql, [ configuracao.valor, configuracao.identificador ]);
     } catch (_) {
       throw StorageException("error-update-config");
+    } finally {
+      await connection.close();
     }
   }
 }

@@ -1,5 +1,3 @@
-import 'package:flutter/services.dart';
-
 import '../../../../core/exceptions/custom_exceptions.dart';
 import '../../../../core/storage/storage.dart';
 import '../models/anotacao_model.dart';
@@ -40,34 +38,19 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
     sqlFinal += "\n$sqlOrderBy";
 
     try {
-      List<Map<String, Object?>> listNote = await connection.rawQuery(sqlFinal);
-      List<Map<String, Object?>> result = [];
-
-      for (Map<String, Object?> map in listNote) {
-        final tmpMap = Map<String, Object>.from(map);
-        final path = tmpMap["imagem_fundo"] as String;
-        if (path.isNotEmpty && path.contains("lib")) {
-          final bytesData = await rootBundle.load(path);
-          final buffer = bytesData.buffer.asUint8List();
-          tmpMap["imagem_fundo"] = buffer;
-        } else {
-          tmpMap["imagem_fundo"] = Uint8List(0);
-        }
-        result.add(tmpMap);
-      }
-
-      await connection.close();
-
-      return result;
+      return await connection.rawQuery(sqlFinal);
     } catch (_) {
       throw StorageException("error-find-all");
+    } finally {
+      await connection.close();
     }
   }
 
   @override
   Future<AnotacaoModel> insert(AnotacaoModel anotacao) async {
+    final connection = await storage.getStorage();
+
     try {
-      final connection = await storage.getStorage();
       final map = anotacao.toMap(true);
 
       int insert = await connection.insert("NOTE", map);
@@ -83,13 +66,16 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       return anotacao;
     } catch (_) {
       throw StorageException("error-insert-anotacao");
+    } finally {
+      await connection.close();
     }
   }
 
   @override
   Future<AnotacaoModel> update(AnotacaoModel anotacao) async {
+    final connection = await storage.getStorage();
+
     try {
-      final connection = await storage.getStorage();
       final map = anotacao.toMap(false);
 
       int update = await connection
@@ -104,6 +90,8 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       return anotacao;
     } catch (_) {
       throw StorageException("error-update-anotacao");
+    } finally {
+      await connection.close();
     }
   }
 }

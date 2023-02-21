@@ -7,4 +7,5 @@ abstract class AnotacaoRepository {
   Future<Result<Failure, Anotacao>> insert(Anotacao anotacao);
   Future<Result<Failure, Anotacao>> update(Anotacao anotacao);
   Future<Result<Failure, Anotacao>> findById(int idAnotacao);
+  Future<Result<Failure, int>> delete(int idAnotacao);
 }

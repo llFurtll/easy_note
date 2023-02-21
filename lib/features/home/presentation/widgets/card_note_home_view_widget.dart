@@ -50,7 +50,8 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
                 SlidableAction(
                   icon: Icons.delete,
                   backgroundColor: Colors.red,
-                  onPressed: (BuildContext context) {}
+                  onPressed: (BuildContext context) =>
+                    controller.removeAnotacao(item)
                 )
               ],
             ),

@@ -54,11 +54,11 @@ class AnotacaoController extends ScreenController {
     }
 
     Future.value()
-        .then((_) => _loadConfigs())
-        .then((_) => _loadImages())
-        .then((_) => _loadAnotacao(idAnotacao))
-        .then((_) => Future.delayed(const Duration(milliseconds: 500)))
-        .then((_) => isLoading.value = false);
+      .then((_) => _loadConfigs())
+      .then((_) => _loadImages())
+      .then((_) => _loadAnotacao(idAnotacao))
+      .then((_) => Future.delayed(const Duration(milliseconds: 500)))
+      .then((_) => isLoading.value = false);
   }
 
   void _loadAnotacao(int? idAnotacao) async {
@@ -68,33 +68,32 @@ class AnotacaoController extends ScreenController {
     }
 
     final getFindById =
-        ScreenInjection.of<AnotacaoInjection>(context).getFindByIdAnotacao;
+      ScreenInjection.of<AnotacaoInjection>(context).getFindByIdAnotacao;
 
     Future.value()
-        .then(
-            (_) => getFindById(FindByIdAnotacaoParams(idAnotacao: idAnotacao)))
-        .then((response) => response.fold((left) => null, (right) => right))
-        .then((response) {
-      if (response != null) {
-        formAnotacao = FormAnotacao.fromAnotacao(response);
-        titleController.text = formAnotacao.titulo ?? "";
-        if (formAnotacao.observacao != null &&
-            formAnotacao.observacao!.isNotEmpty) {
-          quillController = QuillController(
-              document: Document.fromJson(jsonDecode(formAnotacao.observacao!)),
-              selection: const TextSelection.collapsed(offset: 0));
+      .then((_) => getFindById(FindByIdAnotacaoParams(idAnotacao: idAnotacao)))
+      .then((response) => response.fold((left) => null, (right) => right))
+      .then((response) {
+        if (response != null) {
+          formAnotacao = FormAnotacao.fromAnotacao(response);
+          titleController.text = formAnotacao.titulo ?? "";
+          if (formAnotacao.observacao != null &&
+              formAnotacao.observacao!.isNotEmpty) {
+            quillController = QuillController(
+                document: Document.fromJson(jsonDecode(formAnotacao.observacao!)),
+                selection: const TextSelection.collapsed(offset: 0));
+          }
+          if (formAnotacao.imagemFundo != null &&
+              formAnotacao.imagemFundo!.isNotEmpty) {
+            backgroundImage.value = images.firstWhere(
+              (item) => item.pathImage == formAnotacao.imagemFundo
+            );
+          }
+          ultimaAtualizacao.value =
+            "Última atualização às: ${DateFormat("dd/MM/yyyy HH:mm:ss")
+            .format(formAnotacao.ultimaAtualizacao!
+          )}";
         }
-        if (formAnotacao.imagemFundo != null &&
-            formAnotacao.imagemFundo!.isNotEmpty) {
-          backgroundImage.value = images.firstWhere(
-            (item) => item.pathImage == formAnotacao.imagemFundo
-          );
-        }
-        ultimaAtualizacao.value =
-          "Última atualização às: ${DateFormat("dd/MM/yyyy HH:mm:ss")
-          .format(formAnotacao.ultimaAtualizacao!
-        )}";
-      }
     });
   }
 
@@ -103,37 +102,39 @@ class AnotacaoController extends ScreenController {
     final Map<String, dynamic> manifestMap = json.decode(manifest);
 
     final assetsProject = manifestMap.keys
-        .where((key) => key.contains("lib/assets/images/anotacao"))
-        .where((key) => key.contains(".jpg"))
-        .toList();
+      .where((key) => key.contains("lib/assets/images/anotacao"))
+      .where((key) => key.contains(".jpg"))
+      .toList();
 
     for (String asset in assetsProject) {
-      Future.value().then((_) {
-        return Image.asset(
-          asset,
-          fit: BoxFit.cover,
-          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-            if (wasSynchronouslyLoaded) {
-              return child;
-            }
+      Future.value()
+        .then((_) {
+          return Image.asset(
+            asset,
+            fit: BoxFit.cover,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded) {
+                return child;
+              }
 
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: frame != null
-                  ? SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: child,
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ));
-          },
-        );
-      }).then((image) async {
-        await precacheImage(image.image, context);
-        images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
-      });
+              return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: frame != null
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: child,
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      ));
+            },
+          );
+        })
+        .then((image) async {
+          await precacheImage(image.image, context);
+          images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
+        });
     }
   }
 
@@ -153,66 +154,67 @@ class AnotacaoController extends ScreenController {
 
   void _loadConfigs() async {
     final usecase =
-        ScreenInjection.of<AnotacaoInjection>(context).getFindAllConfigByModulo;
+      ScreenInjection.of<AnotacaoInjection>(context).getFindAllConfigByModulo;
     final result = await usecase(FindAllConfigByModuloParams(modulo: "NOTE"));
     result.fold((left) => null, (right) => configs.addAll(right));
   }
 
   void save() async {
     final getSaveAnotacao =
-        ScreenInjection.of<AnotacaoInjection>(context).getSaveAnotacao;
+      ScreenInjection.of<AnotacaoInjection>(context).getSaveAnotacao;
 
     Future.value()
-        .then((_) => unfocus())
-        .then((_) => _validateTitle())
-        .then((result) {
-      if (result) {
-        showLoading(context);
-        return true;
-      } else {
-        showMessage(context, "Preencha o título e tente novamente!");
-      }
-
-      return false;
-    }).then((result) async {
-      if (result) {
-        formAnotacao.titulo = titleController.text;
-        formAnotacao.ultimaAtualizacao = DateTime.now();
-        if (backgroundImage.value != null) {
-          formAnotacao.imagemFundo = backgroundImage.value!.pathImage;
+      .then((_) => unfocus())
+      .then((_) => _validateTitle())
+      .then((result) {
+        if (result) {
+          showLoading(context);
+          return true;
         } else {
-          formAnotacao.imagemFundo = "";
+          showMessage(context, "Preencha o título e tente novamente!");
         }
-        formAnotacao.observacao =
-          json.encode(quillController.document.toDelta().toJson());
-        formAnotacao.situacao = 1;
 
-        final response = await getSaveAnotacao(
-          SaveAnotacaoParams(anotacao: formAnotacao.toAnotacao()));
-        response.fold((left) {
-          Navigator.of(context).pop();
-          showMessage(
-            context,
-            "Não foi possível salvar os dados da anotação, tente novamente!"
-          );
-        }, (right) {
-          Navigator.of(context).pop();
-          ultimaAtualizacao.value =
-            "Última atualização às: ${
-            DateFormat("dd/MM/yyyy HH:mm:ss")
-            .format(formAnotacao.ultimaAtualizacao!
-          )}";
-          showMessage(
-            context,
-            "Anotação ${isEdit.value ? 'atualizada' : 'cadastrada'} com sucesso"
-          );
-          if (!isEdit.value) {
-            isEdit.value = true;
-            formAnotacao.id = right.id;
+        return false;
+      })
+      .then((result) async {
+        if (result) {
+          formAnotacao.titulo = titleController.text;
+          formAnotacao.ultimaAtualizacao = DateTime.now();
+          if (backgroundImage.value != null) {
+            formAnotacao.imagemFundo = backgroundImage.value!.pathImage;
+          } else {
+            formAnotacao.imagemFundo = "";
           }
-          ScreenMediator.callScreen("Home")!.receive("update", null);
-        });
-      }
+          formAnotacao.observacao =
+            json.encode(quillController.document.toDelta().toJson());
+          formAnotacao.situacao = 1;
+
+          final response = await getSaveAnotacao(
+            SaveAnotacaoParams(anotacao: formAnotacao.toAnotacao()));
+          response.fold((left) {
+            Navigator.of(context).pop();
+            showMessage(
+              context,
+              "Não foi possível salvar os dados da anotação, tente novamente!"
+            );
+          }, (right) {
+            Navigator.of(context).pop();
+            ultimaAtualizacao.value =
+              "Última atualização às: ${
+              DateFormat("dd/MM/yyyy HH:mm:ss")
+              .format(formAnotacao.ultimaAtualizacao!
+            )}";
+            showMessage(
+              context,
+              "Anotação ${isEdit.value ? 'atualizada' : 'cadastrada'} com sucesso"
+            );
+            if (!isEdit.value) {
+              isEdit.value = true;
+              formAnotacao.id = right.id;
+            }
+            ScreenMediator.callScreen("Home")!.receive("update", null);
+          });
+        }
     });
   }
 
@@ -324,26 +326,28 @@ class FormAnotacao {
   String? observacao;
   DateTime? ultimaAtualizacao;
 
-  FormAnotacao(
-      {this.id,
-      this.titulo,
-      this.situacao = 1,
-      this.data,
-      this.imagemFundo = "",
-      this.observacao,
-      this.ultimaAtualizacao}) {
+  FormAnotacao({
+    this.id,
+    this.titulo,
+    this.situacao = 1,
+    this.data,
+    this.imagemFundo = "",
+    this.observacao,
+    this.ultimaAtualizacao}
+  ) {
     data ??= DateTime.now();
   }
 
   factory FormAnotacao.fromAnotacao(Anotacao anotacao) {
     return FormAnotacao(
-        id: anotacao.id,
-        titulo: anotacao.titulo,
-        data: anotacao.data,
-        situacao: anotacao.situacao,
-        imagemFundo: anotacao.imagemFundo,
-        observacao: anotacao.observacao,
-        ultimaAtualizacao: anotacao.ultimaAtualizacao);
+      id: anotacao.id,
+      titulo: anotacao.titulo,
+      data: anotacao.data,
+      situacao: anotacao.situacao,
+      imagemFundo: anotacao.imagemFundo,
+      observacao: anotacao.observacao,
+      ultimaAtualizacao: anotacao.ultimaAtualizacao
+    );
   }
 
   Anotacao toAnotacao() {

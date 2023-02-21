@@ -53,4 +53,14 @@ class AnotacaoRepositoryImpl extends AnotacaoRepository {
       return Left(StorageFailure(message: "error-find-by-id-anotacao"));
     }
   }
+
+  @override
+  Future<Result<Failure, int>> delete(int idAnotacao) async {
+    try {
+      final result = await dataSource.delete(idAnotacao);
+      return Right(result);
+    } on StorageException catch (_) {
+      return Left(StorageFailure(message: "error-delete-anotacao"));
+    }
+  }
 }

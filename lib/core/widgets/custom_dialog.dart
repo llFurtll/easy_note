@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomDialog extends StatelessWidget {
   final Widget title;
   final Widget content;
+  final List<Widget>? actions;
 
   const CustomDialog({
     super.key,
     required this.title,
-    required this.content
+    required this.content,
+    this.actions
   });
 
   @override
@@ -15,6 +17,7 @@ class CustomDialog extends StatelessWidget {
     return AlertDialog(
       title: title,
       content: content,
+      actions: actions,
     );
   }
 }

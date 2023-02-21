@@ -7,6 +7,7 @@ abstract class AnotacaoDataSource {
   Future<AnotacaoModel> insert(AnotacaoModel anotacao);
   Future<AnotacaoModel> update(AnotacaoModel anotacao);
   Future<AnotacaoModel> findById(int idAnotacao);
+  Future<int> delete(int idAnotcao);
 }
 
 class AnotacaoDataSourceImpl extends AnotacaoDataSource {
@@ -82,8 +83,6 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       int update = await connection
           .update("NOTE", map, where: "ID = ?", whereArgs: [anotacao.id]);
 
-      await connection.close();
-
       if (update == 0) {
         throw StorageException("");
       }
@@ -126,6 +125,26 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       rethrow;
     } catch (_) {
       throw StorageException("error-find-by-id-anotacao");
+    } finally {
+      await connection.close();
+    }
+  }
+
+  @override
+  Future<int> delete(int idAnotcao) async {
+    final connection = await storage.getStorage();
+
+    try {
+      int update = await connection
+          .delete("NOTE", where: "ID = ?", whereArgs: [ idAnotcao ]);
+
+      if (update == 0) {
+        throw StorageException("");
+      }
+
+      return update;
+    } catch (_) {
+      throw StorageException("error-delete-anotacao");
     } finally {
       await connection.close();
     }

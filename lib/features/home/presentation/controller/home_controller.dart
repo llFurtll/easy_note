@@ -1,6 +1,8 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_receive.dart';
+import '../../../anotacao/domain/usecases/get_delete_anotacao.dart';
+import '../widgets/delete_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/adapters/image_picker_easy_note.dart';
@@ -34,6 +36,7 @@ class HomeController extends ScreenController {
   late final GetSaveNameUsuario getSaveNameUsuario;
   late final GetPhotoUsuario getPhotoUsuario;
   late final GetSavePhotoUsuario getSavePhotoUsuario;
+  late final GetDeleteAnotacao getDeleteAnotacao;
 
   // VALUE NOTIFIER
   final ValueNotifier<bool> isLoading = ValueNotifier(true);
@@ -65,6 +68,8 @@ class HomeController extends ScreenController {
         ScreenInjection.of<HomeInjection>(context).getPhotoUsuario;
     getSavePhotoUsuario =
         ScreenInjection.of<HomeInjection>(context).getSavePhotoUsuario;
+    getDeleteAnotacao =
+        ScreenInjection.of<HomeInjection>(context).getDeleteAnotacao;
 
     Future.value()
         .then((_) => loadName())
@@ -93,14 +98,12 @@ class HomeController extends ScreenController {
 
   Future<void> loadAnotacoes(String descricao) async {
     anotacoes.clear();
-    final response = await getFindAllAnotacao(
-      FindAllAnotacaoParams(descricao: descricao)
-    );
+    final response =
+        await getFindAllAnotacao(FindAllAnotacaoParams(descricao: descricao));
     response.fold((left) => null, (right) {
       if (right.isNotEmpty) {
-        anotacoes.addAll(
-          right.map((item) => ListItemNoteHomeModel.fromMap(item))
-        );
+        anotacoes
+            .addAll(right.map((item) => ListItemNoteHomeModel.fromMap(item)));
       }
     });
   }
@@ -114,19 +117,18 @@ class HomeController extends ScreenController {
       formKeyAlterName.currentState!.save();
 
       Future.value()
-        .then((_) async => await getSaveNameUsuario(
-          SaveNameUsuarioParams(idUsuario: 1, name: nameUser.value)
-        ))
-        .then((result) {
-          result.fold((left) => null, (right) {
-            if (right == 0) {
-              showMessage(context,
-                  "Erro ao atualizar o nome do usuário, tente novamente!");
-              nameUser.value = "";
-            } else {
-              Navigator.of(context).pop();
-            }
-          });
+          .then((_) async => await getSaveNameUsuario(
+              SaveNameUsuarioParams(idUsuario: 1, name: nameUser.value)))
+          .then((result) {
+        result.fold((left) => null, (right) {
+          if (right == 0) {
+            showMessage(context,
+                "Erro ao atualizar o nome do usuário, tente novamente!");
+            nameUser.value = "";
+          } else {
+            Navigator.of(context).pop();
+          }
+        });
       });
     }
   }
@@ -243,6 +245,46 @@ class HomeController extends ScreenController {
     });
   }
 
+  void removeAnotacao(ListItemNoteHomeModel item) async {
+    final result = await showDialog<bool>(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) =>
+            DeleteAnotacaoViewWidget(titleAnotacao: item.titulo));
+
+    if (result!) {
+      Future.value()
+        .then((_) => showLoading(context))
+        .then((_) => getDeleteAnotacao(DeleteAnotacaoParams(idAnotacao: item.id)))
+        .then((response) => response.fold((left) => null, (right) => right))
+        .then((response) {
+          Navigator.of(context).pop();
+          if (response == null) {
+            showMessage(
+              context,
+              "Não foi possível deletar a anotação, tente novamente!"
+            );
+
+            return false;
+          }
+
+          showMessage(
+            context,
+            "Anotação deletada com sucesso!"
+          );
+
+          return true;
+        })
+        .then((value) async {
+          if (value) {
+            isLoading.value = true;
+            await loadAnotacoes("");
+            isLoading.value = false;
+          }
+        });
+    }
+  }
+
   bool verifySize(BoxConstraints constraints) {
     var height = MediaQuery.of(context).padding.top;
     var top = constraints.biggest.height;
@@ -266,19 +308,17 @@ class HomeController extends ScreenController {
   }
 
   void toEdit(int id) {
-    Navigator.of(context).pushNamed(
-      AnotacaoScreen.routeAnotacao,
-      arguments: id
-    );
+    Navigator.of(context)
+        .pushNamed(AnotacaoScreen.routeAnotacao, arguments: id);
   }
 
   void receive(String message, value, {ScreenReceive? screen}) async {
     switch (message) {
       case "update":
         Future.value()
-          .then((_) => isLoading.value = true)
-          .then((_) => loadAnotacoes(""))
-          .then((_) => isLoading.value = false);
+            .then((_) => isLoading.value = true)
+            .then((_) => loadAnotacoes(""))
+            .then((_) => isLoading.value = false);
     }
   }
 }

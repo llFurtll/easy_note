@@ -1,19 +1,19 @@
 class Anotacao {
-  int? id;
-  String? titulo;
-  DateTime? data;
-  int? situacao;
-  String? imagemFundo;
-  String? observacao;
-  DateTime? ultimaAtualizacao;
+  final int? id;
+  final String? titulo;
+  final DateTime? data;
+  final int? situacao;
+  final String? imagemFundo;
+  final String? observacao;
+  final DateTime? ultimaAtualizacao;
 
-  Anotacao({
-    this.id,
-    this.titulo,
-    this.data,
-    this.situacao,
-    this.imagemFundo,
-    this.observacao,
-    this.ultimaAtualizacao
+  const Anotacao({
+    required this.id,
+    required this.titulo,
+    required this.data,
+    required this.situacao,
+    required this.imagemFundo,
+    required this.observacao,
+    required this.ultimaAtualizacao
   });
 }

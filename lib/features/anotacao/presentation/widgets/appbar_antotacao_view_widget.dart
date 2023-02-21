@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
 
-class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with PreferredSizeWidget {
+class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
+    with PreferredSizeWidget {
   const AppBarAnotacaoViewWidget({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -14,16 +15,29 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      title: ValueListenableBuilder(
+        valueListenable: controller.ultimaAtualizacao,
+        builder: (context, value, child) {
+          return Text(
+            value ?? "",
+            maxLines: 2,
+            style: const TextStyle(
+              color: Colors.black54,
+              fontSize: 12.0,
+              fontWeight: FontWeight.bold
+            )
+          );
+        },
+      ),
       leading: _buildLeading(context),
       actions: _buildActions(),
     );
   }
-  
+
   Widget _buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: () => Navigator.of(context).pop(),
-      icon: const Icon(Icons.arrow_back_ios, color: Colors.black)
-    );
+        onPressed: () => Navigator.of(context).pop(),
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.black));
   }
 
   List<Widget> _buildActions() {
@@ -36,23 +50,24 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
               valueListenable: controller.showIcones,
               builder: (BuildContext context, bool value, Widget? widget) {
                 return Card(
-                  elevation: 3.0,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                  child: AnimatedContainer(
-                    width: _returnSizeContainer(),
-                    height: 48.0,
-                    curve: Curves.ease,
-                    duration: const Duration(milliseconds: 500),
-                    child: Wrap(
-                      children: [
-                        _iconOpenItens(value),
-                        ..._iconsActions(context).map((e) => value ? e : const SizedBox(height: 0.0, width: 0.0))
-                      ],
+                    elevation: 3.0,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
                     ),
-                  )
-                );
+                    child: AnimatedContainer(
+                      width: _returnSizeContainer(),
+                      height: 48.0,
+                      curve: Curves.ease,
+                      duration: const Duration(milliseconds: 500),
+                      child: Wrap(
+                        children: [
+                          _iconOpenItens(value),
+                          ..._iconsActions(context).map((e) => value
+                              ? e
+                              : const SizedBox(height: 0.0, width: 0.0))
+                        ],
+                      ),
+                    ));
               },
             ),
           ],
@@ -61,12 +76,13 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
     ];
   }
 
-   IconButton _iconOpenItens(bool close) {
+  IconButton _iconOpenItens(bool close) {
     final showIcones = controller.showIcones;
 
     return IconButton(
       tooltip: close ? "Fechar menu" : "Abrir menu",
-      onPressed: () => close ? showIcones.value = false : showIcones.value = true,
+      onPressed: () =>
+          close ? showIcones.value = false : showIcones.value = true,
       icon: Icon(close ? Icons.close : Icons.menu),
       color: Colors.black,
       padding: EdgeInsets.zero,
@@ -76,17 +92,22 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
 
   List<Widget> _iconsActions(BuildContext context) {
     return [
-      Visibility(
-        visible: controller.isEdit,
-        child: IconButton(
-          tooltip: "Compartilhar",
-          onPressed: () {},
-          icon: const Icon(Icons.ios_share_outlined),
-          color: Colors.black,
-          disabledColor: Colors.grey,
-          padding: EdgeInsets.zero,
-          splashRadius: 25.0,
-        ),
+      ValueListenableBuilder(
+        valueListenable: controller.isEdit,
+        builder: (context, value, child) {
+          return Visibility(
+            visible: value,
+            child: IconButton(
+              tooltip: "Compartilhar",
+              onPressed: () {},
+              icon: const Icon(Icons.ios_share_outlined),
+              color: Colors.black,
+              disabledColor: Colors.grey,
+              padding: EdgeInsets.zero,
+              splashRadius: 25.0,
+            ),
+          );
+        },
       ),
       IconButton(
         onPressed: () {},
@@ -102,7 +123,9 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
           final isFoto = value != null;
 
           return IconButton(
-            tooltip: isFoto ? "Remover imagem de fundo" : "Adicionar imagem de fundo",
+            tooltip: isFoto
+                ? "Remover imagem de fundo"
+                : "Adicionar imagem de fundo",
             color: Colors.black,
             onPressed: () {
               if (isFoto) {
@@ -110,29 +133,26 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
               } else {
                 controller.unfocus();
                 showBottomSheet(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20.0),
-                      topLeft: Radius.circular(20.0)
-                    )
-                  ),
-                  backgroundColor: Colors.blueGrey[50],
-                  context: context,
-                  builder: (context) => const ChangeImageAnotacaoViewWiget()
-                );
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(20.0))),
+                    backgroundColor: Colors.blueGrey[50],
+                    context: context,
+                    builder: (context) => const ChangeImageAnotacaoViewWiget());
               }
             },
             icon: Icon(isFoto ? Icons.no_photography : Icons.photo),
             padding: EdgeInsets.zero,
             splashRadius: 25.0,
-          );  
+          );
         },
       ),
     ];
   }
 
   double _returnSizeContainer() {
-    bool isEdit = controller.isEdit;
+    bool isEdit = controller.isEdit.value;
     bool showIcones = controller.showIcones.value;
 
     double baseSize = 48.0;
@@ -141,7 +161,7 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController> with Pre
     if (!showIcones) {
       return baseSize;
     }
-    
+
     if (isEdit) {
       qtdIcones++;
     }

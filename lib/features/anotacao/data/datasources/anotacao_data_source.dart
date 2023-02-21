@@ -6,6 +6,7 @@ abstract class AnotacaoDataSource {
   Future<List<Map<String, Object?>>> findAll(String descricao);
   Future<AnotacaoModel> insert(AnotacaoModel anotacao);
   Future<AnotacaoModel> update(AnotacaoModel anotacao);
+  Future<AnotacaoModel> findById(int idAnotacao);
 }
 
 class AnotacaoDataSourceImpl extends AnotacaoDataSource {
@@ -90,6 +91,41 @@ class AnotacaoDataSourceImpl extends AnotacaoDataSource {
       return anotacao;
     } catch (_) {
       throw StorageException("error-update-anotacao");
+    } finally {
+      await connection.close();
+    }
+  }
+
+  @override
+  Future<AnotacaoModel> findById(int idAnotacao) async {
+    final storage = StorageImpl();
+    final connection = await storage.getStorage();
+
+    String sql = """
+      SELECT
+        ID,
+        TITULO,
+        DATA,
+        SITUACAO,
+        IMAGEM_FUNDO,
+        OBSERVACAO,
+        ULTIMA_ATUALIZACAO
+      FROM NOTE
+      WHERE ID = ?
+    """;
+
+    try {
+      final result = await connection.rawQuery(sql, [idAnotacao]);
+
+      if (result.isEmpty) {
+        throw StorageException("error-find-by-id-anotacao");
+      }
+
+      return AnotacaoModel.fromMap(result[0]);
+    } on StorageException catch (_) {
+      rethrow;
+    } catch (_) {
+      throw StorageException("error-find-by-id-anotacao");
     } finally {
       await connection.close();
     }

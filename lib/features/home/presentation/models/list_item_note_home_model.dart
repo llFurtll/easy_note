@@ -1,11 +1,10 @@
-import 'dart:typed_data';
 import 'package:intl/intl.dart';
 
 class ListItemNoteHomeModel {
   final int id;
   final String titulo;
   final String data;
-  final Uint8List imagemFundo;
+  final String imagemFundo;
 
   const ListItemNoteHomeModel({
     required this.id,

@@ -6,4 +6,5 @@ abstract class AnotacaoRepository {
   Future<Result<Failure, List<Map<String, Object?>>>> findAll(String descricao);
   Future<Result<Failure, Anotacao>> insert(Anotacao anotacao);
   Future<Result<Failure, Anotacao>> update(Anotacao anotacao);
+  Future<Result<Failure, Anotacao>> findById(int idAnotacao);
 }

@@ -12,7 +12,8 @@ class AnotacaoRepositoryImpl extends AnotacaoRepository {
   AnotacaoRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Result<Failure, List<Map<String, Object?>>>> findAll(String descricao) async {
+  Future<Result<Failure, List<Map<String, Object?>>>> findAll(
+      String descricao) async {
     try {
       final result = await dataSource.findAll(descricao);
       return Right(result);
@@ -24,9 +25,8 @@ class AnotacaoRepositoryImpl extends AnotacaoRepository {
   @override
   Future<Result<Failure, Anotacao>> insert(Anotacao anotacao) async {
     try {
-      final result = await dataSource.insert(
-        AnotacaoModel.fromAnotacao(anotacao)
-      );
+      final result =
+          await dataSource.insert(AnotacaoModel.fromAnotacao(anotacao));
       return Right(result);
     } on StorageException catch (_) {
       return Left(StorageFailure(message: "error-insert-anotacao"));
@@ -36,12 +36,21 @@ class AnotacaoRepositoryImpl extends AnotacaoRepository {
   @override
   Future<Result<Failure, Anotacao>> update(Anotacao anotacao) async {
     try {
-      final result = await dataSource.update(
-        AnotacaoModel.fromAnotacao(anotacao)
-      );
+      final result =
+          await dataSource.update(AnotacaoModel.fromAnotacao(anotacao));
       return Right(result);
     } on StorageException catch (_) {
       return Left(StorageFailure(message: "error-update-anotacao"));
+    }
+  }
+
+  @override
+  Future<Result<Failure, Anotacao>> findById(int idAnotacao) async {
+    try {
+      final result = await dataSource.findById(idAnotacao);
+      return Right(result);
+    } on StorageException catch (_) {
+      return Left(StorageFailure(message: "error-find-by-id-anotacao"));
     }
   }
 }

@@ -1,7 +1,7 @@
 import '../../domain/entities/anotacao.dart';
 
 class AnotacaoModel extends Anotacao {
-  AnotacaoModel({
+  const AnotacaoModel({
     required super.id,
     required super.titulo,
     required super.data,
@@ -18,7 +18,7 @@ class AnotacaoModel extends Anotacao {
       data: DateTime.parse(map["data"]),
       situacao: map["situacao"],
       imagemFundo: map["imagem_fundo"],
-      observacao: map["OBSERVACAO"],
+      observacao: map["observacao"],
       ultimaAtualizacao: DateTime.parse(map["ultima_atualizacao"])
     );
   }

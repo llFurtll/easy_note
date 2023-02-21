@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -55,7 +57,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
             child: Container( // IMAGEM DE FUNDO
             decoration: BoxDecoration(
               image: item.imagemFundo.isNotEmpty ? DecorationImage(
-                image: MemoryImage(item.imagemFundo),
+                image: item.imagemFundo.contains("lib") ? AssetImage(item.imagemFundo) : FileImage(File(item.imagemFundo)) as ImageProvider,
                 fit: BoxFit.cover
               ) : null
             ),

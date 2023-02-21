@@ -37,8 +37,8 @@ class AnotacaoController extends ScreenController {
   final ultimaAtualizacao = ValueNotifier<String?>(null);
 
   late final Timer timer;
-
   late final QuillController quillController;
+  
   FormAnotacao formAnotacao = FormAnotacao();
 
   @override

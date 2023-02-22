@@ -195,7 +195,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
       child: TextFormField(
         focusNode: controller.focusNode,
         controller: controller.textController,
-        onChanged: (String value) {},
+        onChanged: controller.onSearch,
         decoration: const InputDecoration(
           hintText: "Pesquisar anotação",
           suffixIcon: Icon(Icons.search, color: Colors.white),

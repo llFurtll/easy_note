@@ -1,11 +1,11 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
+import 'package:easy_note/core/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/failures/failures.dart';
 import '../../../../../core/result/result.dart';
 import '../../../../../core/widgets/show_loading.dart';
-import '../../../../../core/widgets/show_message.dart';
 import '../../../domain/entities/configuracao.dart';
 import '../../../domain/usecases/get_find_all_config_by_modulo.dart';
 import '../../../domain/usecases/get_save_configuracao.dart';
@@ -103,9 +103,15 @@ class ConfiguracaoEditController extends ScreenController {
         Navigator.of(context).pop();
 
         if (result) {
-          showMessage(context, "Erro ao salvar as configurações, tente novamente!");
+          CustomDialog.error(
+            "Erro ao salvar as configurações, tente novamente!",
+            context
+          );
         } else {
-          showMessage(context, "Configurações atualizadas com sucesso!");
+          CustomDialog.success(
+            "Configurações atualizadas com sucesso!",
+            context
+          );
         }
       });
   }

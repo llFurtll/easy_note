@@ -1,6 +1,7 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_receive.dart';
+import '../../../../core/widgets/custom_dialog.dart';
 import '../../../anotacao/domain/usecases/get_delete_anotacao.dart';
 import '../widgets/delete_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import '../../../../core/result/result.dart';
 import '../../../../core/utils/delete_file.dart';
 import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/show_loading.dart';
-import '../../../../core/widgets/show_message.dart';
 import '../../../anotacao/domain/usecases/get_find_all_anotacao.dart';
 import '../../../anotacao/presentation/view/anotacao_view.dart';
 import '../../../atualizacao/presentation/atualizacao_list/view/atualizacao_list_view.dart';
@@ -75,7 +75,7 @@ class HomeController extends ScreenController {
         .then((_) => loadName())
         .then((result) {
           result.fold((left) {
-            showMessage(context, "Erro ao tentar buscar o nome!");
+            CustomDialog.error("Erro ao tentar buscar o nome!", context);
           }, (right) {
             if (right.isNotEmpty) {
               nameUser.value = right;
@@ -85,7 +85,8 @@ class HomeController extends ScreenController {
         .then((_) => _loadPhoto())
         .then((result) {
           result.fold((left) {
-            showMessage(context, "Erro ao tentar buscar a foto de perfil!");
+            CustomDialog.error(
+                "Erro ao tentar buscar a foto de perfil!", context);
           }, (right) {
             if (right.isNotEmpty) {
               photoUser.value = right;
@@ -122,8 +123,9 @@ class HomeController extends ScreenController {
           .then((result) {
         result.fold((left) => null, (right) {
           if (right == 0) {
-            showMessage(context,
-                "Erro ao atualizar o nome do usuário, tente novamente!");
+            CustomDialog.error(
+                "Erro ao atualizar o nome do usuário, tente novamente!",
+                context);
             nameUser.value = "";
           } else {
             Navigator.of(context).pop();
@@ -165,8 +167,9 @@ class HomeController extends ScreenController {
       if (result.isNotEmpty) {
         photoUser.value = result;
       } else if (result == "0") {
-        showMessage(context,
-            "Não foi possível salvar a foto de perfil, tente novamente!");
+        CustomDialog.error(
+            "Não foi possível salvar a foto de perfil, tente novamente!",
+            context);
       }
     }).then((_) => Navigator.of(context).pop());
   }
@@ -181,8 +184,9 @@ class HomeController extends ScreenController {
       if (result.isNotEmpty && result != "0") {
         photoUser.value = result;
       } else if (result == "0") {
-        showMessage(context,
-            "Não foi possível salvar a foto de perfil, tente novamente!");
+        CustomDialog.error(
+            "Não foi possível salvar a foto de perfil, tente novamente!",
+            context);
       }
     }).then((_) => Navigator.of(context).pop());
   }
@@ -231,15 +235,22 @@ class HomeController extends ScreenController {
         .then((result) {
       Navigator.of(context).pop();
       result.fold((left) {
-        showMessage(context,
-            "Não foi possível remover a foto de perfil, tente novamente!");
+        CustomDialog.error(
+          "Não foi possível remover a foto de perfil, tente novamente!",
+          context
+        );
       }, (right) {
         if (right > 0) {
+          CustomDialog.success(
+            "Foto de perfil removida com sucesso!",
+            context
+          );
           photoUser.value = "";
-          showMessage(context, "Foto de perfil removida com sucesso!");
         } else {
-          showMessage(context,
-              "Não foi possível remover a foto de perfil, tente novamente!");
+          CustomDialog.error(
+            "Não foi possível remover a foto de perfil, tente novamente!",
+            context
+          );
         }
       });
     });
@@ -254,34 +265,34 @@ class HomeController extends ScreenController {
 
     if (result!) {
       Future.value()
-        .then((_) => showLoading(context))
-        .then((_) => getDeleteAnotacao(DeleteAnotacaoParams(idAnotacao: item.id)))
-        .then((response) => response.fold((left) => null, (right) => right))
-        .then((response) {
-          Navigator.of(context).pop();
-          if (response == null) {
-            showMessage(
-              context,
-              "Não foi possível deletar a anotação, tente novamente!"
-            );
-
-            return false;
-          }
-
-          showMessage(
-            context,
-            "Anotação deletada com sucesso!"
+          .then((_) => showLoading(context))
+          .then((_) =>
+              getDeleteAnotacao(DeleteAnotacaoParams(idAnotacao: item.id)))
+          .then((response) => response.fold((left) => null, (right) => right))
+          .then((response) {
+        Navigator.of(context).pop();
+        if (response == null) {
+          CustomDialog.error(
+            "Não foi possível deletar a anotação, tente novamente!",
+            context
           );
 
-          return true;
-        })
-        .then((value) async {
-          if (value) {
-            isLoading.value = true;
-            await loadAnotacoes("");
-            isLoading.value = false;
-          }
-        });
+          return false;
+        }
+
+        CustomDialog.success(
+          "Anotação deletada com sucesso!",
+          context
+        );
+
+        return true;
+      }).then((value) async {
+        if (value) {
+          isLoading.value = true;
+          await loadAnotacoes("");
+          isLoading.value = false;
+        }
+      });
     }
   }
 

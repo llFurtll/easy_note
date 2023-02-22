@@ -19,7 +19,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
         final removeOption = value.isEmpty;
 
         return CustomDialog(
-          title: const Text("Escolha uma das opções"),
+          type: CustomDialogEnum.options,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

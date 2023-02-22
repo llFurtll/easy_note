@@ -36,8 +36,12 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
 
   Widget _buildLeading(BuildContext context) {
     return IconButton(
-        onPressed: () => Navigator.of(context).pop(),
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.black));
+      tooltip: "Voltar",
+      onPressed: () => Navigator.of(context).pop(),
+      icon: const Icon(
+        Icons.arrow_back_ios, color: Colors.black
+      )
+    );
   }
 
   List<Widget> _buildActions() {

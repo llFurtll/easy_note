@@ -14,10 +14,7 @@ class DeleteAnotacaoViewWidget extends ScreenWidget<HomeController> {
     super.build(context);
 
     return CustomDialog(
-      title: const Text(
-        "Atenção",
-        style: TextStyle(fontWeight: FontWeight.bold)
-      ),
+      type: CustomDialogEnum.warning,
       content: Text(
         "Deseja deletar a anotação $titleAnotacao?",
         style: const TextStyle(fontWeight: FontWeight.bold)

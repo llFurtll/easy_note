@@ -1,12 +1,12 @@
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_view.dart';
+import 'package:easy_note/core/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/widgets/show_message.dart';
 import '../../../../core/widgets/spacer.dart';
 import '../controller/sobre_controller.dart';
 import '../injection/sobre_injection.dart';
@@ -187,6 +187,8 @@ class SobreView extends ScreenView<SobreController> {
 
         return true;
       })
-      .then((hasError) => hasError ? showMessage(context, "Não foi possível abrir o link!") : null);
+      .then((hasError) => hasError ?
+        CustomDialog.warning("Não foi possível abrir o link!", context) :
+        null);
   }
 }

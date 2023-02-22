@@ -14,7 +14,6 @@ import 'package:intl/intl.dart';
 import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/show_loading.dart';
-import '../../../../core/widgets/show_message.dart';
 import '../../../configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
 import '../../domain/entities/anotacao.dart';
 import '../../domain/usecases/get_find_by_id_anotacao.dart';
@@ -171,7 +170,7 @@ class AnotacaoController extends ScreenController {
           showLoading(context);
           return true;
         } else {
-          showMessage(context, "Preencha o título e tente novamente!");
+          CustomDialog.warning("Preencha o título e tente novamente!", context);
         }
 
         return false;
@@ -193,9 +192,9 @@ class AnotacaoController extends ScreenController {
             SaveAnotacaoParams(anotacao: formAnotacao.toAnotacao()));
           response.fold((left) {
             Navigator.of(context).pop();
-            showMessage(
-              context,
-              "Não foi possível salvar os dados da anotação, tente novamente!"
+            CustomDialog.error(
+              "Não foi possível salvar os dados da anotação, tente novamente!",
+              context
             );
           }, (right) {
             Navigator.of(context).pop();
@@ -204,9 +203,9 @@ class AnotacaoController extends ScreenController {
               DateFormat("dd/MM/yyyy HH:mm:ss")
               .format(formAnotacao.ultimaAtualizacao!
             )}";
-            showMessage(
-              context,
-              "Anotação ${isEdit.value ? 'atualizada' : 'cadastrada'} com sucesso"
+            CustomDialog.success(
+              "Anotação ${isEdit.value ? 'atualizada' : 'cadastrada'} com sucesso",
+              context
             );
             if (!isEdit.value) {
               isEdit.value = true;
@@ -244,7 +243,7 @@ class AnotacaoController extends ScreenController {
     return showDialog<MediaPickSetting>(
       context: context,
       builder: (ctx) => CustomDialog(
-        title: const Text("Selecione uma opção"),
+        type: CustomDialogEnum.options,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -275,7 +274,7 @@ class AnotacaoController extends ScreenController {
     return showDialog<MediaPickSetting>(
       context: context,
       builder: (ctx) => CustomDialog(
-        title: const Text("Selecione uma opção"),
+        type: CustomDialogEnum.options,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

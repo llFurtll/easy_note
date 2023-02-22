@@ -73,16 +73,43 @@ class SobreView extends ScreenView<SobreController> {
     );
   }
 
-  CircleAvatar _avatar() {
-    return CircleAvatar(
-      backgroundColor: Colors.grey,
-      radius: 75.0,
-      child: CircleAvatar(
-        backgroundImage: const NetworkImage(
+  Widget _avatar() {
+    return Container(
+      width: 150.0,
+      height: 150.0,
+      padding: const EdgeInsets.all(5.0),
+      clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(
+        color: Colors.grey,
+        shape: BoxShape.circle
+      ),
+      child: ClipOval(
+        child: Image.network(
           "https://avatars.githubusercontent.com/llFurtll",
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: frame != null ?
+                SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: child,
+                ) :
+                const Center(
+                  child: CircularProgressIndicator(),
+                )
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(
+              child: Text(
+                "Não foi possível carregar a foto",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              )
+            );
+          },
         ),
-        radius: 70.0,
-        backgroundColor: Colors.grey[200],
       ),
     );
   }

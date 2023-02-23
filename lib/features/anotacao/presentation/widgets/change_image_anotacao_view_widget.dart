@@ -12,7 +12,7 @@ class ChangeImageAnotacaoViewWiget extends ScreenWidget<AnotacaoController> {
   Widget build(BuildContext context) {
     super.build(context);
     
-    return  Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

@@ -149,9 +149,9 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
                       fit: BoxFit.cover,
                       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                         return AnimatedSwitcher(
-                          duration: !photoLoading ?
-                            const Duration(milliseconds: 500) :
-                            const Duration(milliseconds: 0),
+                          duration: Duration(
+                            milliseconds: !photoLoading ? 500 : 0
+                          ),
                           child: frame == null && !photoLoading ?
                             const Center(child: CircularProgressIndicator()) :
                             () {

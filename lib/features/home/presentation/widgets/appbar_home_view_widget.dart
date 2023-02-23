@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/save_state_widget.dart';
 import '../../../../core/widgets/spacer.dart';
 import '../controller/home_controller.dart';
 
@@ -100,7 +101,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
             child: Column(
               children: [
                 spacer(10.0),
-                _buildProfile(context),
+                SaveStateWidget(child: _buildProfile(context)),
                 spacer(10.0),
                 _buildName(),
                 spacer(10.0),
@@ -120,7 +121,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
         valueListenable: controller.photoUser,
         builder: (context, value, child) {
           final path = value;
-          bool loadImage = false;
+          bool photoLoading = false;
 
           return Container(
             decoration: BoxDecoration(
@@ -143,17 +144,20 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
                   child: SizedBox(
                     child: Image.file(
                       File(path),
+                      gaplessPlayback: true,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                        loadImage = true;
                         return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: loadImage ?
-                            child : 
-                            const Center(
-                              child: CircularProgressIndicator(),
-                            )
+                          duration: !photoLoading ?
+                            const Duration(milliseconds: 500) :
+                            const Duration(milliseconds: 0),
+                          child: frame == null && !photoLoading ?
+                            const Center(child: CircularProgressIndicator()) :
+                            () {
+                              photoLoading = true;
+                              return child;
+                            }() 
                         );
                       },
                       errorBuilder: (context, error, stackTrace) {
@@ -168,7 +172,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
                         );
                       },
                     ),
-                  ),
+                  )
                 ),
                 Align(
                   alignment: Alignment.bottomRight,

@@ -28,18 +28,27 @@ class HomeView extends ScreenView<HomeController> {
   const HomeView({super.key});
 
   @override
-  Scaffold build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: controller.removeFocus,
-        child: const CustomScrollView(
-          slivers: [
-            AppBarHomeViewWidget(),
-            ListNoteHomeViewWidget()
-          ],
-        ),
-      ),
-      floatingActionButton: _buildFab(context),
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller.isLoading,
+      builder: (context, value, child) {
+        if (value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return Scaffold(
+          body: GestureDetector(
+            onTap: controller.removeFocus,
+            child: const CustomScrollView(
+              slivers: [
+                AppBarHomeViewWidget(),
+                ListNoteHomeViewWidget()
+              ],
+            ),
+          ),
+          floatingActionButton: _buildFab(context),
+        );
+      },
     );
   }
 

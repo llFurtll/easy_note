@@ -120,15 +120,56 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
         valueListenable: controller.photoUser,
         builder: (context, value, child) {
           final path = value;
+          bool loadImage = false;
 
-          return CircleAvatar(
-            backgroundColor: Colors.white,
-            backgroundImage: path.isNotEmpty ?
-              FileImage(File(path)) :
-              null,
-            radius: 58,
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+            ),
+            width: 120.0,
+            height: 120.0,
             child: Stack(
               children: [
+                ClipOval(
+                  child: SizedBox(
+                    child: Image.file(
+                      File(path),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                        loadImage = true;
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: loadImage ?
+                            child : 
+                            const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Text(
+                            "SEM FOTO",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold
+                            ),
+                          )
+                        );
+                      },
+                    ),
+                  ),
+                ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Container(
@@ -140,17 +181,6 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
                     child: Icon(Icons.camera, color: Theme.of(context).primaryColor, size: 30.0),
                   )
                 ),
-                path.isEmpty ?
-                  Center(
-                    child: Text(
-                      "SEM FOTO",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold
-                      ),
-                    )
-                  ) :
-                  const Text("")
               ],
             ),
           );

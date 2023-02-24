@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/save_state_widget.dart';
 import '../../../../core/widgets/spacer.dart';
 import '../controller/home_controller.dart';
 
@@ -101,7 +100,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
             child: Column(
               children: [
                 spacer(10.0),
-                SaveStateWidget(child: _buildProfile(context)),
+                _buildProfile(context),
                 spacer(10.0),
                 _buildName(),
                 spacer(10.0),
@@ -121,7 +120,6 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
         valueListenable: controller.photoUser,
         builder: (context, value, child) {
           final path = value;
-          bool photoLoading = false;
 
           return Container(
             decoration: BoxDecoration(
@@ -150,12 +148,12 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
                       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                         return AnimatedSwitcher(
                           duration: Duration(
-                            milliseconds: !photoLoading ? 500 : 0
+                            milliseconds: !controller.fotoPerfilCarregada ? 500 : 0
                           ),
-                          child: frame == null && !photoLoading ?
+                          child: frame == null && !controller.fotoPerfilCarregada ?
                             const Center(child: CircularProgressIndicator()) :
                             () {
-                              photoLoading = true;
+                              controller.fotoPerfilCarregada = true;
                               return child;
                             }() 
                         );

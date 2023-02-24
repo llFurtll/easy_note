@@ -60,6 +60,10 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
 
   Widget _buildTitle() {
     return TextFormField(
+      onChanged: (value) =>
+        controller.showConfig("AUTOSAVE") ?
+          controller.autoSave() :
+          null,
       controller: controller.titleController,
       focusNode: controller.titleFocus,
       decoration: const InputDecoration(

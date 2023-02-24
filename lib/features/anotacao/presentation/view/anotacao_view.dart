@@ -34,11 +34,13 @@ class AnotacaoView extends ScreenView<AnotacaoController> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return const Scaffold(
+        return Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBarAnotacaoViewWidget(),
-          body: EditorAnotacaoViewWidget(),
-          floatingActionButton: FabAnotacaoViewWidget(),
+          appBar: const AppBarAnotacaoViewWidget(),
+          body: const EditorAnotacaoViewWidget(),
+          floatingActionButton: controller.showConfig("AUTOSAVE") ?
+            null :
+            const FabAnotacaoViewWidget(),
         );
       },
     );

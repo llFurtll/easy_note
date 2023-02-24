@@ -55,6 +55,7 @@ class HomeController extends ScreenController {
 
   // VARIÁVEIS
   final List<ListItemNoteHomeModel> anotacoes = [];
+  bool fotoPerfilCarregada = false;
 
   @override
   void onInit() {
@@ -200,6 +201,7 @@ class HomeController extends ScreenController {
       .then((result) => _savePhotoUser(result))
       .then((result) {
         if (result.isNotEmpty && result != "0") {
+          fotoPerfilCarregada = false;
           photoUser.value = result;
         } else if (result == "0") {
           CustomDialog.error(
@@ -266,6 +268,7 @@ class HomeController extends ScreenController {
               "Foto de perfil removida com sucesso!",
               context
             );
+            fotoPerfilCarregada = false;
             photoUser.value = "";
           } else {
             CustomDialog.error(

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_mediator.dart';
+import 'package:easy_note/core/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -60,7 +61,7 @@ class AnotacaoController extends ScreenController {
       .then((_) => isLoading.value = false);
   }
 
-  void _loadAnotacao(int? idAnotacao) async {
+  Future<void> _loadAnotacao(int? idAnotacao) async {
     if (idAnotacao == null) {
       quillController = QuillController.basic();
       return;
@@ -93,6 +94,13 @@ class AnotacaoController extends ScreenController {
             .format(formAnotacao.ultimaAtualizacao!
           )}";
         }
+    })
+    .then((_) {
+      if (showConfig("AUTOSAVE")) {
+        quillController.changes.listen((event) {
+          Debounce.debounce(() => autoSave());
+        });
+      }
     });
   }
 
@@ -148,29 +156,42 @@ class AnotacaoController extends ScreenController {
   @override
   void onClose() {
     timer.cancel();
+    Debounce.close();
     super.onClose();
   }
 
   void _loadConfigs() async {
     final usecase =
       ScreenInjection.of<AnotacaoInjection>(context).getFindAllConfigByModulo;
-    final result = await usecase(FindAllConfigByModuloParams(modulo: "NOTE"));
+    var result = await usecase(FindAllConfigByModuloParams(modulo: "NOTE"));
+    result.fold((left) => null, (right) => configs.addAll(right));
+    result = await usecase(FindAllConfigByModuloParams(modulo: "APP"));
     result.fold((left) => null, (right) => configs.addAll(right));
   }
 
+  void autoSave() {
+    Debounce.debounce(() => save());
+  }
+
   void save() async {
+    final autoSave = showConfig("AUTOSAVE");
+
     final getSaveAnotacao =
       ScreenInjection.of<AnotacaoInjection>(context).getSaveAnotacao;
 
     Future.value()
-      .then((_) => unfocus())
+      .then((_) => autoSave ? null : unfocus())
       .then((_) => _validateTitle())
       .then((result) {
         if (result) {
-          showLoading(context);
+          if (!autoSave) {
+            showLoading(context);
+          }
           return true;
         } else {
-          CustomDialog.warning("Preencha o título e tente novamente!", context);
+          if (!autoSave) {
+            CustomDialog.warning("Preencha o título e tente novamente!", context);
+          }
         }
 
         return false;
@@ -197,16 +218,20 @@ class AnotacaoController extends ScreenController {
               context
             );
           }, (right) {
-            Navigator.of(context).pop();
+            if (!autoSave) {
+              Navigator.of(context).pop();
+            }
             ultimaAtualizacao.value =
               "Última atualização às: ${
               DateFormat("dd/MM/yyyy HH:mm:ss")
               .format(formAnotacao.ultimaAtualizacao!
             )}";
-            CustomDialog.success(
-              "Anotação ${isEdit.value ? 'atualizada' : 'cadastrada'} com sucesso",
-              context
-            );
+            if (!autoSave) {
+              CustomDialog.success(
+                "Anotação ${isEdit.value ? 'atualizada' : 'cadastrada'} com sucesso",
+                context
+              );
+            }
             if (!isEdit.value) {
               isEdit.value = true;
               formAnotacao.id = right.id;

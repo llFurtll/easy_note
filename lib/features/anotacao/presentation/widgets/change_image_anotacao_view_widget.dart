@@ -40,6 +40,19 @@ class ChangeImageAnotacaoViewWiget extends ScreenWidget<AnotacaoController> {
       child: ValueListenableBuilder(
         valueListenable: controller.backgroundImage,
         builder: (context, value, child) {
+          if (image.pathImage.isEmpty) {
+            return Container(
+              margin: const EdgeInsets.only(right: 15.0),
+              width: 120.0,
+              height: 150.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                color: Colors.grey,
+              ),
+              child: image.widget
+            );
+          }
+
           return Container(
             clipBehavior: Clip.antiAlias,
             margin: const EdgeInsets.only(right: 15.0),

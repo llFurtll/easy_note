@@ -5,7 +5,8 @@ import 'dart:io';
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_mediator.dart';
-import 'package:easy_note/core/utils/debounce.dart';
+import '../../../../core/adapters/image_picker_easy_note.dart';
+import '../../../../core/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -35,6 +36,7 @@ class AnotacaoController extends ScreenController {
   final backgroundImage = ValueNotifier<BackgroundAnotacaoModel?>(null);
   final isEdit = ValueNotifier(false);
   final ultimaAtualizacao = ValueNotifier<String?>(null);
+  final imagePicker = ImagePickerEasyNoteImpl();
 
   late final Timer timer;
   late final QuillController quillController;
@@ -105,6 +107,20 @@ class AnotacaoController extends ScreenController {
   }
 
   void _loadImages() async {
+    // Adiciona ícone da câmera
+    images.add(
+      BackgroundAnotacaoModel(
+        widget: Center(
+            child: IconButton(
+              onPressed: changePhoto,
+              icon: const Icon(Icons.camera, color: Colors.white, size: 40.0),
+            ),
+        ),
+        pathImage: "",
+        isSelect: false
+      )
+    );
+
     final manifest = await rootBundle.loadString("AssetManifest.json");
     final Map<String, dynamic> manifestMap = json.decode(manifest);
 
@@ -126,15 +142,16 @@ class AnotacaoController extends ScreenController {
 
               return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
-                  child: frame != null
-                    ? SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: child,
-                      )
-                    : const Center(
+                  child: frame != null ? 
+                    SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: child,
+                    ) :
+                    const Center(
                         child: CircularProgressIndicator(),
-                      ));
+                      )
+                    );
             },
           );
         })
@@ -236,7 +253,7 @@ class AnotacaoController extends ScreenController {
               isEdit.value = true;
               formAnotacao.id = right.id;
             }
-            ScreenMediator.callScreen("Home")!.receive("update", null);
+            ScreenMediator.callScreen("Home", "update", null);
           });
         }
     });
@@ -275,16 +292,18 @@ class AnotacaoController extends ScreenController {
             TextButton(
               style: TextButton.styleFrom(foregroundColor: color),
               child: const Text('Tirar uma foto',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black)),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black)
+                ),
               onPressed: () => Navigator.pop(ctx, MediaPickSetting.Camera),
             ),
             Container(height: 1.0, color: Colors.black),
             TextButton(
               style: TextButton.styleFrom(foregroundColor: color),
               child: const Text('Gravar um vídeo',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black)),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black)
+                ),
               onPressed: () => Navigator.pop(ctx, MediaPickSetting.Video),
             ),
           ],
@@ -322,6 +341,85 @@ class AnotacaoController extends ScreenController {
         ),
       ),
     );
+  }
+
+  void changePhoto() async {
+    final color = Theme.of(context).primaryColor.withOpacity(0.5);
+
+    Future.value()
+      .then((_) => showDialog<String>(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => CustomDialog(
+            type: CustomDialogEnum.options,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  style: TextButton.styleFrom(foregroundColor: color),
+                  child: const Text(
+                    'Tirar foto',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black)
+                    ),
+                  onPressed: () => Navigator.pop(context, "camera"),
+                ),
+                Container(height: 1.0, color: Colors.black),
+                TextButton(
+                  style: TextButton.styleFrom(foregroundColor: color),
+                  child: const Text(
+                    'Abrir da galeria',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black)
+                    ),
+                  onPressed: () => Navigator.pop(context, "galeria"),
+                ),
+              ],
+            ),
+          ),
+        )
+      )
+      .then((response) async {
+        if (response != null) {
+          if (response == "galeria") {
+            return imagePicker.getImage(ImagePickerEasyNoteOptions.gallery);
+          }
+
+          return imagePicker.getImage(ImagePickerEasyNoteOptions.camera);
+        }
+
+        return null;
+      })
+      .then((response) {
+        if (response != null) {
+          backgroundImage.value = BackgroundAnotacaoModel(
+            widget: Image.file(
+              File(response),
+              fit: BoxFit.cover,
+              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                if (wasSynchronouslyLoaded) {
+                  return child;
+                }
+
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: frame != null ? 
+                    SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: child,
+                    ) :
+                    const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    );
+              },
+            ),
+            pathImage: response
+          );
+        }
+      });
+
   }
 
   void unfocus() {

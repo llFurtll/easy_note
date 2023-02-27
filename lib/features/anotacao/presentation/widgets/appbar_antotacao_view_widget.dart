@@ -128,8 +128,8 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
 
           return IconButton(
             tooltip: isFoto
-                ? "Remover imagem de fundo"
-                : "Adicionar imagem de fundo",
+              ? "Remover imagem de fundo"
+              : "Adicionar imagem de fundo",
             color: Colors.black,
             onPressed: () {
               if (isFoto) {
@@ -137,13 +137,15 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
               } else {
                 controller.unfocus();
                 showBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(20.0))),
-                    backgroundColor: Colors.blueGrey[50],
-                    context: context,
-                    builder: (context) => const ChangeImageAnotacaoViewWiget());
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0)
+                    )
+                  ),
+                  backgroundColor: Colors.blueGrey[50],
+                  context: context,
+                  builder: (context) => const ChangeImageAnotacaoViewWiget());
               }
             },
             icon: Icon(isFoto ? Icons.no_photography : Icons.photo),

@@ -41,6 +41,7 @@ class HomeController extends ScreenController {
 
   // VALUE NOTIFIER
   final ValueNotifier<bool> isLoading = ValueNotifier(true);
+  final ValueNotifier<bool> isLoadingList = ValueNotifier(false);
   final ValueNotifier<String> nameUser = ValueNotifier("");
   final ValueNotifier<String> photoUser = ValueNotifier("");
 
@@ -314,9 +315,10 @@ class HomeController extends ScreenController {
       })
       .then((value) async {
         if (value) {
-          isLoading.value = true;
-          await loadAnotacoes("");
-          isLoading.value = false;
+          Future.value()
+            .then((_) => isLoadingList.value = true)
+            .then((_) => loadAnotacoes(""))
+            .then((_) => isLoadingList.value = false);
         }
       });
     }
@@ -352,9 +354,9 @@ class HomeController extends ScreenController {
   void onSearch(String text) {
     Debounce.debounce(() {
       Future.value()
-        .then((_) => isLoading.value = true)
+        .then((_) => isLoadingList.value = true)
         .then((_) => loadAnotacoes(text))
-        .then((_) => isLoading.value = false);
+        .then((_) => isLoadingList.value = false);
     });
   }
 
@@ -362,9 +364,9 @@ class HomeController extends ScreenController {
     switch (message) {
       case "update":
         Future.value()
-          .then((_) => isLoading.value = true)
+          .then((_) => isLoadingList.value = true)
           .then((_) => loadAnotacoes(""))
-          .then((_) => isLoading.value = false);
+          .then((_) => isLoadingList.value = false);
     }
   }
 }

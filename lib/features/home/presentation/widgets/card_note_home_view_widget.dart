@@ -33,7 +33,6 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
 
   Widget _buildCard(BuildContext context) {
     return Container(
-      height: 100.0,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10.0))
       ),
@@ -58,11 +57,16 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
             child: Container( // IMAGEM DE FUNDO
             decoration: BoxDecoration(
               image: item.imagemFundo.isNotEmpty ? DecorationImage(
-                image: item.imagemFundo.contains("lib") ? AssetImage(item.imagemFundo) : FileImage(File(item.imagemFundo)) as ImageProvider,
+                image: item.imagemFundo.contains("lib") ?
+                  AssetImage(item.imagemFundo) :
+                  FileImage(File(item.imagemFundo)) as ImageProvider,
                 fit: BoxFit.cover
               ) : null
             ),
             child: Container( // SOMBRA
+              constraints: const BoxConstraints(
+                minHeight: 90.0
+              ),
               color: Colors.white.withOpacity(0.5),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -91,8 +95,9 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
         style: const TextStyle(
           color: Colors.black,
           fontSize: 18.0,
-          fontWeight: FontWeight.bold
+          fontWeight: FontWeight.bold,
         ),
+        maxLines: null,
       ),
     );
   }

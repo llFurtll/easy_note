@@ -5,14 +5,15 @@ import 'dart:io';
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_mediator.dart';
-import '../../../../core/adapters/image_picker_easy_note.dart';
-import '../../../../core/utils/debounce.dart';
+import 'package:easy_note/core/utils/get_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/adapters/image_picker_easy_note.dart';
+import '../../../../core/utils/debounce.dart';
 import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/show_loading.dart';
@@ -87,12 +88,14 @@ class AnotacaoController extends ScreenController {
           }
           if (formAnotacao.imagemFundo != null &&
               formAnotacao.imagemFundo!.isNotEmpty) {
-            backgroundImage.value = images.firstWhere(
-              (item) => item.pathImage == formAnotacao.imagemFundo
+            changeBackground(
+              images.firstWhere(
+                (item) => item.pathImage == formAnotacao.imagemFundo
+              )
             );
           }
           ultimaAtualizacao.value =
-            "Última atualização às: ${DateFormat("dd/MM/yyyy HH:mm:ss")
+            "Atualizado em: ${DateFormat("dd/MM/yyyy HH:mm:ss")
             .format(formAnotacao.ultimaAtualizacao!
           )}";
         }
@@ -121,45 +124,93 @@ class AnotacaoController extends ScreenController {
       )
     );
 
-    final manifest = await rootBundle.loadString("AssetManifest.json");
-    final Map<String, dynamic> manifestMap = json.decode(manifest);
+    Future.value()
+      .then((_) => getDir("anotacao/fundo"))
+      .then((response) {
+        if (response != null) {
+          return response.listSync();
+        }
 
-    final assetsProject = manifestMap.keys
-      .where((key) => key.contains("lib/assets/images/anotacao"))
-      .where((key) => key.contains(".jpg"))
-      .toList();
+        return <FileSystemEntity>[];
+      })
+      .then((response) {
+        if (response.isNotEmpty) {
+          for (FileSystemEntity file in response) {
+            if (file is File) {
+              Future.value()
+                .then((_) {
+                  return Image.file(
+                    file,
+                    fit: BoxFit.cover,
+                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                      if (wasSynchronouslyLoaded) {
+                        return child;
+                      }
 
-    for (String asset in assetsProject) {
-      Future.value()
-        .then((_) {
-          return Image.asset(
-            asset,
-            fit: BoxFit.cover,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              if (wasSynchronouslyLoaded) {
-                return child;
-              }
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: frame != null ? 
+                          SizedBox(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: child,
+                          ) :
+                          const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                      );
+                    },
+                  );
+                })
+                .then((image) async {
+                  await precacheImage(image.image, context);
+                  images.add(BackgroundAnotacaoModel(widget: image, pathImage: file.path));
+                });
+            }
+          }
+        }
+      })
+      .then((_) async {
+        final manifest = await rootBundle.loadString("AssetManifest.json");
+        final Map<String, dynamic> manifestMap = json.decode(manifest);
 
-              return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: frame != null ? 
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: child,
-                    ) :
-                    const Center(
+        final assetsProject = manifestMap.keys
+          .where((key) => key.contains("lib/assets/images/anotacao"))
+          .where((key) => key.contains(".jpg"))
+          .toList();
+
+        for (String asset in assetsProject) {
+          Future.value()
+            .then((_) {
+              return Image.asset(
+                asset,
+                fit: BoxFit.cover,
+                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  if (wasSynchronouslyLoaded) {
+                    return child;
+                  }
+
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: frame != null ? 
+                      SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: child,
+                      ) :
+                      const Center(
                         child: CircularProgressIndicator(),
                       )
-                    );
-            },
-          );
-        })
-        .then((image) async {
-          await precacheImage(image.image, context);
-          images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
-        });
-    }
+                  );
+                },
+              );
+            })
+            .then((image) async {
+              await precacheImage(image.image, context);
+              images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
+            });
+        }
+      });
   }
 
   void _showToolbarObserver() {
@@ -217,8 +268,12 @@ class AnotacaoController extends ScreenController {
         if (result) {
           formAnotacao.titulo = titleController.text;
           formAnotacao.ultimaAtualizacao = DateTime.now();
-          if (backgroundImage.value != null) {
-            formAnotacao.imagemFundo = backgroundImage.value!.pathImage;
+          String pathImage = formAnotacao.imagemFundo ?? "";
+          if (pathImage.isNotEmpty) {
+            if (pathImage.contains("cache")) {
+              pathImage = await saveFile(pathImage, "anotacao/fundo");
+              formAnotacao.imagemFundo = pathImage;
+            }
           } else {
             formAnotacao.imagemFundo = "";
           }
@@ -239,7 +294,7 @@ class AnotacaoController extends ScreenController {
               Navigator.of(context).pop();
             }
             ultimaAtualizacao.value =
-              "Última atualização às: ${
+              "Atualizado em: ${
               DateFormat("dd/MM/yyyy HH:mm:ss")
               .format(formAnotacao.ultimaAtualizacao!
             )}";
@@ -249,10 +304,12 @@ class AnotacaoController extends ScreenController {
                 context
               );
             }
+
             if (!isEdit.value) {
               isEdit.value = true;
               formAnotacao.id = right.id;
             }
+
             ScreenMediator.callScreen("Home", "update", null);
           });
         }
@@ -293,8 +350,9 @@ class AnotacaoController extends ScreenController {
               style: TextButton.styleFrom(foregroundColor: color),
               child: const Text('Tirar uma foto',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.black)
-                ),
+                  fontWeight: FontWeight.bold, color: Colors.black
+                )
+              ),
               onPressed: () => Navigator.pop(ctx, MediaPickSetting.Camera),
             ),
             Container(height: 1.0, color: Colors.black),
@@ -302,8 +360,9 @@ class AnotacaoController extends ScreenController {
               style: TextButton.styleFrom(foregroundColor: color),
               child: const Text('Gravar um vídeo',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.black)
-                ),
+                  fontWeight: FontWeight.bold, color: Colors.black
+                )
+              ),
               onPressed: () => Navigator.pop(ctx, MediaPickSetting.Video),
             ),
           ],
@@ -324,17 +383,23 @@ class AnotacaoController extends ScreenController {
           children: [
             TextButton(
               style: TextButton.styleFrom(foregroundColor: color),
-              child: const Text('Abrir da galeria',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black)),
+              child: const Text(
+                'Abrir da galeria',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black
+                )
+              ),
               onPressed: () => Navigator.pop(ctx, MediaPickSetting.Gallery),
             ),
             Container(height: 1.0, color: Colors.black),
             TextButton(
               style: TextButton.styleFrom(foregroundColor: color),
-              child: const Text('Link',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black)),
+              child: const Text(
+                'Link',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black
+                )
+              ),
               onPressed: () => Navigator.pop(ctx, MediaPickSetting.Link),
             ),
           ],
@@ -360,8 +425,9 @@ class AnotacaoController extends ScreenController {
                   child: const Text(
                     'Tirar foto',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black)
-                    ),
+                      fontWeight: FontWeight.bold, color: Colors.black
+                    )
+                  ),
                   onPressed: () => Navigator.pop(context, "camera"),
                 ),
                 Container(height: 1.0, color: Colors.black),
@@ -370,8 +436,9 @@ class AnotacaoController extends ScreenController {
                   child: const Text(
                     'Abrir da galeria',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black)
-                    ),
+                      fontWeight: FontWeight.bold, color: Colors.black
+                    )
+                  ),
                   onPressed: () => Navigator.pop(context, "galeria"),
                 ),
               ],
@@ -380,6 +447,7 @@ class AnotacaoController extends ScreenController {
         )
       )
       .then((response) async {
+        showLoading(context);
         if (response != null) {
           if (response == "galeria") {
             return imagePicker.getImage(ImagePickerEasyNoteOptions.gallery);
@@ -391,32 +459,37 @@ class AnotacaoController extends ScreenController {
         return null;
       })
       .then((response) {
+        Navigator.of(context).pop();
         if (response != null) {
-          backgroundImage.value = BackgroundAnotacaoModel(
-            widget: Image.file(
-              File(response),
-              fit: BoxFit.cover,
-              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                if (wasSynchronouslyLoaded) {
-                  return child;
-                }
+          changeBackground(
+            BackgroundAnotacaoModel(
+              widget: Image.file(
+                File(response),
+                fit: BoxFit.cover,
+                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  if (wasSynchronouslyLoaded) {
+                    return child;
+                  }
 
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: frame != null ? 
-                    SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: child,
-                    ) :
-                    const Center(
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: frame != null ? 
+                      SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: child,
+                      ) :
+                      const Center(
                         child: CircularProgressIndicator(),
                       )
-                    );
-              },
-            ),
-            pathImage: response
+                  );
+                },
+              ),
+              pathImage: response
+            )
           );
+
+          Navigator.of(context).pop();
         }
       });
 
@@ -435,6 +508,13 @@ class AnotacaoController extends ScreenController {
     backgroundImage.value = image;
     if (image != null) {
       backgroundImage.value!.isSelect = true;
+      formAnotacao.imagemFundo = backgroundImage.value!.pathImage;
+    } else {
+      formAnotacao.imagemFundo = "";
+    }
+
+    if (showConfig("AUTOSAVE")) {
+      autoSave();
     }
   }
 }
@@ -455,8 +535,8 @@ class FormAnotacao {
     this.data,
     this.imagemFundo = "",
     this.observacao,
-    this.ultimaAtualizacao}
-  ) {
+    this.ultimaAtualizacao
+  }) {
     data ??= DateTime.now();
   }
 

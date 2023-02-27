@@ -29,13 +29,14 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
 
         return Container(
           decoration: BoxDecoration(
-              image: path.isNotEmpty
-                  ? DecorationImage(
-                      image: path.contains("lib")
-                          ? AssetImage(path)
-                          : FileImage(File(path)) as ImageProvider,
-                      fit: BoxFit.cover)
-                  : null),
+          image: path.isNotEmpty ? DecorationImage(
+            image: path.contains("lib") ?
+              AssetImage(path) :
+              FileImage(File(path)) as ImageProvider,
+              fit: BoxFit.cover
+            ) :
+            null
+          ),
           child: Container(
             color: value != null ? Colors.white.withOpacity(0.5) : null,
             child: SafeArea(
@@ -73,6 +74,7 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
             fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18.0),
       ),
       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+      maxLines: null,
     );
   }
 

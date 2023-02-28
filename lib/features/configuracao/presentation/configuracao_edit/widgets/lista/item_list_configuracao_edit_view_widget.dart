@@ -41,9 +41,11 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold
             ),
-            maxLines: 2,
+            maxLines: null,
           ),
-          ..._getIconConfig(identificador).map((widget) => widget.runtimeType == IconData ? Icon(widget) : widget),
+          ..._getIconConfig(identificador).map(
+            (widget) => widget.runtimeType == IconData ? Icon(widget) : widget
+          ),
         ],
       )
     );
@@ -133,6 +135,8 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return "Exibir botão de localizar?";
       case "MOSTRACAMERA":
         return "Exibir botão de câmera?";
+      case "SHOWIMAGEAPP":
+        return "Exibir as imagens padrão de fundo do aplicativo na anotação?";
     }
 
     return "";
@@ -221,6 +225,8 @@ class ItemListConfiguracaoEditViewWidget extends StatelessWidget {
         return [Icons.search];
       case "MOSTRACAMERA":
         return [Icons.camera_alt];
+      case "SHOWIMAGEAPP":
+        return [Icons.photo];
     }
 
     return [const SizedBox.shrink()];

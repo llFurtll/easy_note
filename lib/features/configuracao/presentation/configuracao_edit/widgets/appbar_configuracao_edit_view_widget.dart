@@ -17,7 +17,10 @@ class AppBarConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditCont
       actions: [
         _actionSave()
       ],
-      title: Text(controller.title),
+      title: Text(
+        controller.title,
+        style: const TextStyle(fontWeight: FontWeight.bold)
+      ),
       backgroundColor: Theme.of(context).primaryColor,
     );
   }
@@ -36,7 +39,10 @@ class AppBarConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditCont
       style: TextButton.styleFrom(
         foregroundColor: Colors.white
       ),
-      child: const Text("Salvar"),
+      child: const Text(
+        "Salvar",
+        style: TextStyle(fontWeight: FontWeight.bold)
+      ),
     );
   }
 }

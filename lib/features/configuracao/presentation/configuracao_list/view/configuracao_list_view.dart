@@ -58,7 +58,10 @@ class ConfiguracaoListView extends ScreenView<ConfiguracaoListController> {
       backgroundColor: Theme.of(context).primaryColor,
       automaticallyImplyLeading: false,
       leading: _iconLeading(context),
-      title: const Text("Configurações do EasyNote"),
+      title: const Text(
+        "Configurações do EasyNote",
+        style: TextStyle(fontWeight: FontWeight.bold)
+      ),
     );
   }
 
@@ -74,7 +77,7 @@ class ConfiguracaoListView extends ScreenView<ConfiguracaoListController> {
     return const Text(
       "Aqui nas configurações é possível realizar algumas customizações no EasyNote.",
       style: TextStyle(
-        fontSize: 20.0,
+        fontSize: 18.0,
         fontWeight: FontWeight.bold
       ),
     );

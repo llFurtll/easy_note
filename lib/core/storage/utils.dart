@@ -37,7 +37,8 @@ void loadConfigs() {
   ];
 
   configs["APP"] = [
-    "AUTOSAVE"
+    "AUTOSAVE",
+    "SHOWIMAGEAPP"
   ];
 }
 

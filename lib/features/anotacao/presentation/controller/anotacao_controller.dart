@@ -176,44 +176,46 @@ class AnotacaoController extends ScreenController {
         }
       })
       .then((_) async {
-        final manifest = await rootBundle.loadString("AssetManifest.json");
-        final Map<String, dynamic> manifestMap = json.decode(manifest);
+        if (showConfig("SHOWIMAGEAPP")) {
+          final manifest = await rootBundle.loadString("AssetManifest.json");
+          final Map<String, dynamic> manifestMap = json.decode(manifest);
 
-        final assetsProject = manifestMap.keys
-          .where((key) => key.contains("lib/assets/images/anotacao"))
-          .where((key) => key.contains(".jpg"))
-          .toList();
+          final assetsProject = manifestMap.keys
+            .where((key) => key.contains("lib/assets/images/anotacao"))
+            .where((key) => key.contains(".jpg"))
+            .toList();
 
-        for (String asset in assetsProject) {
-          Future.value()
-            .then((_) {
-              return Image.asset(
-                asset,
-                fit: BoxFit.cover,
-                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                  if (wasSynchronouslyLoaded) {
-                    return child;
-                  }
+          for (String asset in assetsProject) {
+            Future.value()
+              .then((_) {
+                return Image.asset(
+                  asset,
+                  fit: BoxFit.cover,
+                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                    if (wasSynchronouslyLoaded) {
+                      return child;
+                    }
 
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: frame != null ? 
-                      SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: child,
-                      ) :
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                  );
-                },
-              );
-            })
-            .then((image) async {
-              await precacheImage(image.image, context);
-              images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
-            });
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: frame != null ? 
+                        SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: child,
+                        ) :
+                        const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                    );
+                  },
+                );
+              })
+              .then((image) async {
+                await precacheImage(image.image, context);
+                images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
+              });
+          }
         }
       });
   }

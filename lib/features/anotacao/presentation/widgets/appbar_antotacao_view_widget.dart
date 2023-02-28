@@ -114,7 +114,8 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
         },
       ),
       IconButton(
-        onPressed: () {},
+        onPressed: controller.showMic,
+        tooltip: "Digitação por voz",
         icon: const Icon(Icons.mic),
         color: Colors.black,
         disabledColor: Colors.grey,

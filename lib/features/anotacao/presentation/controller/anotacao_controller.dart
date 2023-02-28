@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_mediator.dart';
-import 'package:easy_note/core/utils/get_file.dart';
+import 'package:easy_note/features/anotacao/presentation/widgets/mic_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -13,7 +13,9 @@ import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/adapters/image_picker_easy_note.dart';
+import '../../../../core/adapters/speech_text_easy_note.dart';
 import '../../../../core/utils/debounce.dart';
+import '../../../../core/utils/get_file.dart';
 import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/show_loading.dart';
@@ -38,11 +40,14 @@ class AnotacaoController extends ScreenController {
   final isEdit = ValueNotifier(false);
   final ultimaAtualizacao = ValueNotifier<String?>(null);
   final imagePicker = ImagePickerEasyNoteImpl();
+  final speech = SpeechTextEasyNoteImpl();
+  final isListen = ValueNotifier(false);
 
   late final Timer timer;
   late final QuillController quillController;
   
   FormAnotacao formAnotacao = FormAnotacao();
+  bool available = false;
 
   @override
   void onInit() {
@@ -57,11 +62,16 @@ class AnotacaoController extends ScreenController {
     }
 
     Future.value()
+      .then((_) => _initMic())
       .then((_) => _loadConfigs())
       .then((_) => _loadImages())
       .then((_) => _loadAnotacao(idAnotacao))
       .then((_) => Future.delayed(const Duration(milliseconds: 500)))
       .then((_) => isLoading.value = false);
+  }
+
+  Future<void> _initMic() async {
+    available = await speech.init();
   }
 
   Future<void> _loadAnotacao(int? idAnotacao) async {
@@ -133,39 +143,34 @@ class AnotacaoController extends ScreenController {
 
         return <FileSystemEntity>[];
       })
-      .then((response) {
+      .then((response) async {
         if (response.isNotEmpty) {
           for (FileSystemEntity file in response) {
             if (file is File) {
-              Future.value()
-                .then((_) {
-                  return Image.file(
-                    file,
-                    fit: BoxFit.cover,
-                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                      if (wasSynchronouslyLoaded) {
-                        return child;
-                      }
+                final image = Image.file(
+                  file,
+                  fit: BoxFit.cover,
+                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                    if (wasSynchronouslyLoaded) {
+                      return child;
+                    }
 
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        child: frame != null ? 
-                          SizedBox(
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: child,
-                          ) :
-                          const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                      );
-                    },
-                  );
-                })
-                .then((image) async {
-                  await precacheImage(image.image, context);
-                  images.add(BackgroundAnotacaoModel(widget: image, pathImage: file.path));
-                });
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: frame != null ? 
+                        SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: child,
+                        ) :
+                        const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                    );
+                  },
+                );
+                await precacheImage(image.image, context);
+                images.add(BackgroundAnotacaoModel(widget: image, pathImage: file.path));
             }
           }
         }
@@ -493,6 +498,39 @@ class AnotacaoController extends ScreenController {
         }
       });
 
+  }
+
+  void showMic() async {
+    unfocus();
+    
+    if (!available) {
+      CustomDialog.warning(
+        "O EasyNote precisa da permissão "
+        "do microfone do dispositivo para realizar essa operação.",
+        context
+      );
+
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      builder: (context) => const MicAnotacaoViewWidget(),
+    );
+  }
+
+  void onListen() {
+    Future.value()
+      .then((_) => isListen.value = true)
+      .then((_) => speech.start((value) {
+        quillController.document.insert(0, value);
+      }));
+  }
+
+  void onCancelListen() {
+    Future.value()
+      .then((_) => isListen.value = false)
+      .then((_) => Navigator.of(context).pop());
   }
 
   void unfocus() {

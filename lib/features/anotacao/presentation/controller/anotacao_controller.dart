@@ -48,6 +48,7 @@ class AnotacaoController extends ScreenController {
   
   FormAnotacao formAnotacao = FormAnotacao();
   bool available = false;
+  String textMic = "";
 
   @override
   void onInit() {
@@ -521,18 +522,20 @@ class AnotacaoController extends ScreenController {
     );
   }
 
-  void onListen() {
-    Future.value()
-      .then((_) => isListen.value = true)
-      .then((_) => speech.start((value) {
-        quillController.document.insert(0, value);
-      }));
+  void onListen() async {
+    isListen.value = true;
+    await speech.start((value) {
+      textMic = value;
+    });
   }
 
   void onCancelListen() {
     Future.value()
       .then((_) => isListen.value = false)
-      .then((_) => Navigator.of(context).pop());
+      .then((value) => Future.delayed(const Duration(seconds: 2)))
+      .then((_) => Navigator.of(context).pop())
+      .then((_) => quillController.document.insert(0, textMic))
+      .then((_) => textMic = "");
   }
 
   void unfocus() {

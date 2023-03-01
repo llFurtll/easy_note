@@ -1,7 +1,7 @@
 import 'package:speech_to_text/speech_to_text.dart';
 
 abstract class SpeechTextEasyNote {
-  Future<void> start(Function(String value) onResult);
+  Future<void> start(Function(String value) listen);
   Future<void> stop();
   Future<bool> init();
 }
@@ -19,9 +19,9 @@ class SpeechTextEasyNoteImpl extends SpeechTextEasyNote {
   }
   
   @override
-  Future<void> start(Function(String value) onResult) async {
+  Future<void> start(Function(String value) listen) async {
     await _speech.listen(
-      onResult: (result) => onResult(result.recognizedWords)
+      onResult: (result) => listen(result.recognizedWords)
     );
   }
 

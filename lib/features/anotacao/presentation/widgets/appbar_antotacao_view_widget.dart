@@ -138,6 +138,9 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
               } else {
                 controller.unfocus();
                 showBottomSheet(
+                  constraints: const BoxConstraints(
+                    minWidth: double.infinity
+                  ),
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(20.0),

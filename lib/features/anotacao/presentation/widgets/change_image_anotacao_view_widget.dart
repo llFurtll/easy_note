@@ -14,7 +14,6 @@ class ChangeImageAnotacaoViewWiget extends ScreenWidget<AnotacaoController> {
     
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 5.0),
@@ -24,7 +23,6 @@ class ChangeImageAnotacaoViewWiget extends ScreenWidget<AnotacaoController> {
           padding: const EdgeInsets.only(left: 15.0, bottom: 15.0),
           scrollDirection: Axis.horizontal,
           child: Row(
-            mainAxisSize: MainAxisSize.max,
             children: controller.images.map(
               (image) => _buildCard(image)
             ).toList(),
@@ -36,7 +34,9 @@ class ChangeImageAnotacaoViewWiget extends ScreenWidget<AnotacaoController> {
 
   Widget _buildCard(BackgroundAnotacaoModel image) {
     return GestureDetector(
-      onTap: () => controller.changeBackground(image),
+      onTap: image.pathImage.isEmpty ?
+        null :
+        () => controller.changeBackground(image),
       child: ValueListenableBuilder(
         valueListenable: controller.backgroundImage,
         builder: (context, value, child) {

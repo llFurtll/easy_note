@@ -183,7 +183,7 @@ class AnotacaoController extends ScreenController {
 
           final assetsProject = manifestMap.keys
             .where((key) => key.contains("lib/assets/images/anotacao"))
-            .where((key) => key.contains(".jpg"))
+            .where((key) => key.contains("thumbnail"))
             .toList();
 
           for (String asset in assetsProject) {
@@ -191,7 +191,7 @@ class AnotacaoController extends ScreenController {
               .then((_) {
                 return Image.asset(
                   asset,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                     if (wasSynchronouslyLoaded) {
                       return child;
@@ -214,7 +214,14 @@ class AnotacaoController extends ScreenController {
               })
               .then((image) async {
                 await precacheImage(image.image, context);
-                images.add(BackgroundAnotacaoModel(widget: image, pathImage: asset));
+                if (asset.contains("thumbnail")) {
+                  images.add(
+                  BackgroundAnotacaoModel(
+                    widget: image,
+                    pathImage: asset.replaceAll("-thumbnail", "")
+                  )
+                );
+                }
               });
           }
         }
@@ -534,7 +541,16 @@ class AnotacaoController extends ScreenController {
       .then((_) => isListen.value = false)
       .then((value) => Future.delayed(const Duration(seconds: 2)))
       .then((_) => Navigator.of(context).pop())
-      .then((_) => quillController.document.insert(0, textMic))
+      .then((_) {
+        final index = quillController.document.length - 1;
+        final selection = TextSelection.collapsed(offset: index + textMic.length);
+        quillController.replaceText(
+          index,
+          0,
+          textMic,
+          selection
+        );
+      })
       .then((_) => textMic = "");
   }
 

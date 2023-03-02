@@ -90,6 +90,13 @@ flutter:
     - lib/assets/images/anotacao/5.jpg
     - lib/assets/images/anotacao/6.jpg
     - lib/assets/images/anotacao/7.jpg
+    - lib/assets/images/anotacao/1-thumbnail.jpg
+    - lib/assets/images/anotacao/2-thumbnail.jpg
+    - lib/assets/images/anotacao/3-thumbnail.jpg
+    - lib/assets/images/anotacao/4-thumbnail.jpg
+    - lib/assets/images/anotacao/5-thumbnail.jpg
+    - lib/assets/images/anotacao/6-thumbnail.jpg
+    - lib/assets/images/anotacao/7-thumbnail.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

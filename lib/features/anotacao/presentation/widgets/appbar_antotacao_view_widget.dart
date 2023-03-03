@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
 import 'change_image_anotacao_view_widget.dart';
+import 'share_anotacao_view_widget.dart';
 
 class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
     with PreferredSizeWidget {
@@ -66,9 +67,9 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
                       child: Wrap(
                         children: [
                           _iconOpenItens(value),
-                          ..._iconsActions(context).map((e) => value
-                              ? e
-                              : const SizedBox(height: 0.0, width: 0.0))
+                          ..._iconsActions(context).map((e) => value ?
+                            e :
+                            const SizedBox(height: 0.0, width: 0.0))
                         ],
                       ),
                     ));
@@ -103,7 +104,22 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
             visible: value,
             child: IconButton(
               tooltip: "Compartilhar",
-              onPressed: () {},
+              onPressed: () {
+                controller.unfocus();
+                showBottomSheet(
+                  constraints: const BoxConstraints(
+                    minWidth: double.infinity
+                  ),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0)
+                    )
+                  ),
+                  backgroundColor: Colors.blueGrey[50],
+                  context: context,
+                  builder: (context) => const ShareAnotacaoViewWidget());
+              },
               icon: const Icon(Icons.ios_share_outlined),
               color: Colors.black,
               disabledColor: Colors.grey,

@@ -1,0 +1,65 @@
+import 'package:compmanager/screen_widget.dart';
+import 'package:flutter/material.dart';
+
+import '../controller/anotacao_controller.dart';
+
+class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
+  const ShareAnotacaoViewWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(
+          child: Icon(Icons.drag_handle, color: Colors.grey, size: 40.0),
+        ), 
+        TextButton(
+          onPressed: () => controller.share(0),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(15),
+            foregroundColor: Colors.black,
+          ),
+          child: const Text(
+            "Compartilhar anotação como PDF",
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)
+          ),
+        ),
+        TextButton(
+          onPressed: () => controller.share(1),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(15),
+            foregroundColor: Colors.black,
+          ),
+          child: const Text(
+            "Compartilhar anotação como imagem",
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          height: 50.0,
+          margin: const EdgeInsets.only(bottom: 25.0, top: 15.0),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              "Cancelar",
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),
+            )
+          ),
+        )
+      ],
+    );
+  }
+}

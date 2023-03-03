@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_mediator.dart';
-import 'package:easy_note/features/anotacao/presentation/widgets/mic_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -25,6 +24,7 @@ import '../../domain/usecases/get_find_by_id_anotacao.dart';
 import '../../domain/usecases/get_save_anotacao.dart';
 import '../injection/anotacao_injection.dart';
 import '../models/background_anotacao_model.dart';
+import '../widgets/mic_anotacao_view_widget.dart';
 
 class AnotacaoController extends ScreenController {
   final showIcones = ValueNotifier(false);
@@ -539,7 +539,7 @@ class AnotacaoController extends ScreenController {
   void onCancelListen() {
     Future.value()
       .then((_) => isListen.value = false)
-      .then((value) => Future.delayed(const Duration(seconds: 2)))
+      .then((value) => Future.delayed(const Duration(seconds: 1)))
       .then((_) => Navigator.of(context).pop())
       .then((_) {
         final index = quillController.document.length - 1;
@@ -552,6 +552,10 @@ class AnotacaoController extends ScreenController {
         );
       })
       .then((_) => textMic = "");
+  }
+
+  void share(int modo) async {
+    
   }
 
   void unfocus() {

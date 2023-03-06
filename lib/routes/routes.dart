@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../features/anotacao/presentation/view/anotacao_view.dart';
+import '../features/anotacao/presentation/create/view/anotacao_view.dart';
+import '../features/anotacao/presentation/share/view/share_view.dart';
 import '../features/atualizacao/presentation/atualizacao_detalhe/view/atualizacao_detalhe_view.dart';
 import '../features/atualizacao/presentation/atualizacao_list/view/atualizacao_list_view.dart';
 import '../features/configuracao/presentation/configuracao_edit/view/configuracao_edit_view.dart';
@@ -18,6 +19,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     ConfiguracaoEdit.routeConfigEdit: (context) => const ConfiguracaoEdit(),
     AtualizacaoList.routeAtualizacaoList: (context) => const AtualizacaoList(),
     AtualizacaoDetalhe.routeAtualizacaoDetalhe: (context) => const AtualizacaoDetalhe(),
-    AnotacaoScreen.routeAnotacao: (context) => const AnotacaoScreen()
+    AnotacaoScreen.routeAnotacao: (context) => const AnotacaoScreen(),
+    Share.routeShare: (context) => const Share()
   };
 }

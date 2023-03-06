@@ -5,23 +5,26 @@ import 'dart:io';
 import 'package:compmanager/screen_controller.dart';
 import 'package:compmanager/screen_injection.dart';
 import 'package:compmanager/screen_mediator.dart';
+import 'package:easy_note/core/arguments/share_anotacao_arguments.dart';
+import 'package:easy_note/features/anotacao/presentation/share/view/share_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/adapters/image_picker_easy_note.dart';
-import '../../../../core/adapters/speech_text_easy_note.dart';
-import '../../../../core/utils/debounce.dart';
-import '../../../../core/utils/get_file.dart';
-import '../../../../core/utils/save_file.dart';
-import '../../../../core/widgets/custom_dialog.dart';
-import '../../../../core/widgets/show_loading.dart';
-import '../../../configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
-import '../../domain/entities/anotacao.dart';
-import '../../domain/usecases/get_find_by_id_anotacao.dart';
-import '../../domain/usecases/get_save_anotacao.dart';
+import '../../../../../core/adapters/image_picker_easy_note.dart';
+import '../../../../../core/adapters/speech_text_easy_note.dart';
+import '../../../../../core/enum/type_share.dart';
+import '../../../../../core/utils/debounce.dart';
+import '../../../../../core/utils/get_file.dart';
+import '../../../../../core/utils/save_file.dart';
+import '../../../../../core/widgets/custom_dialog.dart';
+import '../../../../../core/widgets/show_loading.dart';
+import '../../../../configuracao/domain/usecases/get_find_all_config_by_modulo.dart';
+import '../../../domain/entities/anotacao.dart';
+import '../../../domain/usecases/get_find_by_id_anotacao.dart';
+import '../../../domain/usecases/get_save_anotacao.dart';
 import '../injection/anotacao_injection.dart';
 import '../models/background_anotacao_model.dart';
 import '../widgets/mic_anotacao_view_widget.dart';
@@ -554,8 +557,62 @@ class AnotacaoController extends ScreenController {
       .then((_) => textMic = "");
   }
 
-  void share(int modo) async {
-    
+  void share(TypeShare modo) async {
+    late bool showImage;
+    if (backgroundImage.value != null) {
+      showImage = await showDialog<bool>(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => CustomDialog(
+          type: CustomDialogEnum.options,
+          content: const Text(
+            "Deseja compartilhar a anotação com a imagem de fundo?",
+            style: TextStyle(fontWeight: FontWeight.bold)
+          ), 
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red
+              ),
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text(
+                "Não",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent
+                )
+              ),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.greenAccent
+              ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text(
+                "Sim",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green
+                )
+              ),
+            ),
+          ],
+        )
+      ) ?? false;
+    } else {
+      showImage = false;
+    }
+
+    final arguments = ShareAnotacaoArguments(
+      anotacao: formAnotacao.toAnotacao(),
+      showImage: showImage,
+      typeShare: modo
+    );
+
+    Future.value()
+      .then((_) =>
+        Navigator.of(context).pushNamed(Share.routeShare, arguments: arguments)
+      );
   }
 
   void unfocus() {

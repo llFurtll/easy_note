@@ -14,7 +14,7 @@ import '../../../../core/utils/delete_file.dart';
 import '../../../../core/utils/save_file.dart';
 import '../../../../core/widgets/show_loading.dart';
 import '../../../anotacao/domain/usecases/get_find_all_anotacao.dart';
-import '../../../anotacao/presentation/view/anotacao_view.dart';
+import '../../../anotacao/presentation/create/view/anotacao_view.dart';
 import '../../../atualizacao/presentation/atualizacao_list/view/atualizacao_list_view.dart';
 import '../../../configuracao/presentation/configuracao_list/view/configuracao_list_view.dart';
 import '../../../sobre/presentation/view/sobre_view.dart';

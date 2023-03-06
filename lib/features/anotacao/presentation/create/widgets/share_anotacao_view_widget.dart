@@ -1,6 +1,7 @@
 import 'package:compmanager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/enum/type_share.dart';
 import '../controller/anotacao_controller.dart';
 
 class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
@@ -17,7 +18,7 @@ class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
           child: Icon(Icons.drag_handle, color: Colors.grey, size: 40.0),
         ), 
         TextButton(
-          onPressed: () => controller.share(0),
+          onPressed: () => controller.share(TypeShare.pdf),
           style: TextButton.styleFrom(
             padding: const EdgeInsets.all(15),
             foregroundColor: Colors.black,
@@ -28,7 +29,7 @@ class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
           ),
         ),
         TextButton(
-          onPressed: () => controller.share(1),
+          onPressed: () => controller.share(TypeShare.image),
           style: TextButton.styleFrom(
             padding: const EdgeInsets.all(15),
             foregroundColor: Colors.black,

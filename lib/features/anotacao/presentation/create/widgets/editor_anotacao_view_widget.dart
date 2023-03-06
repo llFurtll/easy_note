@@ -6,7 +6,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../../../core/widgets/spacer.dart';
+import '../../../../../core/widgets/spacer.dart';
 import '../controller/anotacao_controller.dart';
 
 class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {

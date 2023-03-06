@@ -1,11 +1,11 @@
 import 'package:compmanager/screen_view.dart';
-import 'package:easy_note/features/anotacao/presentation/widgets/fab_anotacao_view_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';
 import '../injection/anotacao_injection.dart';
 import '../widgets/appbar_antotacao_view_widget.dart';
 import '../widgets/editor_anotacao_view_widget.dart';
+import '../widgets/fab_anotacao_view_widget.dart';
 
 class AnotacaoScreen extends Screen {
   static const routeAnotacao = "/anotacao";

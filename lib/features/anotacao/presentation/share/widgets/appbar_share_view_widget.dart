@@ -28,7 +28,7 @@ class AppBarShareViewWidget extends ScreenWidget<ShareController>
   List<Widget> _buildActions() {
     return [
       IconButton(
-        onPressed: () {},
+        onPressed: controller.share,
         icon: const Icon(Icons.share),
       ),
     ];

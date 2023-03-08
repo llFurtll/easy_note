@@ -33,24 +33,25 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
             image: path.contains("lib") ?
               AssetImage(path) :
               FileImage(File(path)) as ImageProvider,
-              fit: BoxFit.cover
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.5),
+                BlendMode.dstATop
+              ),
             ) :
             null
           ),
-          child: Container(
-            color: value != null ? Colors.white.withOpacity(0.5) : null,
-            child: SafeArea(
-              child: Container(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTitle(),
-                    spacer(10.0),
-                    _buildToolbar(),
-                    _buildEditor()
-                  ],
-                ),
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTitle(),
+                  spacer(10.0),
+                  _buildToolbar(),
+                  _buildEditor()
+                ],
               ),
             ),
           ),

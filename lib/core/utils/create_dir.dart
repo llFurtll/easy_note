@@ -9,7 +9,7 @@ Future<String> createDir(String subFolder) async {
 
     bool exist = await subDir.exists();
     if (!exist) {
-      await subDir.create();
+      await subDir.create(recursive: true);
     }
 
     return subDir.path;

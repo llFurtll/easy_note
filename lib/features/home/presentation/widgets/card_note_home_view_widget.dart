@@ -54,32 +54,33 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
                 )
               ],
             ),
-            child: Container( // IMAGEM DE FUNDO
+            child: Container(
             decoration: BoxDecoration(
               image: item.imagemFundo.isNotEmpty ? DecorationImage(
                 image: item.imagemFundo.contains("lib") ?
                   AssetImage(item.imagemFundo) :
                   FileImage(File(item.imagemFundo)) as ImageProvider,
-                fit: BoxFit.cover
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.white.withOpacity(0.5),
+                  BlendMode.dstATop
+                ),
               ) : null
             ),
-            child: Container( // SOMBRA
-              constraints: const BoxConstraints(
-                minHeight: 90.0
-              ),
-              color: Colors.white.withOpacity(0.5),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  spacer(10.0),
-                  _buildTitle(),
-                  spacer(10.0),
-                  _buildFooter()
-                ],
-              ),
-            )
+            constraints: const BoxConstraints(
+              minHeight: 90.0
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                spacer(10.0),
+                _buildTitle(),
+                spacer(10.0),
+                _buildFooter()
+              ],
+            ),
           ),
           )
         ),

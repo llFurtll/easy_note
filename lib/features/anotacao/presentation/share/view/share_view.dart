@@ -29,9 +29,18 @@ class ShareView extends ScreenView<ShareController> {
   Widget build(BuildContext context) {
     final isImage = TypeShare.isImage(controller.args.typeShare);
 
-    return Scaffold(
-      appBar: const AppBarShareViewWidget(),
-      body: isImage ? const ImageShareViewWidget() : Container(),
+    return ValueListenableBuilder(
+      valueListenable: controller.isLoading,
+      builder: (context, value, child) {
+        if (value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return Scaffold(
+          appBar: const AppBarShareViewWidget(),
+          body: isImage ? const ImageShareViewWidget() : Container(),
+        );
+      },
     );
   }
 }

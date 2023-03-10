@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:compmanager/screen_controller.dart';
@@ -105,20 +104,62 @@ class ShareController extends ScreenController {
 
     final delta = <Map<String, dynamic>>[...jsonDecode(args.anotacao.observacao!)];
     final converter = QuillDeltaToHtmlConverter(delta);
+
     final html = """
       <html>
         <head>
           <style>
+            body {
+              padding: 0;
+              margin: 0;
+            }
+
+            .banner {
+              position: relative;
+              z-index: 5;
+              ${args.showImage ? "min-height: 100vh;" : ""}
+              max-height: 99999px;
+              width: 100vw;
+            }
+            
+            .banner .bg {
+              position: absolute;
+              z-index: -1;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              ${args.showImage ? "background: url('data:image/png;base64, $image') center center repeat;" : ""}
+              opacity: .4;
+              width: 100%;
+              height: 100%;
+            }
+
+            .banner .content {
+              padding: ${args.showImage ? "25px" : "0px"};
+            }
+
             .title {
               color: black;
               font-size: 25px;
               font-weight: bold;
             }
+
+            pre {
+              padding: 10px;
+              background-color: #fbfbfb;
+              color: #7da1d1;
+            }
           </style>
         </head>
         <body>
-          <span class="title">${args.anotacao.titulo}</span>
-          ${converter.convert()}
+          <div class='banner'>
+            <div class='bg'></div>
+            <div class='content'>
+              <span class="title">${args.anotacao.titulo}</span>
+              ${converter.convert()}
+            </div>
+          </div>
         </body>
       </html>
     """;

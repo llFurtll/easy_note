@@ -79,7 +79,12 @@ class AtualizacaoDetalheView extends ScreenView<AtualizacaoDetalheController> {
       showNextButton: true,
       next: const Icon(Icons.arrow_forward_ios, size: 20),
       nextStyle: buttonStyle,
-      done: const Text("Continuar"),
+      done: const Text(
+        "Continuar",
+        style: TextStyle(
+          fontWeight: FontWeight.bold
+        ),
+      ),
       onDone: controller.onContinue,
       doneStyle: buttonStyle,
       dotsDecorator: DotsDecorator(

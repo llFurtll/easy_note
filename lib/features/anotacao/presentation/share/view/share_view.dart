@@ -1,4 +1,5 @@
 import 'package:compmanager/screen_view.dart';
+import 'package:easy_note/features/anotacao/presentation/share/widgets/pdf_share_view_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/enum/type_share.dart';
@@ -38,7 +39,7 @@ class ShareView extends ScreenView<ShareController> {
 
         return Scaffold(
           appBar: const AppBarShareViewWidget(),
-          body: isImage ? const ImageShareViewWidget() : Container(),
+          body: isImage ? const ImageShareViewWidget() : const PdfShareViewWidget()
         );
       },
     );

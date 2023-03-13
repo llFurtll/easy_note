@@ -25,6 +25,8 @@ class ShareController extends ScreenController {
   late final ShareAnotacaoArguments args;
   late final QuillController qullController;
 
+  String pathPdf = "";
+
   @override
   void onInit() {
     super.onInit();
@@ -34,7 +36,17 @@ class ShareController extends ScreenController {
       document: Document.fromJson(jsonDecode(args.anotacao.observacao!)),
       selection: const TextSelection.collapsed(offset: 0)
     );
-    isLoading.value = false;
+
+    if (TypeShare.isPdf(args.typeShare)) {
+      Future.value()
+        .then((_) => _createPdf())
+        .then((value) {
+          pathPdf = value;
+          isLoading.value = false;
+        });
+    } else {
+      isLoading.value = false;
+    }
   }
 
   Future<void> share() async {
@@ -43,7 +55,7 @@ class ShareController extends ScreenController {
       .then((_) async {
         switch (args.typeShare) {
           case TypeShare.pdf:
-            return _createPdf();
+            return pathPdf;
           default:
             return await _createImageShare();
         }
@@ -86,90 +98,94 @@ class ShareController extends ScreenController {
   }
 
   Future<String> _createPdf() async {
-    String image = "";
-    if (args.showImage) {
-      try {
-        if (args.anotacao.imagemFundo!.contains("lib")) {
-          ByteData bytes = await rootBundle.load(args.anotacao.imagemFundo!);
-          image = base64Encode(MemoryImage(bytes.buffer.asUint8List()).bytes);
-        } else {
-          image = base64Encode(MemoryImage(
-            File(args.anotacao.imagemFundo!).readAsBytesSync()
-          ).bytes);
+    try {
+      String image = "";
+      if (args.showImage) {
+        try {
+          if (args.anotacao.imagemFundo!.contains("lib")) {
+            ByteData bytes = await rootBundle.load(args.anotacao.imagemFundo!);
+            image = base64Encode(MemoryImage(bytes.buffer.asUint8List()).bytes);
+          } else {
+            image = base64Encode(MemoryImage(
+              File(args.anotacao.imagemFundo!).readAsBytesSync()
+            ).bytes);
+          }
+        } catch (e) {
+          image = "";
         }
-      } catch (e) {
-        image = "";
       }
-    }
 
-    final delta = <Map<String, dynamic>>[...jsonDecode(args.anotacao.observacao!)];
-    final converter = QuillDeltaToHtmlConverter(delta);
+      final delta = <Map<String, dynamic>>[...jsonDecode(args.anotacao.observacao!)];
+      final converter = QuillDeltaToHtmlConverter(delta);
 
-    final html = """
-      <html>
-        <head>
-          <style>
-            body {
-              padding: 0;
-              margin: 0;
-            }
+      final html = """
+        <html>
+          <head>
+            <style>
+              body {
+                padding: 0;
+                margin: 0;
+              }
 
-            .banner {
-              position: relative;
-              z-index: 5;
-              ${args.showImage ? "min-height: 100vh;" : ""}
-              max-height: 99999px;
-              width: 100vw;
-            }
-            
-            .banner .bg {
-              position: absolute;
-              z-index: -1;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              ${args.showImage ? "background: url('data:image/png;base64, $image') center center repeat;" : ""}
-              opacity: .4;
-              width: 100%;
-              height: 100%;
-            }
+              .banner {
+                position: relative;
+                z-index: 5;
+                ${args.showImage ? "min-height: 100vh;" : ""}
+                max-height: 99999px;
+                width: 100vw;
+              }
+              
+              .banner .bg {
+                position: absolute;
+                z-index: -1;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                ${args.showImage ? "background: url('data:image/png;base64, $image') center center repeat;" : ""}
+                opacity: .4;
+                width: 100%;
+                height: 100%;
+              }
 
-            .banner .content {
-              padding: ${args.showImage ? "25px" : "0px"};
-            }
+              .banner .content {
+                padding: ${args.showImage ? "25px" : "0px"};
+              }
 
-            .title {
-              color: black;
-              font-size: 25px;
-              font-weight: bold;
-            }
+              .title {
+                color: black;
+                font-size: 25px;
+                font-weight: bold;
+              }
 
-            pre {
-              padding: 10px;
-              background-color: #fbfbfb;
-              color: #7da1d1;
-            }
-          </style>
-        </head>
-        <body>
-          <div class='banner'>
-            <div class='bg'></div>
-            <div class='content'>
-              <span class="title">${args.anotacao.titulo}</span>
-              ${converter.convert()}
+              pre {
+                padding: 10px;
+                background-color: #fbfbfb;
+                color: #7da1d1;
+              }
+            </style>
+          </head>
+          <body>
+            <div class='banner'>
+              <div class='bg'></div>
+              <div class='content'>
+                <span class="title">${args.anotacao.titulo}</span>
+                ${converter.convert()}
+              </div>
             </div>
-          </div>
-        </body>
-      </html>
-    """;
-    final dir = await createDir("share/pdf");
-    final file = await FlutterHtmlToPdf.convertFromHtmlContent(
-      html,
-      dir,
-      "anotacao-${args.anotacao.id}"
-    );
+          </body>
+        </html>
+      """;
+      final dir = await createDir("share/pdf");
+      final file = await FlutterHtmlToPdf.convertFromHtmlContent(
+        html,
+        dir,
+        "anotacao-${args.anotacao.id}"
+      );
 
-    return file.path;
+      return file.path;
+    } catch (_) {
+      return "";
+    }
   }
 }

@@ -69,7 +69,12 @@ class AtualizacaoListView extends ScreenView<AtualizacaoListController> {
       preferredSize: const Size.fromHeight(56.0),
       child: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text("Versões do EasyNote"),
+        title: const Text(
+          "Versões do EasyNote",
+          style: TextStyle(
+            fontWeight: FontWeight.bold
+          ),
+        ),
         automaticallyImplyLeading: false,
         leading: _buildBack(context),
       )

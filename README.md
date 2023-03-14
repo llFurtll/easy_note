@@ -1,16 +1,12 @@
-# easy_note
+# EasyNote
 
-A new Flutter project.
+<a href="https://www.buymeacoffee.com/danielmelonari" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-## Getting Started
+#### O EasyNote é um aplicativo simples e eficiente para gerenciar anotações.<br> A ideia desse aplicativo começou como um incentivo para um projeto de estudo, mas durante seu desenvolvimento percebi que poderia ser algo útil no dia a dia das pessoas.
 
-This project is a starting point for a Flutter application.
+<h1 align="">
+    <a href="https://flutter.dev/">🔗 Flutter</a>
+<img src="https://img.shields.io/badge/Flutter-Version3.7.0-blue"/>
+</h1>
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### :camera:  Screenshots

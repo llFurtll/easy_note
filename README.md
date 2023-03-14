@@ -11,6 +11,19 @@
 
 ### :camera:  Screenshots
 
+<table>
+  <tr>
+    <td>
+        <img align="left" width="478" alt="home" src="https://user-images.githubusercontent.com/48370450/225049951-6ee15f2e-7cb1-4791-82b7-3cf71475dd21.png" height="500px" width="250px">
+    </td>
+    <td>
+        <img align="left" width="476" alt="configuracao" src="https://user-images.githubusercontent.com/48370450/225050048-c5876e13-7e76-462d-9a73-dea4d5dec509.png" height="500px" width="250px">
+    </td>
+    <td>
+        <img align="left" width="477" alt="anotacao" src="https://user-images.githubusercontent.com/48370450/225050063-575adadb-422c-4adc-9135-c7a7f4462898.png" height="500px" width="250px">
+  </tr>
+</table>
+
 ## :warning:  Issues
 - [ ] Create notification mechanism for annotations
 - [ ] Application internationalization

@@ -1,4 +1,4 @@
-import 'package:compmanager/screen_view.dart';
+import 'package:screen_manager/screen_view.dart';
 import 'package:easy_note/features/anotacao/presentation/share/widgets/pdf_share_view_widget.dart';
 import 'package:flutter/material.dart';
 

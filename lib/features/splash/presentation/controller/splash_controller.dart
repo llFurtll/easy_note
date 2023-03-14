@@ -1,5 +1,5 @@
-import 'package:compmanager/screen_controller.dart';
-import 'package:compmanager/screen_injection.dart';
+import 'package:screen_manager/screen_controller.dart';
+import 'package:screen_manager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/arguments/atualizacao_detalhe_view_arguments.dart';

@@ -1,4 +1,4 @@
-import 'package:compmanager/screen_view.dart';
+import 'package:screen_manager/screen_view.dart';
 import 'package:easy_note/features/atualizacao/presentation/atualizacao_list/controller/atualizacao_list_controller.dart';
 import 'package:easy_note/features/atualizacao/presentation/atualizacao_list/injection/atualizacao_list_injection.dart';
 import 'package:flutter/material.dart';

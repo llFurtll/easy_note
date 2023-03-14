@@ -1,5 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:compmanager/screen_widget.dart';
+import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/anotacao_controller.dart';

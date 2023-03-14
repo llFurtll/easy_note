@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:compmanager/screen_controller.dart';
+import 'package:screen_manager/screen_controller.dart';
 import 'package:easy_note/core/utils/create_dir.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

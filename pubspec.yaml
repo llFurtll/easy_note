@@ -31,8 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  compmanager:
-    git: https://github.com/llFurtll/screen_manager.git
+  screen_manager: ^1.0.0
   font_awesome_flutter: ^10.3.0
   flutter_svg: ^1.1.6
   url_launcher: ^6.1.7

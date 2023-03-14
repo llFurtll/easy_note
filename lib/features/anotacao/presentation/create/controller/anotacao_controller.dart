@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:compmanager/screen_controller.dart';
-import 'package:compmanager/screen_injection.dart';
-import 'package:compmanager/screen_mediator.dart';
+import 'package:screen_manager/screen_controller.dart';
+import 'package:screen_manager/screen_injection.dart';
+import 'package:screen_manager/screen_mediator.dart';
 import 'package:easy_note/core/arguments/share_anotacao_arguments.dart';
 import 'package:easy_note/features/anotacao/presentation/share/view/share_view.dart';
 import 'package:flutter/material.dart';

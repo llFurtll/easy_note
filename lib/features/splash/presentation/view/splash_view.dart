@@ -1,4 +1,4 @@
-import 'package:compmanager/screen_view.dart';
+import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/splash_controller.dart';

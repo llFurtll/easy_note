@@ -1,5 +1,5 @@
-import 'package:compmanager/screen_injection.dart';
-import 'package:compmanager/screen_view.dart';
+import 'package:screen_manager/screen_injection.dart';
+import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configuracao/data/datasources/configuracao_data_source.dart';

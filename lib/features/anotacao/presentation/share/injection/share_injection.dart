@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:compmanager/screen_injection.dart';
-import 'package:compmanager/screen_view.dart';
+import 'package:screen_manager/screen_injection.dart';
+import 'package:screen_manager/screen_view.dart';
 
 import '../controller/share_controller.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:compmanager/screen_widget.dart';
+import 'package:screen_manager/screen_widget.dart';
 import 'package:easy_note/core/widgets/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;

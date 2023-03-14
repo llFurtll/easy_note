@@ -1,6 +1,6 @@
-import 'package:compmanager/screen_controller.dart';
-import 'package:compmanager/screen_injection.dart';
-import 'package:compmanager/screen_receive.dart';
+import 'package:screen_manager/screen_controller.dart';
+import 'package:screen_manager/screen_injection.dart';
+import 'package:screen_manager/screen_receive.dart';
 import 'package:easy_note/core/utils/debounce.dart';
 import '../../../../core/widgets/custom_dialog.dart';
 import '../../../anotacao/domain/usecases/get_delete_anotacao.dart';

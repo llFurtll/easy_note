@@ -1,6 +1,6 @@
-import 'package:compmanager/screen_controller.dart';
-import 'package:compmanager/screen_injection.dart';
-import 'package:compmanager/screen_view.dart';
+import 'package:screen_manager/screen_controller.dart';
+import 'package:screen_manager/screen_injection.dart';
+import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../configuracao_edit/view/configuracao_edit_view.dart';

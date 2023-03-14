@@ -1,4 +1,4 @@
-import 'package:compmanager/screen_injection.dart';
+import 'package:screen_manager/screen_injection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../versao/data/datasources/versao_data_source.dart';

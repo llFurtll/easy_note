@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:compmanager/screen_widget.dart';
+import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 

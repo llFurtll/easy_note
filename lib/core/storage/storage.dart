@@ -14,7 +14,7 @@ class StorageImpl extends Storage<Database> {
   Future<void> initStorage() async {
     await openDatabase(
       join(await getDatabasesPath(), "note.db"),
-      version: 6,
+      version: 3,
       onCreate: storageCreate,
       onUpgrade: storageUpdate
     );

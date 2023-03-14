@@ -16,9 +16,10 @@
     </queries>
 
    <application
-        android:label="easy_note"
+        android:label="EasyNote"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_rounded"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"

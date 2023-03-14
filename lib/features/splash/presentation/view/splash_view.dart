@@ -28,7 +28,11 @@ class SplashView extends ScreenView<SplashController> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
-        child: Image.asset("lib/assets/images/easy-note-logo.png"),
+        child: Image.asset(
+          "lib/assets/images/easy-note-logo.png",
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.8
+        ),
       ),
     );
   }

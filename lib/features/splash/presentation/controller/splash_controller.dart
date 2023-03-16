@@ -1,3 +1,5 @@
+import 'package:easy_note/core/adapters/notification_easy_note.dart';
+import 'package:easy_note/core/adapters/speech_text_easy_note.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +15,16 @@ import '../../../home/presentation/view/home_view.dart';
 import '../injection/splash_injection.dart';
 
 class SplashController extends ScreenController {
+  final _speech = SpeechTextEasyNoteImpl();
+  final _notification = NotificationEasyNoteImpl();
+
   @override
   void onInit() {
     super.onInit();
 
     Future.value()
       .then((_) => StorageImpl().initStorage())
+      .then((_) => _permissions())
       .then((_) => Future.delayed(const Duration(seconds: 2)))
       .then((_) => getVersao())
       .then((response) async {
@@ -68,5 +74,10 @@ class SplashController extends ScreenController {
       AtualizacaoDetalhe.routeAtualizacaoDetalhe,
       arguments: AtualizacaoDetalheViewArguments(idVersao: idVersao, isSplash: true)
     );
+  }
+
+  Future<void> _permissions() async {
+    await _speech.init();
+    await _notification.init();
   }
 }

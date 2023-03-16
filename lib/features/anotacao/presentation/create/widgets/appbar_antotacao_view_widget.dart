@@ -1,5 +1,6 @@
 import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import '../controller/anotacao_controller.dart';
 import 'change_image_anotacao_view_widget.dart';
@@ -174,6 +175,13 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
           );
         },
       ),
+      IconButton(
+        onPressed: () => showDatePickerTime(context),
+        icon: const Icon(Icons.schedule),
+        color: Colors.black,
+        padding: EdgeInsets.zero,
+        splashRadius: 25.0,
+      )
     ];
   }
 
@@ -182,7 +190,7 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
     bool showIcones = controller.showIcones.value;
 
     double baseSize = 48.0;
-    int qtdIcones = 3;
+    int qtdIcones = 4;
 
     if (!showIcones) {
       return baseSize;
@@ -193,6 +201,23 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
     }
 
     return baseSize * qtdIcones;
+  }
+
+  void showDatePickerTime(BuildContext context) async {
+    await DatePicker.showDateTimePicker(
+      context,
+      showTitleActions: true,
+      minTime: DateTime.now(),
+      maxTime: DateTime.now().add(const Duration(days: 365)),
+      onConfirm: (date) {
+        controller.dataAgendamento = date;
+      },
+      onCancel: () {
+        controller.dataAgendamento = null;
+      },
+      currentTime: DateTime.now(),
+      locale: LocaleType.pt
+    );
   }
 
   @override

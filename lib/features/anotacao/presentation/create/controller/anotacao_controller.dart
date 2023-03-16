@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import '../../../../../core/adapters/notification_easy_note.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_mediator.dart';
-import 'package:easy_note/core/arguments/share_anotacao_arguments.dart';
-import 'package:easy_note/features/anotacao/presentation/share/view/share_view.dart';
+import '../../../../../core/arguments/share_anotacao_arguments.dart';
+import '../../share/view/share_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -45,6 +46,7 @@ class AnotacaoController extends ScreenController {
   final imagePicker = ImagePickerEasyNoteImpl();
   final speech = SpeechTextEasyNoteImpl();
   final isListen = ValueNotifier(false);
+  final _notification = NotificationEasyNoteImpl();
 
   late final Timer timer;
   late final QuillController quillController;
@@ -52,6 +54,7 @@ class AnotacaoController extends ScreenController {
   FormAnotacao formAnotacao = FormAnotacao();
   bool available = false;
   String textMic = "";
+  DateTime? dataAgendamento;
 
   @override
   void onInit() {
@@ -307,7 +310,7 @@ class AnotacaoController extends ScreenController {
               "Não foi possível salvar os dados da anotação, tente novamente!",
               context
             );
-          }, (right) {
+          }, (right) async {
             if (!autoSave) {
               Navigator.of(context).pop();
             }
@@ -326,6 +329,14 @@ class AnotacaoController extends ScreenController {
             if (!isEdit.value) {
               isEdit.value = true;
               formAnotacao.id = right.id;
+            }
+
+            if (dataAgendamento != null) {
+              await _notification.createNotification(
+                id: formAnotacao.id!,
+                dateTime: dataAgendamento!,
+                anotacao: formAnotacao.toAnotacao()
+              );
             }
 
             ScreenMediator.callScreen("Home", "update", null);

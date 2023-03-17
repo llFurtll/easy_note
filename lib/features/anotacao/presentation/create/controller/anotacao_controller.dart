@@ -2,20 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import '../../../../../core/adapters/notification_easy_note.dart';
-import 'package:screen_manager/screen_controller.dart';
-import 'package:screen_manager/screen_injection.dart';
-import 'package:screen_manager/screen_mediator.dart';
-import '../../../../../core/arguments/share_anotacao_arguments.dart';
-import '../../share/view/share_view.dart';
+import 'package:easy_note/core/adapters/shared_preferences_easy_note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:intl/intl.dart';
+import 'package:screen_manager/screen_controller.dart';
+import 'package:screen_manager/screen_injection.dart';
+import 'package:screen_manager/screen_mediator.dart';
 
+import '../../../../../core/adapters/date_time_picker_easy_note.dart';
 import '../../../../../core/adapters/image_picker_easy_note.dart';
+import '../../../../../core/adapters/notification_easy_note.dart';
 import '../../../../../core/adapters/speech_text_easy_note.dart';
+import '../../../../../core/arguments/share_anotacao_arguments.dart';
 import '../../../../../core/enum/type_share.dart';
 import '../../../../../core/utils/debounce.dart';
 import '../../../../../core/utils/get_file.dart';
@@ -26,6 +27,7 @@ import '../../../../configuracao/domain/usecases/get_find_all_config_by_modulo.d
 import '../../../domain/entities/anotacao.dart';
 import '../../../domain/usecases/get_find_by_id_anotacao.dart';
 import '../../../domain/usecases/get_save_anotacao.dart';
+import '../../share/view/share_view.dart';
 import '../injection/anotacao_injection.dart';
 import '../models/background_anotacao_model.dart';
 import '../widgets/mic_anotacao_view_widget.dart';
@@ -47,6 +49,8 @@ class AnotacaoController extends ScreenController {
   final speech = SpeechTextEasyNoteImpl();
   final isListen = ValueNotifier(false);
   final _notification = NotificationEasyNoteImpl();
+  final datePicker = DateTimePickerEasyNoteImpl();
+  final _shared = SharedPreferencesEasyNoteImpl();
 
   late final Timer timer;
   late final QuillController quillController;
@@ -85,6 +89,17 @@ class AnotacaoController extends ScreenController {
     if (idAnotacao == null) {
       quillController = QuillController.basic();
       return;
+    }
+
+    String? ultimoAgendamento =
+      _shared.getString(identity: "anotacao-$idAnotacao");
+    if (ultimoAgendamento != null) {
+      final date = DateTime.tryParse(ultimoAgendamento);
+      if (date != null && date.isAfter(DateTime.now())) {
+        dataAgendamento = date;
+      } else {
+        _shared.remove(identity: "anotacao-${formAnotacao.id}");
+      }
     }
 
     final getFindById =
@@ -332,11 +347,33 @@ class AnotacaoController extends ScreenController {
             }
 
             if (dataAgendamento != null) {
+              String? ultimaData =
+                _shared.getString(identity: "anotacao-${formAnotacao.id}");
+              if (ultimaData != null) {
+                final dataFormat = DateTime.tryParse(ultimaData);
+                if (dataFormat != null && dataFormat != dataAgendamento) {
+                  await _notification.cancelNotification(id: formAnotacao.id!);
+                }
+              }
+              await _shared.setValue(
+                  identity: "anotacao-${formAnotacao.id}",
+                  value: dataAgendamento!.toIso8601String()
+                );
               await _notification.createNotification(
-                id: formAnotacao.id!,
-                dateTime: dataAgendamento!,
-                anotacao: formAnotacao.toAnotacao()
-              );
+                  id: formAnotacao.id!,
+                  dateTime: dataAgendamento!,
+                  anotacao: formAnotacao.toAnotacao()
+                );
+            } else {
+              String? ultimaData =
+                _shared.getString(identity: "anotacao-${formAnotacao.id}");
+              if (ultimaData != null) {
+                final dataFormat = DateTime.tryParse(ultimaData);
+                if (dataFormat != null && dataFormat.isAfter(DateTime.now())) {
+                  await _notification.cancelNotification(id: formAnotacao.id!);
+                }
+                _shared.remove(identity: "anotacao-${formAnotacao.id}");
+              }
             }
 
             ScreenMediator.callScreen("Home", "update", null);

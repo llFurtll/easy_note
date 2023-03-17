@@ -1,9 +1,10 @@
-import 'package:easy_note/core/adapters/notification_easy_note.dart';
-import 'package:easy_note/core/adapters/speech_text_easy_note.dart';
+import 'package:flutter/material.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
-import 'package:flutter/material.dart';
 
+import '../../../../core/adapters/notification_easy_note.dart';
+import '../../../../core/adapters/shared_preferences_easy_note.dart';
+import '../../../../core/adapters/speech_text_easy_note.dart';
 import '../../../../core/arguments/atualizacao_detalhe_view_arguments.dart';
 import '../../../../core/failures/failures.dart';
 import '../../../../core/result/result.dart';
@@ -17,6 +18,7 @@ import '../injection/splash_injection.dart';
 class SplashController extends ScreenController {
   final _speech = SpeechTextEasyNoteImpl();
   final _notification = NotificationEasyNoteImpl();
+  final _shared = SharedPreferencesEasyNoteImpl();
 
   @override
   void onInit() {
@@ -24,7 +26,7 @@ class SplashController extends ScreenController {
 
     Future.value()
       .then((_) => StorageImpl().initStorage())
-      .then((_) => _permissions())
+      .then((_) => _init())
       .then((_) => Future.delayed(const Duration(seconds: 2)))
       .then((_) => getVersao())
       .then((response) async {
@@ -76,8 +78,9 @@ class SplashController extends ScreenController {
     );
   }
 
-  Future<void> _permissions() async {
+  Future<void> _init() async {
     await _speech.init();
     await _notification.init();
+    await _shared.init();
   }
 }

@@ -1,7 +1,7 @@
-import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:screen_manager/screen_widget.dart';
 
+import '../../../../../core/adapters/date_time_picker_easy_note.dart';
 import '../controller/anotacao_controller.dart';
 import 'change_image_anotacao_view_widget.dart';
 import 'share_anotacao_view_widget.dart';
@@ -176,12 +176,13 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
         },
       ),
       IconButton(
+        tooltip: "Cadastrar agendamento",
         onPressed: () => showDatePickerTime(context),
         icon: const Icon(Icons.schedule),
         color: Colors.black,
         padding: EdgeInsets.zero,
         splashRadius: 25.0,
-      )
+      ),
     ];
   }
 
@@ -204,19 +205,25 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
   }
 
   void showDatePickerTime(BuildContext context) async {
-    await DatePicker.showDateTimePicker(
-      context,
+    controller.unfocus();
+    final ultimoAgendamento = controller.dataAgendamento;
+
+    await controller.datePicker.show(
+      context: context,
       showTitleActions: true,
-      minTime: DateTime.now(),
+      minTime: DateTime.now().add(const Duration(minutes: 1)),
       maxTime: DateTime.now().add(const Duration(days: 365)),
       onConfirm: (date) {
         controller.dataAgendamento = date;
       },
       onCancel: () {
         controller.dataAgendamento = null;
+        if (controller.showConfig("AUTOSAVE")) {
+          controller.autoSave();
+        }
       },
-      currentTime: DateTime.now(),
-      locale: LocaleType.pt
+      currentTime: ultimoAgendamento ?? DateTime.now().add(const Duration(minutes: 1)),
+      locale: LocaleTypeEasyNote.pt
     );
   }
 

@@ -17,7 +17,7 @@ abstract class NotificationEasyNote {
 }
 
 class NotificationEasyNoteImpl extends NotificationEasyNote {
-  static final channelID = UniqueKey().hashCode;
+  static final _channelID = UniqueKey().hashCode;
 
   final _notification = FlutterLocalNotificationsPlugin();
 
@@ -41,7 +41,7 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
   }) async {
     final details = NotificationDetails(
       android: AndroidNotificationDetails(
-        "$channelID",
+        "$_channelID",
         "Lembretes de anotação",
         channelDescription: 'Todos os lembretes configurados no EasyNote.',
         importance: Importance.max,
@@ -52,8 +52,8 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
 
     await _notification.zonedSchedule(
       id,
-      anotacao.titulo,
-      "Lembrete da anotação ${anotacao.titulo}",
+      "${anotacao.titulo}",
+      "Oi, não esqueça do seu lembrete 😄",
       tz.TZDateTime.from(dateTime, tz.local),
       details,
       uiLocalNotificationDateInterpretation:

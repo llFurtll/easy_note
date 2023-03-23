@@ -215,6 +215,9 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
       maxTime: DateTime.now().add(const Duration(days: 365)),
       onConfirm: (date) {
         controller.dataAgendamento = date;
+        if (controller.showConfig("AUTOSAVE")) {
+          controller.autoSave();
+        }
       },
       onCancel: () {
         controller.dataAgendamento = null;
@@ -222,7 +225,7 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
           controller.autoSave();
         }
       },
-      currentTime: ultimoAgendamento ?? DateTime.now().add(const Duration(minutes: 1)),
+      currentTime: ultimoAgendamento,
       locale: LocaleTypeEasyNote.pt
     );
   }

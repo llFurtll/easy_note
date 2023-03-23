@@ -156,27 +156,32 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
 
   Widget _buildEditor() {
     return Expanded(
-        child: QuillEditor(
-      embedBuilders: FlutterQuillEmbeds.builders(),
-      scrollController: ScrollController(),
-      controller: controller.quillController,
-      autoFocus: false,
-      placeholder: "Começe a digitar aqui...",
-      customStyles: DefaultStyles(
-        placeHolder: DefaultTextBlockStyle(
+      child: QuillEditor(
+        embedBuilders: FlutterQuillEmbeds.builders(),
+        scrollController: ScrollController(),
+        controller: controller.quillController,
+        autoFocus: false,
+        placeholder: "Começe a digitar aqui...",
+        customStyles: DefaultStyles(
+          placeHolder: DefaultTextBlockStyle(
             const TextStyle(
-                color: Colors.black, fontFamily: "roboto", fontSize: 16.0),
+              color: Colors.black,
+              fontFamily: "roboto",
+              fontSize: 16.0
+            ),
             const Tuple2(16, 0),
             const Tuple2(0, 0),
-            null),
-      ),
-      expands: true,
-      scrollable: true,
-      focusNode: controller.editorFocus,
-      enableInteractiveSelection: true,
-      readOnly: false,
-      padding: EdgeInsets.zero,
-      locale: controller.locale,
-    ));
+            null
+          ),
+        ),
+        expands: true,
+        scrollable: true,
+        focusNode: controller.editorFocus,
+        enableInteractiveSelection: true,
+        readOnly: false,
+        padding: EdgeInsets.zero,
+        locale: controller.locale,
+      )
+    );
   }
 }

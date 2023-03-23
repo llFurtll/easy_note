@@ -1,3 +1,5 @@
+import 'package:easy_note/core/adapters/notification_easy_note.dart';
+import 'package:easy_note/core/adapters/shared_preferences_easy_note.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_receive.dart';
@@ -30,6 +32,8 @@ import '../widgets/alter_photo_home_view_widget.dart';
 class HomeController extends ScreenController {
   // ADAPTERS
   final imagePicker = ImagePickerEasyNoteImpl();
+  final _shared = SharedPreferencesEasyNoteImpl();
+  final _notification = NotificationEasyNoteImpl();
 
   // CASOS DE USO
   late final GetFindAllAnotacao getFindAllAnotacao;
@@ -315,6 +319,9 @@ class HomeController extends ScreenController {
       })
       .then((value) async {
         if (value) {
+          await _shared.remove(identity: "anotacao-${item.id}");
+          await _notification.cancelNotification(id: item.id);
+
           Future.value()
             .then((_) => isLoadingList.value = true)
             .then((_) => loadAnotacoes(""))

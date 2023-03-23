@@ -356,24 +356,17 @@ class AnotacaoController extends ScreenController {
                 }
               }
               await _shared.setValue(
-                  identity: "anotacao-${formAnotacao.id}",
-                  value: dataAgendamento!.toIso8601String()
-                );
+                identity: "anotacao-${formAnotacao.id}",
+                value: dataAgendamento!.toIso8601String()
+              );
               await _notification.createNotification(
-                  id: formAnotacao.id!,
-                  dateTime: dataAgendamento!,
-                  anotacao: formAnotacao.toAnotacao()
-                );
+                id: formAnotacao.id!,
+                dateTime: dataAgendamento!,
+                anotacao: formAnotacao.toAnotacao()
+              );
             } else {
-              String? ultimaData =
-                _shared.getString(identity: "anotacao-${formAnotacao.id}");
-              if (ultimaData != null) {
-                final dataFormat = DateTime.tryParse(ultimaData);
-                if (dataFormat != null && dataFormat.isAfter(DateTime.now())) {
-                  await _notification.cancelNotification(id: formAnotacao.id!);
-                }
-                _shared.remove(identity: "anotacao-${formAnotacao.id}");
-              }
+              await _notification.cancelNotification(id: formAnotacao.id!);
+              await _shared.remove(identity: "anotacao-${formAnotacao.id}");
             }
 
             ScreenMediator.callScreen("Home", "update", null);

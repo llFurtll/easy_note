@@ -66,18 +66,20 @@ class ImageShareViewWidget extends ScreenWidget<ShareController> {
                 spacer(10.0),
                 Padding(
                   padding: const EdgeInsets.only(left: 5.0),
-                    child: QuillEditor(
-                    controller: controller.qullController,
-                    readOnly: true,
-                    autoFocus: false,
-                    expands: false,
-                    focusNode: FocusNode(),
-                    padding: EdgeInsets.zero,
-                    scrollController: ScrollController(),
-                    scrollable: true,
-                    paintCursorAboveText: false,
-                    enableInteractiveSelection: false,
-                  ),
+                    child: Expanded(
+                      child: QuillEditor(
+                      controller: controller.qullController,
+                      readOnly: true,
+                      autoFocus: false,
+                      expands: true,
+                      focusNode: FocusNode(),
+                      padding: EdgeInsets.zero,
+                      scrollController: ScrollController(),
+                      scrollable: true,
+                      paintCursorAboveText: false,
+                      enableInteractiveSelection: false,
+                    ),
+                    )
                 ),
               ]
             )

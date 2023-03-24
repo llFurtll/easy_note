@@ -119,7 +119,6 @@ class ShareController extends ScreenController {
       final converter = QuillDeltaToHtmlConverter(delta);
 
       final htmlString = converter.convert().replaceAll("src=\"", "src=\"file://");
-      print(htmlString);
 
       final html = """
         <html>

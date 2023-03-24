@@ -38,6 +38,7 @@ class ShareView extends ScreenView<ShareController> {
         }
 
         return Scaffold(
+          extendBody: true,
           appBar: const AppBarShareViewWidget(),
           body: isImage ? const ImageShareViewWidget() : const PdfShareViewWidget()
         );

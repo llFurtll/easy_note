@@ -23,7 +23,7 @@ class ShareController extends ScreenController {
   final shareFile = ShareFileEasyNoteImpl();
 
   late final ShareAnotacaoArguments args;
-  late final QuillController qullController;
+  late final QuillController quillController;
 
   String pathPdf = "";
 
@@ -32,7 +32,7 @@ class ShareController extends ScreenController {
     super.onInit();
 
     args = ModalRoute.of(context)!.settings.arguments as ShareAnotacaoArguments;
-    qullController = QuillController(
+    quillController = QuillController(
       document: Document.fromJson(jsonDecode(args.anotacao.observacao!)),
       selection: const TextSelection.collapsed(offset: 0)
     );
@@ -118,6 +118,9 @@ class ShareController extends ScreenController {
       final delta = <Map<String, dynamic>>[...jsonDecode(args.anotacao.observacao!)];
       final converter = QuillDeltaToHtmlConverter(delta);
 
+      final htmlString = converter.convert().replaceAll("src=\"", "src=\"file://");
+      print(htmlString);
+
       final html = """
         <html>
           <head>
@@ -125,6 +128,10 @@ class ShareController extends ScreenController {
               body {
                 padding: 0;
                 margin: 0;
+              }
+
+              img {
+                width: 100%;
               }
 
               .banner {
@@ -170,7 +177,7 @@ class ShareController extends ScreenController {
               <div class='bg'></div>
               <div class='content'>
                 <span class="title">${args.anotacao.titulo}</span>
-                ${converter.convert()}
+                $htmlString
               </div>
             </div>
           </body>

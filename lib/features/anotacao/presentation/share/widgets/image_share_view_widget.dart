@@ -1,14 +1,16 @@
 import 'dart:io';
 
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:screen_manager/screen_widget.dart';
 import 'package:easy_note/core/widgets/spacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
 
 import '../controller/share_controller.dart';
 
 class ImageShareViewWidget extends ScreenWidget<ShareController> {
   const ImageShareViewWidget({super.key});
+  
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -24,68 +26,62 @@ class ImageShareViewWidget extends ScreenWidget<ShareController> {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(10.0),
       child: RepaintBoundary(
         key: controller.boundaryKey,
-        child: Material(
-          clipBehavior: Clip.antiAlias,
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25.0),
-          elevation: 10.0,
-          child: Container(
-            decoration: args.showImage ? BoxDecoration(
-              image: DecorationImage(
-                colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.5),
-                  BlendMode.dstATop
-                ),
-                image: image!,
-                fit: BoxFit.cover
+        child: Container(
+          margin: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
+          constraints: const BoxConstraints(
+            minWidth: double.infinity,
+            minHeight: 100.0
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            image: args.showImage ? DecorationImage(
+              image: image!,
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.5),
+                BlendMode.dstATop
               ),
             ) : null,
-            constraints: const BoxConstraints(
-              minWidth: double.infinity,
-              minHeight: 500.0,
-            ),
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                    child: Text(
-                      args.anotacao.titulo!,
-                      style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0
-                    ),
-                  ),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 10,
+                offset: Offset(0, 0),
+              ),
+            ],
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                args.anotacao.titulo!,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25.0
                 ),
-                spacer(10.0),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                    child: Expanded(
-                      child: QuillEditor(
-                      controller: controller.qullController,
-                      readOnly: true,
-                      autoFocus: false,
-                      expands: true,
-                      focusNode: FocusNode(),
-                      padding: EdgeInsets.zero,
-                      scrollController: ScrollController(),
-                      scrollable: true,
-                      paintCursorAboveText: false,
-                      enableInteractiveSelection: false,
-                    ),
-                    )
-                ),
-              ]
-            )
+              ),
+              spacer(10.0),
+              QuillEditor(
+                embedBuilders: FlutterQuillEmbeds.builders(),
+                autoFocus: false,
+                controller: controller.quillController,
+                expands: false,
+                focusNode: FocusNode(),
+                padding: EdgeInsets.zero,
+                readOnly: true,
+                scrollController: ScrollController(),
+                scrollable: false,
+              )
+            ],
           ),
         ),
-      )
+      ),
     );
   }
 }

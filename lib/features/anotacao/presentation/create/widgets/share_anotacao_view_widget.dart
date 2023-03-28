@@ -16,7 +16,17 @@ class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
       children: [
         const SizedBox(
           child: Icon(Icons.drag_handle, color: Colors.grey, size: 40.0),
-        ), 
+        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Text(
+            "Atenção, no caso do pdf, as imagens inseridas na anotação irão ser exibidas no padrão 500x500 de altura/largura!",
+            maxLines: null,
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          ),
+        ),
         TextButton(
           onPressed: () => controller.share(TypeShare.pdf),
           style: TextButton.styleFrom(

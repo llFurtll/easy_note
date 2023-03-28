@@ -130,7 +130,14 @@ class ShareController extends ScreenController {
               }
 
               img {
-                width: 100%;
+                width: auto;
+                height: auto;
+                max-width: 500px; 
+                max-height: 500px;
+              }
+
+              .ql-video {
+                display: none;
               }
 
               .banner {

@@ -20,10 +20,12 @@ class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
         const Padding(
           padding: EdgeInsets.only(left: 15.0, right: 15.0),
           child: Text(
-            "Atenção, no caso do pdf, as imagens inseridas na anotação irão ser exibidas no padrão 500x500 de altura/largura!",
+            "Atenção, no caso do pdf, as imagens inseridas na anotação irão ser exibidas até o máximo 500x500 de altura/largura. "
+            "Vídeos também não são suportados.",
             maxLines: null,
             style: TextStyle(
               color: Colors.red,
+              fontWeight: FontWeight.bold
             ),
           ),
         ),

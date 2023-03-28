@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../features/anotacao/domain/entities/anotacao.dart';
+import '../storage/mensagens.dart';
 
 abstract class NotificationEasyNote {
   Future<void> init();
@@ -50,10 +53,16 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
       )
     );
 
+    int random = Random().nextInt(50);
+    if (random == 0) {
+      random++;
+    }
+    final messageNotification = mensagens[random];
+
     await _notification.zonedSchedule(
       id,
       "${anotacao.titulo}",
-      "Oi, não esqueça do seu lembrete 😄",
+      messageNotification,
       tz.TZDateTime.from(dateTime, tz.local),
       details,
       uiLocalNotificationDateInterpretation:

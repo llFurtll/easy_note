@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 
+import '../../../../core/adapters/deep_link_easy_note.dart';
 import '../../../../core/adapters/notification_easy_note.dart';
 import '../../../../core/adapters/shared_preferences_easy_note.dart';
 import '../../../../core/adapters/speech_text_easy_note.dart';
@@ -19,6 +22,7 @@ class SplashController extends ScreenController {
   final _speech = SpeechTextEasyNoteImpl();
   final _notification = NotificationEasyNoteImpl();
   final _shared = SharedPreferencesEasyNoteImpl();
+  final _deepLink = DeepLinkEasyNoteImpl();
 
   @override
   void onInit() {
@@ -45,7 +49,13 @@ class SplashController extends ScreenController {
           return null;
         });
       })
-      .then((result) {
+      .then((result) async {
+        final isNotification = await _deepLink.getLink();
+
+        if (isNotification != null) {
+          log("Veio assim: $isNotification");
+        }
+        
         if (result == null) {
           toHome();
           return;
@@ -79,8 +89,9 @@ class SplashController extends ScreenController {
   }
 
   Future<void> _init() async {
-    await _speech.init();
-    await _notification.init();
-    await _shared.init();
+    Future.value()
+      .then((_) => _speech.init())
+      .then((_) => _notification.init(context))
+      .then((_) => _shared.init());
   }
 }

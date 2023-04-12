@@ -8,7 +8,7 @@ import '../../features/anotacao/domain/entities/anotacao.dart';
 import '../storage/mensagens.dart';
 
 abstract class NotificationEasyNote {
-  Future<void> init(BuildContext context);
+  Future<void> init();
   Future<void> createNotification({
     required int id,
     required DateTime dateTime,
@@ -17,6 +17,7 @@ abstract class NotificationEasyNote {
   Future<void> cancelNotification({
     required int id
   });
+  Future<String?> getPayload();
 }
 
 class NotificationEasyNoteImpl extends NotificationEasyNote {
@@ -25,7 +26,7 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
   final _notification = FlutterLocalNotificationsPlugin();
 
   @override
-  Future<void> init(BuildContext context) async {
+  Future<void> init() async {
     var config = const AndroidInitializationSettings('app_icon');
     var initializationSettings = InitializationSettings(
       android: config
@@ -68,12 +69,22 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
       uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
-      payload: "{ id: $id }"
+      payload: "$id"
     );
   }
   
   @override
   Future<void> cancelNotification({required int id}) async {
     await _notification.cancel(id);
+  }
+
+  @override
+  Future<String?> getPayload() async {
+    final details = await _notification.getNotificationAppLaunchDetails();
+    if (details != null && details.didNotificationLaunchApp) {
+      return details.notificationResponse?.payload;
+    }
+
+    return null;
   }
 }

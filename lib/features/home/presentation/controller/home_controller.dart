@@ -93,7 +93,8 @@ class HomeController extends ScreenController {
       .then((result) {
         result.fold((left) {
           CustomDialog.error(
-              "Erro ao tentar buscar a foto de perfil!", context);
+            "Erro ao tentar buscar a foto de perfil!", context
+          );
         }, (right) {
           if (right.isNotEmpty) {
             photoUser.value = right;
@@ -101,6 +102,12 @@ class HomeController extends ScreenController {
         });
       })
       .then((_) => loadAnotacoes(""))
+      .then((_) => _notification.getPayload())
+      .then((value) {
+        if (value != null) {
+          toEdit(int.parse(value));
+        }
+      })
       .then((_) => isLoading.value = false);
   }
   

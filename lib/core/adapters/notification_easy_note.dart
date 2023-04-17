@@ -5,10 +5,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../features/anotacao/domain/entities/anotacao.dart';
+import '../../features/anotacao/presentation/create/view/anotacao_view.dart';
 import '../storage/mensagens.dart';
 
 abstract class NotificationEasyNote {
-  Future<void> init();
+  Future<void> init(BuildContext context);
   Future<void> createNotification({
     required int id,
     required DateTime dateTime,
@@ -26,12 +27,19 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
   final _notification = FlutterLocalNotificationsPlugin();
 
   @override
-  Future<void> init() async {
+  Future<void> init(BuildContext context) async {
     var config = const AndroidInitializationSettings('app_icon');
     var initializationSettings = InitializationSettings(
       android: config
     );
-    _notification.initialize(initializationSettings);
+    _notification.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) {
+        Navigator.of(context).pushNamed(
+          AnotacaoScreen.routeAnotacao, arguments: int.tryParse(details.payload ?? "")
+        );
+      },
+    );
     _notification
       .resolvePlatformSpecificImplementation
         <AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();

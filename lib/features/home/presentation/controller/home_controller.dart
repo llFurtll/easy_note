@@ -1,20 +1,19 @@
-import 'package:easy_note/core/adapters/notification_easy_note.dart';
-import 'package:easy_note/core/adapters/shared_preferences_easy_note.dart';
+import 'package:flutter/material.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_receive.dart';
-import 'package:easy_note/core/utils/debounce.dart';
-import '../../../../core/widgets/custom_dialog.dart';
-import '../../../anotacao/domain/usecases/get_delete_anotacao.dart';
-import '../widgets/delete_anotacao_view_widget.dart';
-import 'package:flutter/material.dart';
 
 import '../../../../core/adapters/image_picker_easy_note.dart';
+import '../../../../core/adapters/notification_easy_note.dart';
+import '../../../../core/adapters/shared_preferences_easy_note.dart';
 import '../../../../core/failures/failures.dart';
 import '../../../../core/result/result.dart';
+import '../../../../core/utils/debounce.dart';
 import '../../../../core/utils/delete_file.dart';
 import '../../../../core/utils/save_file.dart';
+import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/show_loading.dart';
+import '../../../anotacao/domain/usecases/get_delete_anotacao.dart';
 import '../../../anotacao/domain/usecases/get_find_all_anotacao.dart';
 import '../../../anotacao/presentation/create/view/anotacao_view.dart';
 import '../../../atualizacao/presentation/atualizacao_list/view/atualizacao_list_view.dart';
@@ -28,6 +27,7 @@ import '../injection/home_injection.dart';
 import '../models/list_item_note_home_model.dart';
 import '../widgets/alter_name_home_view_widget.dart';
 import '../widgets/alter_photo_home_view_widget.dart';
+import '../widgets/delete_anotacao_view_widget.dart';
 
 class HomeController extends ScreenController {
   // ADAPTERS
@@ -61,6 +61,9 @@ class HomeController extends ScreenController {
   // VARIÁVEIS
   final List<ListItemNoteHomeModel> anotacoes = [];
   bool fotoPerfilCarregada = false;
+
+  // DEBOUNCE
+  final _debounce = Debounce(milliseconds: 500);
 
   @override
   void onInit() {
@@ -114,7 +117,7 @@ class HomeController extends ScreenController {
   @override
   void onClose() {
     super.onClose();
-    Debounce.close();
+    _debounce.dispose();
   }
   
   Future<void> loadAnotacoes(String descricao) async {
@@ -366,7 +369,7 @@ class HomeController extends ScreenController {
   }
 
   void onSearch(String text) {
-    Debounce.debounce(() {
+    _debounce.run(() {
       Future.value()
         .then((_) => isLoadingList.value = true)
         .then((_) => loadAnotacoes(text))

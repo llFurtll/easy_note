@@ -1,17 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
 class Debounce {
-  static Timer? _debounce;
+  final int milliseconds;
+  Timer? _timer;
 
-  static void debounce(Function() event) {
-    if (_debounce?.isActive ?? false) {
-      _debounce?.cancel();
-    }
+  Debounce({required this.milliseconds});
 
-    _debounce = Timer(const Duration(milliseconds: 500), event);
+  void run(VoidCallback action) {
+    _timer?.cancel();
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 
-  static void close() {
-    _debounce?.cancel();
+  void dispose() {
+    _timer?.cancel();
   }
 }

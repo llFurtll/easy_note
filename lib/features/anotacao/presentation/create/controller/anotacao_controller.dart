@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:easy_note/core/adapters/shared_preferences_easy_note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -15,6 +14,7 @@ import 'package:screen_manager/screen_mediator.dart';
 import '../../../../../core/adapters/date_time_picker_easy_note.dart';
 import '../../../../../core/adapters/image_picker_easy_note.dart';
 import '../../../../../core/adapters/notification_easy_note.dart';
+import '../../../../../core/adapters/shared_preferences_easy_note.dart';
 import '../../../../../core/adapters/speech_text_easy_note.dart';
 import '../../../../../core/arguments/share_anotacao_arguments.dart';
 import '../../../../../core/enum/type_share.dart';
@@ -51,6 +51,7 @@ class AnotacaoController extends ScreenController {
   final _notification = NotificationEasyNoteImpl();
   final datePicker = DateTimePickerEasyNoteImpl();
   final _shared = SharedPreferencesEasyNoteImpl();
+  final _debounce = Debounce(milliseconds: 500);
 
   late final Timer timer;
   late final QuillController quillController;
@@ -65,7 +66,8 @@ class AnotacaoController extends ScreenController {
     super.onInit();
 
     timer = Timer.periodic(
-        const Duration(milliseconds: 500), (timer) => _showToolbarObserver());
+      const Duration(milliseconds: 500), (timer) => _showToolbarObserver()
+    );
 
     final idAnotacao = ModalRoute.of(context)!.settings.arguments as int?;
     if (idAnotacao != null) {
@@ -136,7 +138,7 @@ class AnotacaoController extends ScreenController {
     .then((_) {
       if (showConfig("AUTOSAVE")) {
         quillController.changes.listen((event) {
-          Debounce.debounce(() => autoSave());
+          _debounce.run(() => autoSave());
         });
       }
     });
@@ -261,7 +263,7 @@ class AnotacaoController extends ScreenController {
   @override
   void onClose() {
     timer.cancel();
-    Debounce.close();
+    _debounce.dispose();
     super.onClose();
   }
 
@@ -275,7 +277,7 @@ class AnotacaoController extends ScreenController {
   }
 
   void autoSave() {
-    Debounce.debounce(() => save());
+    _debounce.run(() => save());
   }
 
   void save() async {

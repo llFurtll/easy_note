@@ -89,17 +89,42 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
   }
 
   Widget _buildTitle() {
+    String? ultimoAgendamento =
+      controller.shared.getString(identity: "anotacao-${item.id}");
+    int? hours;
+    if (ultimoAgendamento != null) {
+      final parse = DateTime.tryParse(ultimoAgendamento);
+      if (parse != null) {
+        hours = parse.difference(DateTime.now()).inHours;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-      child: Text(
-        item.titulo,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-        ),
-        maxLines: null,
-      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            item.titulo,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+            maxLines: null,
+          ),
+          hours != null ?
+            Wrap(
+              spacing: 5.0,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const Icon(Icons.alarm),
+                Text("Faltam $hours ${hours == 1 ? 'hora' : 'horas'}")
+              ],
+            ) :
+            const SizedBox.shrink()
+        ],
+      )
     );
   }
 

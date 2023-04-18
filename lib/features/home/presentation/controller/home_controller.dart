@@ -32,7 +32,7 @@ import '../widgets/alter_photo_home_view_widget.dart';
 class HomeController extends ScreenController {
   // ADAPTERS
   final imagePicker = ImagePickerEasyNoteImpl();
-  final _shared = SharedPreferencesEasyNoteImpl();
+  final shared = SharedPreferencesEasyNoteImpl();
   final _notification = NotificationEasyNoteImpl();
 
   // CASOS DE USO
@@ -326,7 +326,7 @@ class HomeController extends ScreenController {
       })
       .then((value) async {
         if (value) {
-          await _shared.remove(identity: "anotacao-${item.id}");
+          await shared.remove(identity: "anotacao-${item.id}");
           await _notification.cancelNotification(id: item.id);
 
           Future.value()

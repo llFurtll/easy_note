@@ -99,9 +99,6 @@ class AnotacaoController extends ScreenController {
       final date = DateTime.tryParse(ultimoAgendamento);
       if (date != null && date.isAfter(DateTime.now())) {
         dataAgendamento = date;
-      } else {
-        _shared.remove(identity: "anotacao-$idAnotacao");
-        ScreenMediator.callScreen("Home", "update", null);
       }
     }
 

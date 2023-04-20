@@ -89,13 +89,31 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
   }
 
   Widget _buildTitle() {
+    String tempoRestante = "";
+
     String? ultimoAgendamento =
       controller.shared.getString(identity: "anotacao-${item.id}");
+    int? days;
     int? hours;
+    int? minutes;
+    int? seconds;
     if (ultimoAgendamento != null) {
       final parse = DateTime.tryParse(ultimoAgendamento);
       if (parse != null) {
-        hours = parse.difference(DateTime.now()).inHours;
+        final now = DateTime.now();
+        days = parse.difference(now).inDays;
+        hours = parse.difference(now).inHours;
+        minutes = parse.difference(now).inMinutes;
+        seconds = parse.difference(now).inSeconds;
+        if (days != 0) {
+          tempoRestante = "Faltam $days ${days == 1 ? 'dia' : 'dias'}";
+        } else if (hours != 0) {
+          tempoRestante = "Faltam $hours ${hours == 1 ? 'hora' : 'horas'}";
+        } else if (minutes != 0) {
+          tempoRestante = "Faltam $minutes ${minutes == 1 ? 'minuto' : 'minutos'}";
+        } else {
+          tempoRestante = "Faltam $seconds ${seconds == 1 ? 'segundo' : 'segundos'}";
+        }
       }
     }
 
@@ -119,7 +137,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 const Icon(Icons.alarm),
-                Text("Faltam $hours ${hours == 1 ? 'hora' : 'horas'}")
+                Text(tempoRestante)
               ],
             ) :
             const SizedBox.shrink()

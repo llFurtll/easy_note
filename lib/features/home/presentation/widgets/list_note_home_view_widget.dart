@@ -1,6 +1,7 @@
 import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../controller/home_controller.dart';
 import 'card_note_home_view_widget.dart';
@@ -23,11 +24,17 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
         final lista = controller.anotacoes;
         final size = lista.length;
 
-        return SliverPadding(
-          padding: const EdgeInsets.all(10.0),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {      
+        return SliverFillRemaining(
+          child: SmartRefresher(
+            header: const WaterDropMaterialHeader(
+              color: Colors.white
+            ),
+            controller: controller.refreshController,
+            onRefresh: controller.onRefresh,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemCount: size > 0 ? size : 1,
+              itemBuilder: (context, index) {      
                 if (value) {
                   return SizedBox(
                     height: MediaQuery.of(context).size.height - (280 + kToolbarHeight),
@@ -58,7 +65,6 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
 
                 return CardNoteHomeViewWidget(item: lista[index]);
               },
-              childCount: size > 0 ? size : 1,
             ),
           ),
         );

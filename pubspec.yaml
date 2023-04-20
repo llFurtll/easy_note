@@ -59,6 +59,7 @@ dependencies:
   timezone: ^0.9.1
   flutter_datetime_picker: ^1.5.1
   shared_preferences: ^2.0.18
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -24,6 +24,7 @@ abstract class SharedPreferencesEasyNote {
   Future<void> remove({
     required String identity
   });
+  List<String> getKeys();
 }
 
 class SharedPreferencesEasyNoteImpl extends SharedPreferencesEasyNote {
@@ -85,5 +86,10 @@ class SharedPreferencesEasyNoteImpl extends SharedPreferencesEasyNote {
   @override
   Future<void> remove({required String identity}) async {
     await _prefs?.remove(identity);
+  }
+
+  @override
+  List<String> getKeys() {
+    return _prefs?.getKeys().toList() ?? [];
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_receive.dart';
@@ -8,6 +9,7 @@ import '../../../../core/adapters/notification_easy_note.dart';
 import '../../../../core/adapters/shared_preferences_easy_note.dart';
 import '../../../../core/failures/failures.dart';
 import '../../../../core/result/result.dart';
+import '../../../../core/services/remove_tasks.dart';
 import '../../../../core/utils/debounce.dart';
 import '../../../../core/utils/delete_file.dart';
 import '../../../../core/utils/save_file.dart';
@@ -54,6 +56,7 @@ class HomeController extends ScreenController {
 
   // CONTROLLERS
   final TextEditingController textController = TextEditingController();
+  final refreshController = RefreshController();
 
   // KEYS
   GlobalKey<FormState> formKeyAlterName = GlobalKey();
@@ -64,6 +67,9 @@ class HomeController extends ScreenController {
 
   // DEBOUNCE
   final _debounce = Debounce(milliseconds: 500);
+
+  // SERVICES
+  final _removeTasks = RemoveTasks();
 
   @override
   void onInit() {
@@ -111,13 +117,16 @@ class HomeController extends ScreenController {
           toEdit(int.parse(value));
         }
       })
-      .then((_) => isLoading.value = false);
+      .then((_) => isLoading.value = false)
+      .then((_) => Future.delayed(const Duration(seconds: 5)))
+      .then((_) => _removeTasks.execute());
   }
   
   @override
   void onClose() {
     super.onClose();
     _debounce.dispose();
+    _removeTasks.dispose();
   }
   
   Future<void> loadAnotacoes(String descricao) async {
@@ -375,6 +384,14 @@ class HomeController extends ScreenController {
         .then((_) => loadAnotacoes(text))
         .then((_) => isLoadingList.value = false);
     });
+  }
+
+  void onRefresh() {
+    Future.value()
+        .then((_) => isLoadingList.value = true)
+        .then((_) => loadAnotacoes(textController.text))
+        .then((_) => isLoadingList.value = false)
+        .then((_) => refreshController.refreshCompleted());
   }
 
   void receive(String message, value, {ScreenReceive? screen}) async {

@@ -1,4 +1,5 @@
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:rive/rive.dart';
 import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,6 +9,8 @@ import 'card_note_home_view_widget.dart';
 
 // ignore: must_be_immutable
 class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
+  final double _offsetToArmed = 200 - 250;
+
   const ListNoteHomeViewWidget({super.key, super.context});
 
   @override
@@ -25,12 +28,32 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
         final size = lista.length;
 
         return SliverFillRemaining(
-          child: SmartRefresher(
-            header: const WaterDropMaterialHeader(
-              color: Colors.white
-            ),
-            onRefresh: controller.onRefresh,
-            controller: controller.refreshController,
+          child: CustomRefreshIndicator(
+            offsetToArmed: _offsetToArmed,
+            builder: (_, customChild, innerConroller) {
+              return AnimatedBuilder(
+                animation: innerConroller,
+                child: customChild,
+                builder: (_, __) {
+                  return Stack(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: _offsetToArmed * innerConroller.value,
+                        child: const RiveAnimation.asset(
+                          "lib/assets/images/loading_animation.riv",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Transform.translate(
+                        offset: Offset(0.0, _offsetToArmed * innerConroller.value)
+                      )
+                    ],
+                  );
+                },
+              );
+            },
+            onRefresh: () async => controller.onRefresh(),
             child: ListView.builder(
               padding: const EdgeInsets.all(10.0),
               itemCount: size > 0 ? size : 1,

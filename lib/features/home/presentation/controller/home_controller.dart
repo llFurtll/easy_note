@@ -386,12 +386,12 @@ class HomeController extends ScreenController {
     });
   }
 
-  void onRefresh() {
+  Future<void> onRefresh() async {
     Future.value()
-        .then((_) => isLoadingList.value = true)
-        .then((_) => loadAnotacoes(textController.text))
-        .then((_) => isLoadingList.value = false)
-        .then((_) => refreshController.refreshCompleted());
+      .then((_) => isLoadingList.value = true)
+      .then((_) => loadAnotacoes(textController.text))
+      .then((_) => isLoadingList.value = false)
+      .then((_) => refreshController.refreshCompleted());
   }
 
   void receive(String message, value, {ScreenReceive? screen}) async {

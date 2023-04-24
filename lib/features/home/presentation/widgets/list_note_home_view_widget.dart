@@ -1,7 +1,7 @@
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../controller/home_controller.dart';
 import 'card_note_home_view_widget.dart';
@@ -29,8 +29,8 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
             header: const WaterDropMaterialHeader(
               color: Colors.white
             ),
-            controller: controller.refreshController,
             onRefresh: controller.onRefresh,
+            controller: controller.refreshController,
             child: ListView.builder(
               padding: const EdgeInsets.all(10.0),
               itemCount: size > 0 ? size : 1,

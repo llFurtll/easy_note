@@ -18,9 +18,9 @@ import '../controller/home_controller.dart';
 // ignore: must_be_immutable
 class HomeInjection extends ScreenInjection<HomeController> {
   static final _usuarioRepository =
-      UsuarioRepositoryImpl(dataSource: UsuarioDataSourceImpl());
+    UsuarioRepositoryImpl(dataSource: UsuarioDataSourceImpl());
   static final _anotacaoRepository =
-      AnotacaoRepositoryImpl(dataSource: AnotacaoDataSourceImpl());
+    AnotacaoRepositoryImpl(dataSource: AnotacaoDataSourceImpl());
 
   final getFindAllAnotacao = GetFindAllAnotacao(_anotacaoRepository);
   final getNameUsuario = GetNameUsuario(_usuarioRepository);
@@ -29,12 +29,15 @@ class HomeInjection extends ScreenInjection<HomeController> {
   final getSavePhotoUsuario = GetSavePhotoUsuario(_usuarioRepository);
   final getDeleteAnotacao = GetDeleteAnotacao(_anotacaoRepository);
 
-  HomeInjection({super.key, required ScreenBridge child})
-      : super(
-            child: child,
-            controller: HomeController(),
-            receiveArgs:
-                const ScreenReceiveArgs(receive: true, identity: "Home"));
+  HomeInjection({
+    super.key,
+    required ScreenBridge child
+  }) : super(
+    child: child,
+    controller: HomeController(),
+    receiveArgs:
+    const ScreenReceiveArgs(receive: true, identity: "Home")
+  );
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;

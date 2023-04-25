@@ -9,7 +9,7 @@ import 'card_note_home_view_widget.dart';
 
 // ignore: must_be_immutable
 class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
-  final double _offsetToArmed = 200 - 250;
+  final double _offsetToArmed = 100;
 
   const ListNoteHomeViewWidget({super.key, super.context});
 
@@ -30,66 +30,68 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
         return SliverFillRemaining(
           child: CustomRefreshIndicator(
             offsetToArmed: _offsetToArmed,
-            builder: (_, customChild, innerConroller) {
+            onRefresh: () async => controller.onRefresh(),
+            builder: (context, child, controller) {
               return AnimatedBuilder(
-                animation: innerConroller,
-                child: customChild,
-                builder: (_, __) {
+                animation: controller,
+                child: child,
+                builder: (context, child) {
                   return Stack(
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        height: _offsetToArmed * innerConroller.value,
+                        height: _offsetToArmed * controller.value,
                         child: const RiveAnimation.asset(
                           "lib/assets/images/loading_animation.riv",
                           fit: BoxFit.cover,
+                          alignment: Alignment.center,
                         ),
                       ),
                       Transform.translate(
-                        offset: Offset(0.0, _offsetToArmed * innerConroller.value)
+                        offset: Offset(0.0, _offsetToArmed * controller.value),
+                        child: child,
                       )
                     ],
                   );
                 },
               );
             },
-            onRefresh: () async => controller.onRefresh(),
             child: ListView.builder(
-              padding: const EdgeInsets.all(10.0),
-              itemCount: size > 0 ? size : 1,
-              itemBuilder: (context, index) {      
-                if (value) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height - (280 + kToolbarHeight),
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                }
+                padding: const EdgeInsets.all(10.0),
+                itemCount: size > 0 ? size : 1,
+                itemBuilder: (context, index) {      
+                  if (value) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height - (280 + kToolbarHeight),
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  }
 
-                if (size == 0) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height - (280 + kToolbarHeight),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SvgPicture.asset("lib/assets/images/sem-anotacao.svg", width: 100.0, height: 100.0),
-                        const Text(
-                          "Sem anotações!",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
-                            color: Colors.grey
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }
+                  if (size == 0) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height - (280 + kToolbarHeight),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SvgPicture.asset("lib/assets/images/sem-anotacao.svg", width: 100.0, height: 100.0),
+                          const Text(
+                            "Sem anotações!",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Colors.grey
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }
 
-                return CardNoteHomeViewWidget(item: lista[index]);
-              },
-            ),
-          ),
+                  return CardNoteHomeViewWidget(item: lista[index]);
+                },
+              ),
+          )
         );
       },
     );

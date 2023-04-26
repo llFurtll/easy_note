@@ -220,9 +220,11 @@ class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
         }
       },
       onCancel: () {
-        controller.dataAgendamento = null;
-        if (controller.showConfig("AUTOSAVE")) {
-          controller.autoSave();
+        if (controller.dataAgendamento != null) {
+          controller.dataAgendamento = null;
+          if (controller.showConfig("AUTOSAVE")) {
+            controller.autoSave();
+          }
         }
       },
       currentTime: ultimoAgendamento,

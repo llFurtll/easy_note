@@ -9,7 +9,7 @@ import 'card_note_home_view_widget.dart';
 
 // ignore: must_be_immutable
 class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
-  final double _offsetToArmed = 100;
+  final double _offsetToArmed = 120;
 
   const ListNoteHomeViewWidget({super.key, super.context});
 
@@ -30,7 +30,7 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
         return SliverFillRemaining(
           child: CustomRefreshIndicator(
             offsetToArmed: _offsetToArmed,
-            onRefresh: () async => controller.onRefresh(),
+            onRefresh: () async => await controller.onRefresh(),
             builder: (context, child, controller) {
               return AnimatedBuilder(
                 animation: controller,
@@ -43,7 +43,7 @@ class ListNoteHomeViewWidget extends ScreenWidget<HomeController> {
                         height: _offsetToArmed * controller.value,
                         child: const RiveAnimation.asset(
                           "lib/assets/images/loading_animation.riv",
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                           alignment: Alignment.center,
                         ),
                       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_receive.dart';
@@ -56,7 +55,6 @@ class HomeController extends ScreenController {
 
   // CONTROLLERS
   final TextEditingController textController = TextEditingController();
-  final refreshController = RefreshController();
 
   // KEYS
   GlobalKey<FormState> formKeyAlterName = GlobalKey();
@@ -387,11 +385,11 @@ class HomeController extends ScreenController {
   }
 
   Future<void> onRefresh() async {
-    Future.value()
+    await Future.value()
+      .then((_) => Future.delayed(const Duration(seconds: 1)))
       .then((_) => isLoadingList.value = true)
       .then((_) => loadAnotacoes(textController.text))
-      .then((_) => isLoadingList.value = false)
-      .then((_) => refreshController.refreshCompleted());
+      .then((_) => isLoadingList.value = false);
   }
 
   void receive(String message, value, {ScreenReceive? screen}) async {

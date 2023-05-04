@@ -105,13 +105,13 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
         hours = parse.difference(now).inHours;
         minutes = parse.difference(now).inMinutes;
         seconds = parse.difference(now).inSeconds;
-        if (days != 0) {
+        if (days > 0) {
           tempoRestante = "Faltam $days ${days == 1 ? 'dia' : 'dias'}";
-        } else if (hours != 0) {
+        } else if (hours > 0) {
           tempoRestante = "Faltam $hours ${hours == 1 ? 'hora' : 'horas'}";
-        } else if (minutes != 0) {
+        } else if (minutes > 0) {
           tempoRestante = "Faltam $minutes ${minutes == 1 ? 'minuto' : 'minutos'}";
-        } else {
+        } else if (seconds > 0) {
           tempoRestante = "Faltam $seconds ${seconds == 1 ? 'segundo' : 'segundos'}";
         }
       }
@@ -131,7 +131,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
             ),
             maxLines: null,
           ),
-          hours != null ?
+          tempoRestante.isNotEmpty ?
             Wrap(
               spacing: 5.0,
               crossAxisAlignment: WrapCrossAlignment.center,

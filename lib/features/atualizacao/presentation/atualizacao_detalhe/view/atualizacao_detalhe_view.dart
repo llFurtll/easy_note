@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_view.dart';
@@ -116,22 +117,22 @@ class AtualizacaoDetalheView extends ScreenView<AtualizacaoDetalheController> {
   }
 
   Widget _buildImage(Atualizacao atualizacao, BuildContext context) {
+    if (atualizacao.imagem!.contains("svg")) {
+      return SvgPicture.asset(
+        atualizacao.imagem!,
+        width: 250.0,
+        height: 250.0,
+        color: Colors.white
+      );
+    }
+
     return Container(
       width: 250.0,
       height: 250.0,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black,
-            blurRadius: 30,
-            offset: Offset(0, 0),
-          ),
-        ],
         image: DecorationImage(
           image: AssetImage(atualizacao.imagem!),
-          fit: BoxFit.fill
+          fit: BoxFit.cover
         )
       ),
     );

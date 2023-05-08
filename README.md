@@ -25,7 +25,7 @@
 </table>
 
 ## :warning:  Issues
-- [ ] Create notification mechanism for annotations
+- [X] Create notification mechanism for annotations
 - [ ] Application internationalization
 - [ ] Encryption backup service
 

@@ -28,7 +28,7 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
 
   @override
   Future<void> init(BuildContext context) async {
-    var config = const AndroidInitializationSettings('app_icon');
+    var config = const AndroidInitializationSettings('icon');
     var initializationSettings = InitializationSettings(
       android: config
     );
@@ -58,7 +58,10 @@ class NotificationEasyNoteImpl extends NotificationEasyNote {
         channelDescription: 'Todos os lembretes configurados no EasyNote.',
         importance: Importance.max,
         priority: Priority.high,
-        ticker: 'ticker'
+        ticker: 'ticker',
+        icon: "icon",
+        color: const Color(0xFFA50044),
+        colorized: true,
       )
     );
 

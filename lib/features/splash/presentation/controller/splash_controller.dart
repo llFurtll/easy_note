@@ -81,6 +81,7 @@ class SplashController extends ScreenController {
   Future<void> _init() async {
     Future.value()
       .then((_) => _speech.init())
+      // ignore: use_build_context_synchronously
       .then((_) => _notification.init(context))
       .then((_) => _shared.init());
   }

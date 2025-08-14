@@ -7,7 +7,7 @@ import 'change_image_anotacao_view_widget.dart';
 import 'share_anotacao_view_widget.dart';
 
 class AppBarAnotacaoViewWidget extends ScreenWidget<AnotacaoController>
-    with PreferredSizeWidget {
+    implements PreferredSizeWidget {
   const AppBarAnotacaoViewWidget({super.key});
 
   @override

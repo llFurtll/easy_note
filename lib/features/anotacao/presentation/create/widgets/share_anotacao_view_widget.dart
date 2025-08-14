@@ -67,7 +67,8 @@ class ShareAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
             child: const Text(
               "Cancelar",
               style: TextStyle(
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
+                color: Colors.white
               ),
             )
           ),

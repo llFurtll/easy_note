@@ -1,5 +1,4 @@
 import 'package:screen_manager/screen_injection.dart';
-import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../configuracao/data/datasources/configuracao_data_source.dart';
@@ -24,9 +23,8 @@ class AnotacaoInjection extends ScreenInjection<AnotacaoController> {
 
   AnotacaoInjection({
     super.key,
-    required ScreenBridge child
+    required super.child
   }) : super(
-    child: child,
     controller: AnotacaoController()
   );
 

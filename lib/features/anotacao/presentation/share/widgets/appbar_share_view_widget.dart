@@ -3,7 +3,7 @@ import 'package:easy_note/features/anotacao/presentation/share/controller/share_
 import 'package:flutter/material.dart';
 
 class AppBarShareViewWidget extends ScreenWidget<ShareController>
-  with PreferredSizeWidget {
+  implements PreferredSizeWidget {
   const AppBarShareViewWidget({super.key});
   
   @override
@@ -14,11 +14,11 @@ class AppBarShareViewWidget extends ScreenWidget<ShareController>
       backgroundColor: Theme.of(context).primaryColor,
       title: const Text(
         "Compartilhar anotação",
-        style: TextStyle(fontWeight: FontWeight.bold)
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
       ),
       leading: IconButton(
         onPressed: () => Navigator.of(context).pop(),
-        icon: const Icon(Icons.arrow_back_ios),
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         tooltip: "Voltar",      
       ),
       actions: _buildActions(),
@@ -29,7 +29,7 @@ class AppBarShareViewWidget extends ScreenWidget<ShareController>
     return [
       IconButton(
         onPressed: controller.share,
-        icon: const Icon(Icons.share),
+        icon: const Icon(Icons.share, color: Colors.white),
       ),
     ];
   }

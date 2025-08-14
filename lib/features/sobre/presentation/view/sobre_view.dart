@@ -215,6 +215,7 @@ class SobreView extends ScreenView<SobreController> {
         return true;
       })
       .then((hasError) => hasError ?
+        // ignore: use_build_context_synchronously
         CustomDialog.warning("Não foi possível abrir o link!", context) :
         null);
   }

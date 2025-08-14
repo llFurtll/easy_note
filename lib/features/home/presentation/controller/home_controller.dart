@@ -198,7 +198,9 @@ class HomeController extends ScreenController {
 
   void fromGallery() {
     Future.value()
+      // ignore: use_build_context_synchronously
       .then((_) => Navigator.of(context).pop())
+      // ignore: use_build_context_synchronously
       .then((_) => showLoading(context))
       .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.gallery))
       .then((result) => _savePhotoUser(result))
@@ -208,16 +210,20 @@ class HomeController extends ScreenController {
         } else if (result == "0") {
           CustomDialog.error(
             "Não foi possível salvar a foto de perfil, tente novamente!",
+            // ignore: use_build_context_synchronously
             context
           );
         }
       })
+    // ignore: use_build_context_synchronously
     .then((_) => Navigator.of(context).pop());
   }
 
   void fromCamera() {
     Future.value()
+      // ignore: use_build_context_synchronously
       .then((value) => Navigator.of(context).pop())
+      // ignore: use_build_context_synchronously
       .then((_) => showLoading(context))
       .then((_) => imagePicker.getImage(ImagePickerEasyNoteOptions.camera))
       .then((result) => _savePhotoUser(result))
@@ -228,10 +234,12 @@ class HomeController extends ScreenController {
         } else if (result == "0") {
           CustomDialog.error(
             "Não foi possível salvar a foto de perfil, tente novamente!",
+            // ignore: use_build_context_synchronously
             context
           );
         }
       })
+      // ignore: use_build_context_synchronously
       .then((_) => Navigator.of(context).pop());
   }
 
@@ -271,13 +279,16 @@ class HomeController extends ScreenController {
 
   Future<void> removePhoto() async {
     Future.value()
+      // ignore: use_build_context_synchronously
       .then((_) => Navigator.of(context).pop())
+      // ignore: use_build_context_synchronously
       .then((_) => showLoading(context))
       .then((_) => _deleteOldPhoto())
       .then((_) => getSavePhotoUsuario(
         SavePhotoUsuarioParams(idUsuario: 1, path: ""))
       )
       .then((result) {
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
         result.fold((left) {
           CustomDialog.error(
@@ -313,14 +324,17 @@ class HomeController extends ScreenController {
 
     if (result!) {
       Future.value()
+        // ignore: use_build_context_synchronously
         .then((_) => showLoading(context))
         .then((_) => getDeleteAnotacao(DeleteAnotacaoParams(idAnotacao: item.id)))
         .then((response) => response.fold((left) => null, (right) => right))
         .then((response) {
+          // ignore: use_build_context_synchronously
           Navigator.of(context).pop();
           if (response == null) {
             CustomDialog.error(
               "Não foi possível deletar a anotação, tente novamente!",
+              // ignore: use_build_context_synchronously
               context
             );
 
@@ -329,6 +343,7 @@ class HomeController extends ScreenController {
 
           CustomDialog.success(
             "Anotação deletada com sucesso!",
+            // ignore: use_build_context_synchronously
             context
           );
 

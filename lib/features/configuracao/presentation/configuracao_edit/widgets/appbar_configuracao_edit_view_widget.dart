@@ -19,7 +19,7 @@ class AppBarConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditCont
       ],
       title: Text(
         controller.title,
-        style: const TextStyle(fontWeight: FontWeight.bold)
+        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
       ),
       backgroundColor: Theme.of(context).primaryColor,
     );
@@ -29,7 +29,7 @@ class AppBarConfiguracaoEditViewWidget extends ScreenWidget<ConfiguracaoEditCont
     return IconButton(
       tooltip: "Voltar",
       onPressed: () => Navigator.of(context).pop(),
-      icon: const Icon(Icons.arrow_back_ios)
+      icon: const Icon(Icons.arrow_back_ios, color: Colors.white)
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:screen_manager/screen_injection.dart';
 import 'package:screen_manager/screen_receive.dart';
-import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../anotacao/data/datasources/anotacao_data_source.dart';
@@ -31,9 +30,8 @@ class HomeInjection extends ScreenInjection<HomeController> {
 
   HomeInjection({
     super.key,
-    required ScreenBridge child
+    required super.child
   }) : super(
-    child: child,
     controller: HomeController(),
     receiveArgs:
     const ScreenReceiveArgs(receive: true, identity: "Home")

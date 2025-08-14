@@ -1,5 +1,4 @@
 import 'package:screen_manager/screen_injection.dart';
-import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/sobre_controller.dart';
@@ -7,9 +6,8 @@ import '../controller/sobre_controller.dart';
 class SobreInjection extends ScreenInjection<SobreController> {
   SobreInjection({
     super.key,
-    required ScreenBridge child
+    required super.child
   }) : super(
-    child: child,
     controller: SobreController()
   );
 

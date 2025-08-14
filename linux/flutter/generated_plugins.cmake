@@ -3,7 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  pasteboard
+  file_selector_linux
+  rive_common
   url_launcher_linux
 )
 

@@ -47,12 +47,14 @@ class AtualizacaoDetalheController extends ScreenController {
 
       Future.value()
         .then((_) async {
+          // ignore: use_build_context_synchronously
           final getSaveVisualizacao = ScreenInjection.of<AtualizacaoDetalheInjection>(context).getSaveVisualizacao;
           await getSaveVisualizacao(SaveVisualizacaoParams(
             idUsuario: 1,
             idVersao: arguments.idVersao
           ));
         })
+        // ignore: use_build_context_synchronously
         .then((_) => Navigator.pushNamedAndRemoveUntil(context, Home.routeHome, ModalRoute.withName(Splash.routeSplash)));
     } else {
       Navigator.pop(context);

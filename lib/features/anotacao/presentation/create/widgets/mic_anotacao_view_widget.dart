@@ -24,19 +24,17 @@ class MicAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
             child: AvatarGlow(
               glowColor: color,
               animate: value,
-              endRadius: value ? 100.0 : 70.0,
+              curve: Curves.ease,
               duration: const Duration(milliseconds: 1000),
-              repeat: true,
-              showTwoGlows: true,
-              repeatPauseDuration: const Duration(milliseconds: 100),
+              glowShape: BoxShape.circle,
+              glowRadiusFactor: value ? 1.0 : 0.7, // substitui endRadius
               child: AnimatedContainer(
                 width: value ? 100.0 : 80.0,
                 height: value ? 100.0 : 80.0,
-                curve: Curves.ease,
                 duration: const Duration(milliseconds: 500),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: color
+                  color: color,
                 ),
                 child: const Icon(Icons.mic, color: Colors.white, size: 30.0),
               ),

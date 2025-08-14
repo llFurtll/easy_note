@@ -46,6 +46,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
 
   PopupMenuButton _buildPopup() {
     return PopupMenuButton<int>(
+      iconColor: Colors.white,
       shape: const ContinuousRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
@@ -127,7 +128,7 @@ class AppBarHomeViewWidget extends ScreenWidget<HomeController> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: const Offset(0, 0),

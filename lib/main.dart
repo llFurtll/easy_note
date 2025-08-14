@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 import 'routes/routes.dart';
 
@@ -29,9 +31,20 @@ void main() {
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent
         ),
-        fontFamily: "roboto"
+        fontFamily: "roboto",
       ),
       routes: routes(),
+      locale: const Locale('pt', 'BR'),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        quill.FlutterQuillLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('pt', 'BR'),
+        ...quill.FlutterQuillLocalizations.supportedLocales,
+      ],
     )
   );
 }

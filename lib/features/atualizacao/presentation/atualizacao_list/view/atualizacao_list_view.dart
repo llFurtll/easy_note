@@ -72,7 +72,8 @@ class AtualizacaoListView extends ScreenView<AtualizacaoListController> {
         title: const Text(
           "Versões do EasyNote",
           style: TextStyle(
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
+            color: Colors.white
           ),
         ),
         automaticallyImplyLeading: false,
@@ -85,7 +86,7 @@ class AtualizacaoListView extends ScreenView<AtualizacaoListController> {
     return IconButton(
       tooltip: "Voltar",
       onPressed: () => Navigator.of(context).pop(),
-      icon: const Icon(Icons.arrow_back_ios),
+      icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
     );
   }
 

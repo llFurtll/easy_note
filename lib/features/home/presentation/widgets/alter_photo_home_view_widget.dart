@@ -11,7 +11,7 @@ class AlterPhotoHomeViewWidget extends ScreenWidget<HomeController> {
   Widget build(BuildContext context) {
     super.build(context);
 
-    final color = Theme.of(context).primaryColor.withOpacity(0.5);
+    final color = Theme.of(context).primaryColor.withValues(alpha: 0.5);
 
     return ValueListenableBuilder(
       valueListenable: controller.photoUser,

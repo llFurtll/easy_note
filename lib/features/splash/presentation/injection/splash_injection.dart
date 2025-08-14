@@ -1,5 +1,4 @@
 import 'package:screen_manager/screen_injection.dart';
-import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../atualizacao/data/datasources/atualizacao_data_source.dart';
@@ -21,10 +20,9 @@ class SplashInjection extends ScreenInjection<SplashController> {
 
   SplashInjection({
     super.key,
-    required ScreenBridge child
+    required super.child
   }) : super(
-    controller: SplashController(),
-    child: child
+    controller: SplashController()
   );
 
   @override

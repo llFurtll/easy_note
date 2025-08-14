@@ -62,7 +62,7 @@ class CardNoteHomeViewWidget extends ScreenWidget<HomeController> {
                   FileImage(File(item.imagemFundo)) as ImageProvider,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.5),
+                  Colors.white.withValues(alpha: 0.5),
                   BlendMode.dstATop
                 ),
               ) : null

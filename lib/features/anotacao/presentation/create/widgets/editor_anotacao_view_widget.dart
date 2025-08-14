@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:screen_manager/screen_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
-import 'package:tuple/tuple.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart' as qx;
 
 import '../../../../../core/widgets/spacer.dart';
 import '../controller/anotacao_controller.dart';
@@ -22,24 +21,26 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
     return ValueListenableBuilder(
       valueListenable: controller.backgroundImage,
       builder: (context, value, child) {
-        String path = "";
+        String path = '';
         if (value != null) {
           path = value.pathImage;
         }
 
         return Container(
           decoration: BoxDecoration(
-          image: path.isNotEmpty ? DecorationImage(
-            image: path.contains("lib") ?
-              AssetImage(path) :
-              FileImage(File(path)) as ImageProvider,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.5),
-                BlendMode.dstATop
-              ),
-            ) :
-            null
+            image: path.isNotEmpty
+                ? DecorationImage(
+                    image: path.contains('lib')
+                        ? AssetImage(path)
+                        : FileImage(File(path)) as ImageProvider,
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      // .withOpacity() é deprecado: use withValues
+                      Colors.white.withValues(alpha: 0.5),
+                      BlendMode.dstATop,
+                    ),
+                  )
+                : null,
           ),
           child: SafeArea(
             child: Container(
@@ -49,8 +50,8 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
                 children: [
                   _buildTitle(),
                   spacer(10.0),
-                  _buildToolbar(),
-                  _buildEditor()
+                  _buildToolbar(context),
+                  _buildEditor(),
                 ],
               ),
             ),
@@ -63,125 +64,98 @@ class EditorAnotacaoViewWidget extends ScreenWidget<AnotacaoController> {
   Widget _buildTitle() {
     return TextFormField(
       onChanged: (value) =>
-        controller.showConfig("AUTOSAVE") ?
-          controller.autoSave() :
-          null,
+          controller.showConfig('AUTOSAVE') ? controller.autoSave() : null,
       controller: controller.titleController,
       focusNode: controller.titleFocus,
       decoration: const InputDecoration(
         border: InputBorder.none,
-        hintText: "Título",
+        hintText: 'Título',
         hintStyle: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18.0),
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          fontSize: 18.0,
+        ),
       ),
       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
       maxLines: null,
     );
   }
 
-  Widget _buildToolbar() {
-    return ValueListenableBuilder(
-      valueListenable: controller.showToolbar,
-      builder: (context, value, child) {
-        return Visibility(
+  Widget _buildToolbar(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          showDragHandle: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+        ),
+      ),
+      child: ValueListenableBuilder(
+        valueListenable: controller.showToolbar,
+        builder: (context, value, child) {
+          return Visibility(
             visible: value,
             child: Column(
               children: [
-                QuillToolbar.basic(
-                  color: Colors.grey[100],
-                  iconTheme: QuillIconTheme(
-                      iconUnselectedFillColor: Colors.grey[100],
-                      borderRadius: 0.0),
-                  toolbarIconSize: 20,
-                  embedButtons: FlutterQuillEmbeds.buttons(
-                      onImagePickCallback:
-                          controller.onImageAndVideoPickCallback,
-                      onVideoPickCallback:
-                          controller.onImageAndVideoPickCallback,
-                      showImageButton: controller.showConfig("MOSTRAFOTO"),
-                      showCameraButton: controller.showConfig("MOSTRACAMERA"),
-                      showVideoButton: false,
-                      cameraPickSettingSelector:
-                          controller.selectCameraPickSetting,
-                      mediaPickSettingSelector:
-                          controller.selectMediaPickSetting),
-                  locale: controller.locale,
+                quill.QuillSimpleToolbar(
                   controller: controller.quillController,
-                  multiRowsDisplay: false,
-                  showDividers: controller.showConfig("MOSTRASEPARADOR"),
-                  showFontFamily: controller.showConfig("MOSTRAFONTFAMILY"),
-                  showFontSize: controller.showConfig("MOSTRAFONTSIZE"),
-                  showBoldButton: controller.showConfig("MOSTRANEGRITO"),
-                  showItalicButton: controller.showConfig("MOSTRAITALICO"),
-                  showSmallButton: controller.showConfig("MOSTRASMALLBUTTON"),
-                  showUnderLineButton:
-                      controller.showConfig("MOSTRASUBLINHADO"),
-                  showStrikeThrough: controller.showConfig("MOSTRARISCADO"),
-                  showInlineCode: controller.showConfig("MOSTRAINLINECODE"),
-                  showColorButton: controller.showConfig("MOSTRACORLETRA"),
-                  showBackgroundColorButton:
-                      controller.showConfig("MOSTRACORFUNDOLETRA"),
-                  showClearFormat: controller.showConfig("MOSTRACLEARFORMAT"),
-                  showAlignmentButtons: true,
-                  showLeftAlignment:
-                      controller.showConfig("MOSTRAALINHAMENTOESQUERDA"),
-                  showCenterAlignment:
-                      controller.showConfig("MOSTRAALINHAMENTOCENTRO"),
-                  showRightAlignment:
-                      controller.showConfig("MOSTRAALINHAMENTODIREITA"),
-                  showJustifyAlignment:
-                      controller.showConfig("MOSTRAJUSTIFICADO"),
-                  showHeaderStyle:
-                      controller.showConfig("MOSTRABOTAOCABECALHO"),
-                  showListNumbers: controller.showConfig("MOSTRALISTANUMERICA"),
-                  showListBullets: controller.showConfig("MOSTRALISTAPONTO"),
-                  showListCheck: controller.showConfig("MOSTRALISTACHECK"),
-                  showCodeBlock: controller.showConfig("MOSTRACODEBLOCK"),
-                  showQuote: controller.showConfig("MOSTRAQUOTE"),
-                  showIndent: controller.showConfig("MOSTRAINDENT"),
-                  showLink: controller.showConfig("MOSTRALINK"),
-                  showUndo:
-                      controller.showConfig("MOSTRAREVERTERPRODUZIRALTERACOES"),
-                  showRedo:
-                      controller.showConfig("MOSTRAREVERTERPRODUZIRALTERACOES"),
-                  showDirection: false,
-                  showSearchButton: controller.showConfig("MOSTRASEARCHBUTTON"),
+                  config: quill.QuillSimpleToolbarConfig(
+                    // Most flags antigos foram removidos; mantenha os essenciais:
+                    multiRowsDisplay: false,
+                    showAlignmentButtons: true,
+                    showLeftAlignment:
+                        controller.showConfig('MOSTRAALINHAMENTOESQUERDA'),
+                    showCenterAlignment:
+                        controller.showConfig('MOSTRAALINHAMENTOCENTRO'),
+                    showRightAlignment:
+                        controller.showConfig('MOSTRAALINHAMENTODIREITA'),
+                    showJustifyAlignment:
+                        controller.showConfig('MOSTRAJUSTIFICADO'),
+                    showDividers: controller.showConfig('MOSTRASEPARADOR'),
+                    showInlineCode: controller.showConfig('MOSTRAINLINECODE'),
+                    embedButtons: qx.FlutterQuillEmbeds.toolbarButtons(
+                      imageButtonOptions: qx.QuillToolbarImageButtonOptions(
+                        imageButtonConfig: qx.QuillToolbarImageConfig(
+                          onImageInsertedCallback: (image) =>
+                              controller.onImageAndVideoPickCallback(File(image)),
+                        )
+                      ),
+                      videoButtonOptions: qx.QuillToolbarVideoButtonOptions(
+                        videoConfig: qx.QuillToolbarVideoConfig(
+                          onVideoInsertedCallback: (video) => 
+                              controller.onImageAndVideoPickCallback(File(video)),
+                        )
+                      ),
+                    ),
+                  ),
                 ),
-                spacer(10.0)
+                spacer(10.0),
               ],
-            ));
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildEditor() {
     return Expanded(
-      child: QuillEditor(
-        embedBuilders: FlutterQuillEmbeds.builders(),
-        scrollController: ScrollController(),
+      child: quill.QuillEditor.basic(
         controller: controller.quillController,
-        autoFocus: false,
-        placeholder: "Começe a digitar aqui...",
-        customStyles: DefaultStyles(
-          placeHolder: DefaultTextBlockStyle(
-            const TextStyle(
-              color: Colors.black,
-              fontFamily: "roboto",
-              fontSize: 16.0
-            ),
-            const Tuple2(16, 0),
-            const Tuple2(0, 0),
-            null
-          ),
+        config: quill.QuillEditorConfig(
+          // Estes nomes existem no v11 (confirmei na API ref)
+          autoFocus: false,
+          expands: true,
+          scrollable: true,
+          placeholder: 'Comece a digitar aqui...',
+          padding: EdgeInsets.zero,
+          // Suporte a imagens/vídeos dentro do editor:
+          embedBuilders: qx.FlutterQuillEmbeds.defaultEditorBuilders(),
         ),
-        expands: true,
-        scrollable: true,
-        focusNode: controller.editorFocus,
-        enableInteractiveSelection: true,
-        readOnly: false,
-        padding: EdgeInsets.zero,
-        locale: controller.locale,
-      )
+      ),
     );
   }
 }

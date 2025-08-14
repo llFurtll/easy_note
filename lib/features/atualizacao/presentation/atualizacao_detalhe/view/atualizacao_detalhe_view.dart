@@ -19,7 +19,7 @@ class AtualizacaoDetalhe extends Screen {
     return AtualizacaoDetalheInjection(
       child: const ScreenBridge<AtualizacaoDetalheController, AtualizacaoDetalheInjection>(
         child: AtualizacaoDetalheView(),
-      )
+      ),
     );
   }
 }
@@ -59,38 +59,40 @@ class AtualizacaoDetalheView extends ScreenView<AtualizacaoDetalheController> {
 
           return _buildBody(context);
         },
-      )
+      ),
     );
   }
 
   Widget _buildBody(BuildContext context) {
-    final buttonStyle =  ButtonStyle(
-      foregroundColor: const MaterialStatePropertyAll(Colors.white),
-      overlayColor: MaterialStatePropertyAll(Colors.white.withOpacity(0.2))
+    final buttonStyle = ButtonStyle(
+      foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      overlayColor: WidgetStatePropertyAll(
+        Colors.white.withValues(alpha: 0.2),
+      ),
     );
 
-    return IntroductionScreen(
-      globalBackgroundColor: Theme.of(context).primaryColor,
-      isBottomSafeArea: true,
-      isTopSafeArea: true,
-      pages: controller.lista.map((item) => _buildPage(item, context)).toList(),
-      showBackButton: true,
-      back: const Icon(Icons.arrow_back_ios, size: 20),
-      backStyle: buttonStyle,
-      showNextButton: true,
-      next: const Icon(Icons.arrow_forward_ios, size: 20),
-      nextStyle: buttonStyle,
-      done: const Text(
-        "Continuar",
-        style: TextStyle(
-          fontWeight: FontWeight.bold
+    return SafeArea( // substitui isTopSafeArea/isBottomSafeArea
+      top: true,
+      bottom: true,
+      child: IntroductionScreen(
+        globalBackgroundColor: Theme.of(context).primaryColor,
+        pages: controller.lista.map((item) => _buildPage(item, context)).toList(),
+        showBackButton: true,
+        back: const Icon(Icons.arrow_back_ios, size: 20),
+        backStyle: buttonStyle,
+        showNextButton: true,
+        next: const Icon(Icons.arrow_forward_ios, size: 20),
+        nextStyle: buttonStyle,
+        done: const Text(
+          "Continuar",
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-      ),
-      onDone: controller.onContinue,
-      doneStyle: buttonStyle,
-      dotsDecorator: DotsDecorator(
-        color: Colors.black.withOpacity(0.5),
-        activeColor: Colors.white
+        onDone: controller.onContinue,
+        doneStyle: buttonStyle,
+        dotsDecorator: DotsDecorator(
+          color: Colors.black.withValues(alpha: 0.5),
+          activeColor: Colors.white,
+        ),
       ),
     );
   }
@@ -101,13 +103,13 @@ class AtualizacaoDetalheView extends ScreenView<AtualizacaoDetalheController> {
         titleTextStyle: TextStyle(
           fontSize: 30.0,
           fontWeight: FontWeight.bold,
-          color: Colors.white
+          color: Colors.white,
         ),
         bodyTextStyle: TextStyle(
           color: Colors.white,
           letterSpacing: 1.2,
           fontSize: 16.0,
-          height: 1.3
+          height: 1.3,
         ),
       ),
       title: atualizacao.cabecalho,
@@ -122,7 +124,8 @@ class AtualizacaoDetalheView extends ScreenView<AtualizacaoDetalheController> {
         atualizacao.imagem!,
         width: 250.0,
         height: 250.0,
-        color: Colors.white
+        // color:  (deprecado) -> use colorFilter
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
       );
     }
 
@@ -132,8 +135,8 @@ class AtualizacaoDetalheView extends ScreenView<AtualizacaoDetalheController> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(atualizacao.imagem!),
-          fit: BoxFit.cover
-        )
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

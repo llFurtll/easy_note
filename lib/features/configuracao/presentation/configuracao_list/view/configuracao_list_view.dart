@@ -60,7 +60,7 @@ class ConfiguracaoListView extends ScreenView<ConfiguracaoListController> {
       leading: _iconLeading(context),
       title: const Text(
         "Configurações do EasyNote",
-        style: TextStyle(fontWeight: FontWeight.bold)
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
@@ -68,7 +68,7 @@ class ConfiguracaoListView extends ScreenView<ConfiguracaoListController> {
   Widget _iconLeading(BuildContext context) {
     return IconButton(
       tooltip: "Voltar",
-      icon: const Icon(Icons.arrow_back_ios),
+      icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
       onPressed: () => Navigator.of(context).pop(),
     );
   }

@@ -3,12 +3,9 @@ import '../../domain/entities/versao.dart';
 
 class VersaoModel extends Versao {
   const VersaoModel({
-    required int? idVersao,
-    required double? versao
-  }) : super(
-    idVersao: idVersao,
-    versao: versao
-  );
+    required super.idVersao,
+    required super.versao
+  });
 
   factory VersaoModel.fromMap(Map json) {
     return VersaoModel(

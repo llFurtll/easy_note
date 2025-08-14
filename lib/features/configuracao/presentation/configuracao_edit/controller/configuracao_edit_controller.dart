@@ -100,16 +100,19 @@ class ConfiguracaoEditController extends ScreenController {
         return error;
       })
       .then((result) {
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
 
         if (result) {
           CustomDialog.error(
             "Erro ao salvar as configurações, tente novamente!",
+            // ignore: use_build_context_synchronously
             context
           );
         } else {
           CustomDialog.success(
             "Configurações atualizadas com sucesso!",
+            // ignore: use_build_context_synchronously
             context
           );
         }

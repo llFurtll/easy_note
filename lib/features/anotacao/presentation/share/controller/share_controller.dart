@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:html_to_pdf_plus/html_to_pdf_plus.dart';
 import 'package:screen_manager/screen_controller.dart';
 import 'package:easy_note/core/utils/create_dir.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
@@ -35,7 +35,7 @@ class ShareController extends ScreenController {
     quillController = QuillController(
       document: Document.fromJson(jsonDecode(args.anotacao.observacao!)),
       selection: const TextSelection.collapsed(offset: 0)
-    );
+    )..readOnly = false;
 
     if (TypeShare.isPdf(args.typeShare)) {
       Future.value()
@@ -51,6 +51,7 @@ class ShareController extends ScreenController {
 
   Future<void> share() async {
     Future.value()
+      // ignore: use_build_context_synchronously
       .then((_) => showLoading(context))
       .then((_) async {
         switch (args.typeShare) {
@@ -61,11 +62,13 @@ class ShareController extends ScreenController {
         }
       })
       .then((value) {
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
         if (value.isEmpty) {
           CustomDialog.error(
             "Não foi possível gerar o arquivo para compartilhamento, "
             "tente novamente!",
+            // ignore: use_build_context_synchronously
             context
           );
           
@@ -190,10 +193,12 @@ class ShareController extends ScreenController {
         </html>
       """;
       final dir = await createDir("share/pdf");
-      final file = await FlutterHtmlToPdf.convertFromHtmlContent(
-        html,
-        dir,
-        "anotacao-${args.anotacao.id}"
+      final file = await HtmlToPdf.convertFromHtmlContent(
+        htmlContent: html,
+        configuration: PdfConfiguration(
+          targetDirectory: dir,
+          targetName: "anotacao-${args.anotacao.id}"
+        ),
       );
 
       return file.path;

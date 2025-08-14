@@ -1,5 +1,4 @@
 import 'package:screen_manager/screen_injection.dart';
-import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/datasources/configuracao_data_source.dart';
@@ -18,10 +17,9 @@ class ConfiguracaoEditInjection extends ScreenInjection<ConfiguracaoEditControll
   final GetSaveConfiguracao getSaveConfiguracao = GetSaveConfiguracao(_configuracaoRepository);
 
   ConfiguracaoEditInjection({
-    required ScreenBridge child,
+    required super.child,
     super.key
   }) : super(
-    child: child,
     controller: ConfiguracaoEditController()
   );
 

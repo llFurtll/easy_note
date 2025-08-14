@@ -69,6 +69,7 @@ class AlterNameHomeViewWidget extends ScreenWidget<HomeController> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: controller.saveName,
                 child: const Text("Salvar")

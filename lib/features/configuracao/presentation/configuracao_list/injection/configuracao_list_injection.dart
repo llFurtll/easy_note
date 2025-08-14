@@ -1,5 +1,4 @@
 import 'package:screen_manager/screen_injection.dart';
-import 'package:screen_manager/screen_view.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/configuracao_list_controller.dart';
@@ -7,9 +6,8 @@ import '../controller/configuracao_list_controller.dart';
 class ConfiguracaoListInjection extends ScreenInjection<ConfiguracaoListController> {
   ConfiguracaoListInjection({
     super.key,
-    required ScreenBridge child
+    required super.child
   }) : super(
-    child: child,
     controller: ConfiguracaoListController()
   );
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart' as qx;
 import 'package:screen_manager/screen_widget.dart';
 import 'package:easy_note/core/widgets/spacer.dart';
 import 'package:flutter/material.dart';
@@ -33,18 +33,20 @@ class ImageShareViewWidget extends ScreenWidget<ShareController> {
           padding: const EdgeInsets.all(15.0),
           constraints: const BoxConstraints(
             minWidth: double.infinity,
-            minHeight: 100.0
+            minHeight: 100.0,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
-            image: args.showImage ? DecorationImage(
-              image: image!,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.5),
-                BlendMode.dstATop
-              ),
-            ) : null,
+            image: args.showImage
+                ? DecorationImage(
+                    image: image!,
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withValues(alpha: 0.5), // was withOpacity
+                      BlendMode.dstATop,
+                    ),
+                  )
+                : null,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black,
@@ -63,21 +65,21 @@ class ImageShareViewWidget extends ScreenWidget<ShareController> {
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 25.0
+                  fontSize: 25.0,
                 ),
               ),
               spacer(10.0),
-              QuillEditor(
-                embedBuilders: FlutterQuillEmbeds.builders(),
-                autoFocus: false,
+              // Quill v11: use QuillEditor.basic + config
+              quill.QuillEditor.basic(
                 controller: controller.quillController,
-                expands: false,
-                focusNode: FocusNode(),
-                padding: EdgeInsets.zero,
-                readOnly: true,
-                scrollController: ScrollController(),
-                scrollable: false,
-              )
+                config: quill.QuillEditorConfig(
+                  autoFocus: false,
+                  expands: false,
+                  scrollable: false,
+                  padding: EdgeInsets.zero,
+                  embedBuilders: qx.FlutterQuillEmbeds.editorBuilders(),
+                ),
+              ),
             ],
           ),
         ),
